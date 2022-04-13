@@ -8,7 +8,7 @@
     "server:dev": "npm run dev --prefix Server",
     "client:build": "npm run build --prefix Client",
     "client:start": "npm run start --prefix Client",
-    "dev": "cross-env NODE_ENV=development concurrently -n node,react -c black.bgGreenBright.bold,black.bgMagentaBright.bold \"npm run server:dev\" \"npm run client:start\"",
+    "dev": "cross-env NODE_ENV=production concurrently -n node,react -c black.bgGreenBright.bold,black.bgMagentaBright.bold \"npm run server:dev\" \"npm run client:start\"",
     "start": "cross-env NODE_ENV=production \"npm run server:start\""
   },
   "repository": {
