@@ -20,14 +20,14 @@ app.use('/api', router)
 app.use(errorHandler) //обработка ошибок
 
 //Отдаем фронтэнд
-// if (process.env.NODE_ENV === 'production') {
-//   app.use('/', express.static(path.join(__dirname, '../Client', 'build')))
+if (process.env.NODE_ENV === 'production') {
+  app.use('/', express.static(path.join(__dirname, '../Client', 'build')))
 
-//   app.get('*', (req, res) => {
-//     //отдаем файл текущая_директория/client/build/index.html
-//     res.sendFile(path.resolve(__dirname, '../Client', 'build', 'index.html'))
-//   })
-// }
+  app.get('*', (req, res) => {
+    //отдаем файл текущая_директория/client/build/index.html
+    res.sendFile(path.resolve(__dirname, '../Client', 'build', 'index.html'))
+  })
+}
 
 const start = async () => {
   try {
