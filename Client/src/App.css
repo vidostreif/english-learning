@@ -1,0 +1,247 @@
+.App {
+  text-align: center;
+  padding-top: 5px;
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+.Task {
+  padding: 0 5px;
+}
+
+.NextBtn {
+  transition: 0.3s;
+  color: #008b8b;
+  font-size: 2rem;
+  border: 3px solid #a15eb1;
+  border-radius: 10px;
+  background-color: #ffffff;
+  padding: 5px 10px;
+  text-shadow: 3px 0px 20px;
+}
+
+.NextBtn:hover {
+  cursor: pointer;
+  color: #a15eb1;
+  font-size: 2rem;
+  border: 3px solid #008b8b;
+  background-color: #e5f5f5;
+  transition: 0.3s;
+  transform: scale(1.2);
+}
+
+.Board {
+  position: relative;
+  color: #000;
+  text-align: center;
+}
+
+.Words {
+  background: #e5f5f5c0;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  width: inherit;
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 7px 0;
+}
+
+.MainImg {
+  margin: 0px;
+  width: 100%;
+}
+
+.Marker {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  font-size: 20px;
+  border-radius: 10px;
+  color: #ffffff;
+  padding: 5px 10px;
+}
+
+.EmptyMarker {
+  transition: 0.3s;
+  border: 2px dashed rgba(255, 148, 72, 0.7);
+  background-color: rgba(255, 148, 72, 0.2);
+  animation-name: idle;
+  animation-duration: 10s;
+  animation-iteration-count: infinite;
+  animation-delay: 5s;
+}
+
+.EmptyMarker:hover {
+  border: 2px solid #ff9448;
+  color: #000;
+  cursor: pointer;
+}
+
+.MistakeMarker {
+  border: 2px solid rgba(255, 0, 8, 0.5);
+  animation-name: mistake;
+  animation-duration: 0.6s;
+  animation-iteration-count: 1;
+  animation-delay: 0s;
+}
+
+.FillMarker {
+  border: 2px solid #86cca4;
+  background-color: rgba(127, 255, 0, 0.2);
+  animation-name: fill;
+  animation-duration: 0.4s;
+  animation-iteration-count: 1;
+  animation-delay: 0s;
+}
+
+.FillMarker:hover {
+  border-color: transparent;
+  color: #090909;
+}
+
+.ChoicedMarker {
+  transition: 0.3s;
+  border: 2px solid #f948ff;
+  color: #000;
+  cursor: pointer;
+  animation-name: choiced;
+  animation-duration: 0.6s;
+  animation-iteration-count: infinite;
+  animation-delay: 0s;
+}
+
+.StartWord {
+  transition: 0.3s;
+  font-size: 20px;
+  border: 2px solid #008b8b;
+  border-radius: 10px;
+  color: #e32636;
+  padding: 5px 10px;
+  margin: 5px;
+}
+
+.StartWord:hover {
+  transition: 0.3s;
+  color: #f87d87;
+  cursor: pointer;
+  border-radius: 20px;
+}
+
+.ChoicedWord {
+  transition: 0.3s;
+  transform: translateY(-10%) scale(1.1);
+  font-size: 20px;
+  cursor: pointer;
+  border: 2px solid #6f008b;
+  border-radius: 20px;
+  color: #e32636;
+  padding: 5px 10px;
+  color: #000;
+  margin: 5px;
+}
+
+.MistakeWord {
+  border: 2px solid rgba(255, 0, 8, 0.5);
+  animation-name: word_mistake;
+  animation-duration: 0.6s;
+  animation-iteration-count: 1;
+  animation-delay: 0s;
+}
+
+.FinishWord {
+  opacity: 0;
+  transform: scale(0.5);
+  transition: 300ms;
+
+  font-size: 20px;
+  border: 2px solid #008b8b;
+  border-radius: 10px;
+  color: #e32636;
+  padding: 5px 10px;
+  margin: 5px;
+}
+
+.TaskListElement {
+  margin: 5px;
+  width: 300px;
+}
+
+@keyframes idle {
+  from {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  10% {
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+  20% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes fill {
+  from {
+    transform: translate(-50%, -50%) scale(0.5);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes mistake {
+  from {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  20% {
+    transform: translate(-30%, -50%) scale(1);
+  }
+  40% {
+    transform: translate(-70%, -50%) scale(1);
+  }
+  60% {
+    transform: translate(-30%, -50%) scale(1);
+  }
+  80% {
+    transform: translate(-70%, -50%) scale(1);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes choiced {
+  from {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes word_mistake {
+  from {
+    transform: translate(0%, 0%) scale(1);
+  }
+  20% {
+    transform: translate(10%, 0%) scale(1);
+  }
+  40% {
+    transform: translate(-10%, 0%) scale(1);
+  }
+  60% {
+    transform: translate(10%, 0%) scale(1);
+  }
+  80% {
+    transform: translate(-10%, 0%) scale(1);
+  }
+  100% {
+    transform: translate(0%, 0%) scale(1);
+  }
+}

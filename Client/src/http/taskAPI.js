@@ -1,0 +1,38 @@
+import { $host, $authHost } from './index'
+
+export const createTask = async (img, markers, id = null) => {
+  const formData = new FormData()
+  formData.append('img', img)
+  formData.append('id', id)
+  formData.append('markers', JSON.stringify(markers))
+
+  const { data } = await $host.post('api/task', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  })
+  return data
+}
+
+export const fetchTask = async (id) => {
+  const { data } = await $host.get(`api/task/${id}`)
+  return data
+}
+
+export const fetchAllTask = async (page) => {
+  const { data } = await $host.get(`api/task/`, {
+    params: {
+      page,
+    },
+  })
+  return data
+}
+
+export const fetchRandomTask = async (not_id = null) => {
+  const { data } = await $host.get(`api/task/random`, {
+    params: {
+      not_id,
+    },
+  })
+  return data
+}
