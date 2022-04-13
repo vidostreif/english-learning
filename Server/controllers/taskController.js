@@ -1,5 +1,5 @@
 const { Task, Marker, Dictionary } = require('../models/models')
-const { Sequelize, Op } = require('Sequelize')
+const { Sequelize, Op } = require('sequelize')
 const ApiError = require('../error/ApiError')
 const uuid = require('uuid')
 const fs = require('fs')

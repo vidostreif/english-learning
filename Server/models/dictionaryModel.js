@@ -1,5 +1,5 @@
 const { sequelize } = require('../db')
-const { DataTypes, Model } = require('Sequelize')
+const { DataTypes, Model } = require('sequelize')
 
 // const Dictionary = sequelize.define('dictionary', {
 //   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },

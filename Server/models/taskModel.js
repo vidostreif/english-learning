@@ -1,5 +1,5 @@
 const { sequelize } = require('../db')
-const { DataTypes, Model } = require('Sequelize')
+const { DataTypes, Model } = require('sequelize')
 // const Marker = require('./markerModel')
 const Dictionary = require('./dictionaryModel')
 
