@@ -12,7 +12,8 @@
 .NextBtn {
   transition: 0.3s;
   color: #008b8b;
-  font-size: 2rem;
+  /* font-size: 24px; */
+  font-size: calc(6px + 18 * (100vw / 1440));
   border: 3px solid #a15eb1;
   border-radius: 10px;
   background-color: #ffffff;
@@ -23,7 +24,8 @@
 .NextBtn:hover {
   cursor: pointer;
   color: #a15eb1;
-  font-size: 2rem;
+  /* font-size: 24px; */
+  font-size: calc(6px + 18 * (100vw / 1440));
   border: 3px solid #008b8b;
   background-color: #e5f5f5;
   transition: 0.3s;
@@ -57,10 +59,15 @@
 .Marker {
   position: absolute;
   transform: translate(-50%, -50%);
-  font-size: 20px;
+  /* font-size: 20px; */
+  font-size: calc(6px + 10 * (100vw / 1440));
   border-radius: 10px;
   color: #ffffff;
-  padding: 5px 10px;
+  /* padding: 5px 10px; */
+  padding-top: calc(1px + 4 * (100vw / 1440));
+  padding-bottom: calc(1px + 4 * (100vw / 1440));
+  padding-left: calc(2px + 8 * (100vw / 1440));
+  padding-right: calc(2px + 8 * (100vw / 1440));
 }
 
 .EmptyMarker {
@@ -115,11 +122,31 @@
 .StartWord {
   transition: 0.3s;
   font-size: 20px;
+
   border: 2px solid #008b8b;
   border-radius: 10px;
   color: #e32636;
   padding: 5px 10px;
+
   margin: 5px;
+}
+
+@media (max-width: 426px) {
+  .StartWord {
+    border: 1px solid #008b8b;
+  }
+}
+
+@media (max-width: 1440px) {
+  .StartWord {
+    font-size: calc(8px + 12 * (100vw / 1440));
+    padding-top: calc(2px + 3 * (100vw / 1440));
+    padding-bottom: calc(2px + 3 * (100vw / 1440));
+    padding-left: calc(3px + 7 * (100vw / 1440));
+    padding-right: calc(3px + 7 * (100vw / 1440));
+    margin: calc(1px + 4 * (100vw / 1440));
+    border-radius: calc(3px + 7 * (100vw / 1440));
+  }
 }
 
 .StartWord:hover {
@@ -132,14 +159,19 @@
 .ChoicedWord {
   transition: 0.3s;
   transform: translateY(-10%) scale(1.1);
-  font-size: 20px;
+  /* font-size: 20px; */
+  font-size: calc(6px + 14 * (100vw / 1440));
   cursor: pointer;
   border: 2px solid #6f008b;
   border-radius: 20px;
   color: #e32636;
-  padding: 5px 10px;
+  /* padding: 5px 10px; */
+  padding-top: calc(1px + 4 * (100vw / 1440));
+  padding-bottom: calc(1px + 4 * (100vw / 1440));
+  padding-left: calc(2px + 8 * (100vw / 1440));
+  padding-right: calc(2px + 8 * (100vw / 1440));
   color: #000;
-  margin: 5px;
+  margin: calc(1px + 4 * (100vw / 1440));
 }
 
 .MistakeWord {
@@ -155,12 +187,17 @@
   transform: scale(0.5);
   transition: 300ms;
 
-  font-size: 20px;
+  /* font-size: 20px; */
+  font-size: calc(6px + 14 * (100vw / 1440));
   border: 2px solid #008b8b;
   border-radius: 10px;
   color: #e32636;
-  padding: 5px 10px;
-  margin: 5px;
+  /* padding: 5px 10px; */
+  padding-top: calc(1px + 4 * (100vw / 1440));
+  padding-bottom: calc(1px + 4 * (100vw / 1440));
+  padding-left: calc(2px + 8 * (100vw / 1440));
+  padding-right: calc(2px + 8 * (100vw / 1440));
+  margin: calc(1px + 4 * (100vw / 1440));
 }
 
 .TaskListElement {
