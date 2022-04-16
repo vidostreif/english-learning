@@ -33,11 +33,11 @@ function DivDrag({ id, text, check, choiced, used }) {
 
   //определяем классы текста
   const liClasses = classNames({
-    // Marker: true,
-    MistakeWord: isMistake && !used,
-    FinishWord: used,
-    StartWord: !used && !choiced,
-    ChoicedWord: choiced && !used,
+    DragText: true,
+    MistakeDragText: isMistake && !used,
+    FinishDragText: used,
+    StartDragText: !used && !choiced,
+    ChoicedDragText: choiced && !used,
   })
 
   return (
