@@ -3,7 +3,7 @@ import '../App.css'
 import DivDrag from '../components/DivDrag'
 import DropPlace from '../components/DropPlace'
 import { fetchTask, fetchRandomTask } from '../http/taskAPI'
-import { useSearchParams } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
 
 const DragDrop = (props) => {
@@ -167,9 +167,12 @@ const DragDrop = (props) => {
             )
           })
         ) : (
-          <button onClick={() => nextRandomTask(taskId)} className="NextBtn">
-            next
-          </button>
+          <img
+            src="/btn/random.png"
+            alt="random"
+            onClick={() => nextRandomTask(taskId)}
+            className="NextBtn"
+          ></img>
         )}
       </div>
       <div className="Board" key={keyMarkers}>
@@ -188,6 +191,18 @@ const DragDrop = (props) => {
             />
           )
         })}
+      </div>
+      <div className="BottomNextBtn">
+        <Link to={`/task_list`}>
+          <img src="/btn/list.png" alt="list" className="NextBtn"></img>
+        </Link>
+
+        <img
+          src="/btn/random.png"
+          alt="random"
+          onClick={() => nextRandomTask(taskId)}
+          className="NextBtn"
+        ></img>
       </div>
     </div>
   )
