@@ -1,6 +1,5 @@
 const { sequelize } = require('../db')
 const { DataTypes, Model } = require('sequelize')
-// const Marker = require('./markerModel')
 const Dictionary = require('./dictionaryModel')
 
 class Task extends Model {}
@@ -30,11 +29,5 @@ Task.init(
     },
   }
 )
-
-// const Task = sequelize.define('task', {
-//   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-//   imgUrl: { type: DataTypes.STRING, allowNull: false },
-//   numberOfPasses: { type: DataTypes.INTEGER, defaultValue: 0 },
-// })
 
 module.exports = Task

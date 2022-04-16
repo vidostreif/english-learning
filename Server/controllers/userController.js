@@ -1,4 +1,5 @@
 const ApiError = require('../error/ApiError')
+const bcrypt = require('bcrypt')
 class UserController {
   async registration(req, res) {
     res.json({ message: 'Нужно реализовать авторизацию!' })
