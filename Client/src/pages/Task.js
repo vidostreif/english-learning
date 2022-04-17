@@ -4,8 +4,7 @@ import DivDrag from '../components/DivDrag'
 import DropPlace from '../components/DropPlace'
 import { fetchTask, fetchRandomTask } from '../http/taskAPI'
 import { Link, useSearchParams } from 'react-router-dom'
-import { CSSTransition } from 'react-transition-group'
-import { VHeader } from '../components/Header/VHeader'
+import Loader from '../components/Loader/Loader'
 
 const DragDrop = (props) => {
   const [searchParams, setSearchParams] = useSearchParams() //список параметров из url
@@ -150,24 +149,25 @@ const DragDrop = (props) => {
   return (
     <>
       <div className="Task">
-        {/* <button onClick={() => nextRandomTask(taskId)} className="NextBtn">
-        next
-      </button> */}
         <div className="Words">
-          {!taskIsDone && dictionary.length > 0 ? (
-            dictionary.map((element) => {
-              return (
-                <DivDrag
-                  key={element.id}
-                  text={element.text}
-                  id={element.id}
-                  // filledFunction={() => delItem(element.id)}
-                  check={() => choicedText(element)}
-                  choiced={element.choiced}
-                  used={element.used}
-                />
-              )
-            })
+          {!taskIsDone ? (
+            dictionary.length > 0 ? (
+              dictionary.map((element) => {
+                return (
+                  <DivDrag
+                    key={element.id}
+                    text={element.text}
+                    id={element.id}
+                    // filledFunction={() => delItem(element.id)}
+                    check={() => choicedText(element)}
+                    choiced={element.choiced}
+                    used={element.used}
+                  />
+                )
+              })
+            ) : (
+              <Loader />
+            )
           ) : (
             <img
               src="/btn/random.png"
