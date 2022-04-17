@@ -3,6 +3,7 @@ const Dictionary = require('./dictionaryModel')
 const Task = require('./taskModel')
 const UserRole = require('./userRoleModel')
 const User = require('./userModel')
+const Token = require('./tokenModel')
 
 //Определяем связи
 Task.hasMany(Marker, { as: 'Markers', foreignKey: 'taskId' }) //у одной задачи может быть множество маркеров
@@ -14,10 +15,14 @@ Marker.belongsTo(Dictionary)
 UserRole.hasMany(User, { as: 'User', foreignKey: 'userRoleId' })
 User.belongsTo(UserRole)
 
+User.hasMany(Token, { as: 'Token', foreignKey: 'userId' })
+Token.belongsTo(User)
+
 module.exports = {
   Marker,
   Dictionary,
   Task,
   UserRole,
   User,
+  Token,
 }

@@ -1,7 +1,7 @@
 require('dotenv').config() // инициализация переменных среды
 const express = require('express')
 const { sequelize, openConnection, closeConnection } = require('./db') //для подключения к БД
-// const models = require('./models/taskModel') //модель базы данных
+const cookieParser = require('cookie-parser')
 const cors = require('cors') // для обработки запросов с браузера
 const fileUpload = require('express-fileupload')
 const router = require('./routes/index') // список маршрутов
@@ -10,6 +10,7 @@ const path = require('path')
 const PORT = process.env.PORT || 5000
 
 const app = express()
+app.use(cookieParser()) // для депарсинга cookie
 app.use(cors()) // для обработки запросов с браузера
 app.use(express.json()) // для депарсинга json
 app.use(express.static(path.resolve(__dirname, 'static'))) // для отправки файлов
