@@ -5,6 +5,7 @@ import DisplayImage from '../components/DisplayImage'
 import DropPlaceBasket from '../components/DropPlaceBasket'
 import { createTask, fetchTask } from '../http/taskAPI'
 import { useSearchParams } from 'react-router-dom'
+import { VHeader } from '../components/Header/VHeader'
 
 const Editor = () => {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -97,31 +98,33 @@ const Editor = () => {
   }
 
   return (
-    <div>
-      <DropPlaceBasket active={delMarket} />
-      <DisplayImage setImg={setImg} />
-      <DropPlaceForEditor
-        hideSourceOnDrag={hideSourceOnDrag}
-        urlImg={urlImg}
-        markers={markers}
-        moveBox={moveBox}
-        changeText={changeText}
-        addMarker={addMarker}
-      />
-      <p>
-        <label htmlFor="hideSourceOnDrag">
-          <input
-            id="hideSourceOnDrag"
-            type="checkbox"
-            role="checkbox"
-            checked={hideSourceOnDrag}
-            onChange={toggle}
-          />
-          <small>Hide the source item while dragging</small>
-        </label>
-      </p>
-      <button onClick={setTaskOnServer}>Сохранить</button>
-    </div>
+    <>
+      <div>
+        <DropPlaceBasket active={delMarket} />
+        <DisplayImage setImg={setImg} />
+        <DropPlaceForEditor
+          hideSourceOnDrag={hideSourceOnDrag}
+          urlImg={urlImg}
+          markers={markers}
+          moveBox={moveBox}
+          changeText={changeText}
+          addMarker={addMarker}
+        />
+        <p>
+          <label htmlFor="hideSourceOnDrag">
+            <input
+              id="hideSourceOnDrag"
+              type="checkbox"
+              role="checkbox"
+              checked={hideSourceOnDrag}
+              onChange={toggle}
+            />
+            <small>Hide the source item while dragging</small>
+          </label>
+        </p>
+        <button onClick={setTaskOnServer}>Сохранить</button>
+      </div>
+    </>
   )
 }
 
