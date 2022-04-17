@@ -3,8 +3,9 @@ import '../App.css'
 import DivDrag from '../components/DivDrag'
 import DropPlace from '../components/DropPlace'
 import { fetchTask, fetchRandomTask } from '../http/taskAPI'
-import { useSearchParams } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
+import { VHeader } from '../components/Header/VHeader'
 
 const DragDrop = (props) => {
   const [searchParams, setSearchParams] = useSearchParams() //список параметров из url
@@ -147,49 +148,66 @@ const DragDrop = (props) => {
   }
 
   return (
-    <div className="Task">
-      {/* <button onClick={() => nextRandomTask(taskId)} className="NextBtn">
+    <>
+      <div className="Task">
+        {/* <button onClick={() => nextRandomTask(taskId)} className="NextBtn">
         next
       </button> */}
-      <div className="Words">
-        {!taskIsDone && dictionary.length > 0 ? (
-          dictionary.map((element) => {
+        <div className="Words">
+          {!taskIsDone && dictionary.length > 0 ? (
+            dictionary.map((element) => {
+              return (
+                <DivDrag
+                  key={element.id}
+                  text={element.text}
+                  id={element.id}
+                  // filledFunction={() => delItem(element.id)}
+                  check={() => choicedText(element)}
+                  choiced={element.choiced}
+                  used={element.used}
+                />
+              )
+            })
+          ) : (
+            <img
+              src="/btn/random.png"
+              alt="random"
+              onClick={() => nextRandomTask(taskId)}
+              className="NextBtn"
+            ></img>
+          )}
+        </div>
+        <div className="Board" key={keyMarkers}>
+          <img src={urlImg} alt="1" className="MainImg" />
+          {markers.map((element) => {
             return (
-              <DivDrag
+              <DropPlace
                 key={element.id}
-                text={element.text}
-                id={element.id}
-                // filledFunction={() => delItem(element.id)}
-                check={() => choicedText(element)}
+                correctElement={element}
+                top={element.top}
+                left={element.left}
+                filledFunction={(idText, idMarker) => delItem(idText, idMarker)}
+                check={() => choicedMarker(element)}
                 choiced={element.choiced}
                 used={element.used}
               />
             )
-          })
-        ) : (
-          <button onClick={() => nextRandomTask(taskId)} className="NextBtn">
-            next
-          </button>
-        )}
+          })}
+        </div>
+        <div className="BottomNextBtn">
+          <Link to={`/task_list`}>
+            <img src="/btn/list.png" alt="list" className="NextBtn"></img>
+          </Link>
+
+          <img
+            src="/btn/random.png"
+            alt="random"
+            onClick={() => nextRandomTask(taskId)}
+            className="NextBtn"
+          ></img>
+        </div>
       </div>
-      <div className="Board" key={keyMarkers}>
-        <img src={urlImg} alt="1" className="MainImg" />
-        {markers.map((element) => {
-          return (
-            <DropPlace
-              key={element.id}
-              correctElement={element}
-              top={element.top}
-              left={element.left}
-              filledFunction={(idText, idMarker) => delItem(idText, idMarker)}
-              check={() => choicedMarker(element)}
-              choiced={element.choiced}
-              used={element.used}
-            />
-          )
-        })}
-      </div>
-    </div>
+    </>
   )
 }
 
