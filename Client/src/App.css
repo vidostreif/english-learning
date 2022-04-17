@@ -16,7 +16,7 @@
   background-color: #ffffff89;
   padding: 4px 4px;
   margin: 5px;
-  width: calc(20px + 60 * (100vw / 1440));
+  width: calc(15px + 40 * (100vw / 1440));
   height: calc(15px + 40 * (100vw / 1440));
 }
 
