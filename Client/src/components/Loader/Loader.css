@@ -1,0 +1,59 @@
+:root {
+  --loader__yellow: #feb60a;
+  --loader__red: #ff0062;
+  --loader__blue: #00dbf9;
+  --loader__violet: #da00f7;
+}
+
+.loader__container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.loader__ball {
+  width: 3vw;
+  height: 3vw;
+  border-radius: 100%;
+  margin: 2vw;
+  background-image: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.5) 0%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  animation: bounce 1.5s 0.5s linear infinite;
+}
+.loader__yellow {
+  background-color: var(--loader__yellow);
+}
+
+.loader__red {
+  background-color: var(--loader__red);
+  animation-delay: 0.1s;
+}
+
+.loader__blue {
+  background-color: var(--loader__blue);
+  animation-delay: 0.2s;
+}
+
+.loader__violet {
+  background-color: var(--loader__violet);
+  animation-delay: 0.3s;
+}
+
+@keyframes bounce {
+  0%,
+  50%,
+  100% {
+    transform: scale(1);
+    filter: blur(0px);
+  }
+  25% {
+    transform: scale(0.6);
+    filter: blur(3px);
+  }
+  75% {
+    filter: blur(3px);
+    transform: scale(1.4);
+  }
+}
