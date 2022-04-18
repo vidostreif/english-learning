@@ -40,7 +40,10 @@ class UserController {
 
   async activate(req, res, next) {
     try {
-      res.json({ message: 'Нужно реализовать авторизацию!' })
+      const activationLink = req.params.link
+      console.log(activationLink)
+      await userService.activate(activationLink)
+      return res.redirect(process.env.CLIENT_URL)
     } catch (error) {
       next(ApiError.badRequest(error.message))
     }

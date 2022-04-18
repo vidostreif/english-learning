@@ -6,6 +6,7 @@ const tokenService = require('./tokenService')
 const UserDto = require('../dtos/userDto')
 
 class UserService {
+  //регистрация нового пользователя
   async registration(email, password) {
     const candidate = await User.findOne({
       where: { email: email },
@@ -22,7 +23,10 @@ class UserService {
       activationLink,
     }) //сохранение пользователя
 
-    await mailService.sendActivationMail(email, activationLink) //отправка письма с сылкой на активацию
+    await mailService.sendActivationMail(
+      email,
+      `${process.env.API_URL}/api/user/activate/${activationLink}`
+    ) //отправка письма с сылкой на активацию
 
     const userDto = new UserDto(user) //с помощью dto обрезаем модель до трех полей email id isActivated
     const tokens = tokenService.generateTokens({ ...userDto })
@@ -32,6 +36,18 @@ class UserService {
       ...tokens,
       user: userDto,
     }
+  }
+
+  //активация пользователя
+  async activate(activationLink) {
+    const user = await User.findOne({
+      where: { activationLink },
+    })
+    if (!user) {
+      throw new Error('Некорректная ссылка активации')
+    }
+    user.isActivated = true
+    await user.save()
   }
 }
 
