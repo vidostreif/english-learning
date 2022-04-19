@@ -1,5 +1,5 @@
 const Dictionary = require('../models/dictionaryModel')
-const ApiError = require('../error/ApiError')
+const ApiError = require('../exceptions/ApiError')
 
 class DictionaryController {
   async create(req, res) {

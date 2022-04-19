@@ -1,6 +1,6 @@
 const { Task, Marker, Dictionary } = require('../models/models')
 const { Sequelize, Op } = require('sequelize')
-const ApiError = require('../error/ApiError')
+const ApiError = require('../exceptions/ApiError')
 const uuid = require('uuid')
 const fs = require('fs')
 const path = require('path')
