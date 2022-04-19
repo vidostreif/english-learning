@@ -17,12 +17,13 @@ function DropPlace({
   const [isFilled, setFilled] = useState(false) //заполнили правильно ответ
 
   //метод перетаскивания на маркер
-  const [{ isOver, isDidDrop }, drop] = useDrop(() => ({
+  const [{ isOver, isDidDrop, isActive }, drop] = useDrop(() => ({
     accept: 'div',
     drop: (item, monitor) => addTextToBoard(item.id, item.text, monitor),
     collect: (monitor) => ({
       isOver: !!monitor.isOver(),
       isDidDrop: !!monitor.didDrop(),
+      isActive: monitor.canDrop() && monitor.isOver(),
     }),
     canDrop: (item, monitor) => {
       return true
@@ -78,9 +79,10 @@ function DropPlace({
   const liClasses = classNames({
     Marker: true,
     FillMarker: isFilled,
-    EmptyMarker: !isFilled && !isMistake && !choiced,
+    EmptyMarker: !isFilled && !isMistake && !choiced && !isActive,
     MistakeMarker: isMistake,
     ChoicedMarker: choiced && !isFilled,
+    CanFilledMarker: isActive && !isFilled,
   })
 
   return (
