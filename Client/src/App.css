@@ -12,7 +12,7 @@
 .NextBtn {
   transition: 0.3s;
   border: 3px solid #008b8b00;
-  border-radius: 10px;
+  border-radius: 5px;
   background-color: #ffffff89;
   padding: 4px 4px;
   margin: 5px;
@@ -39,19 +39,6 @@
   position: relative;
   color: #000;
   text-align: center;
-}
-
-.Words {
-  background: #daf0f0c0;
-  position: sticky;
-  top: 0;
-  z-index: 1;
-  width: inherit;
-  display: flex;
-  text-align: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  padding: 7px 0;
 }
 
 .MainImg {
@@ -104,6 +91,11 @@
   animation-delay: 0s;
 }
 
+.CanFilledMarker {
+  border: 2px solid #4857ff;
+  background-color: #ff94487d;
+}
+
 .FillMarker {
   border: 2px solid #008b8b77;
   background-color: #7fff0033;
@@ -129,9 +121,23 @@
   animation-delay: 0s;
 }
 
+.Words {
+  background: #daf0f0c0;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  width: inherit;
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 7px 0;
+}
+
 .DragText {
   font-size: 20px;
   border: 2px solid #008b8b;
+  background-color: #daf0f0c0;
   color: #e32636;
   padding: 5px 10px;
   margin: 5px;
@@ -151,6 +157,7 @@
 
 .StartDragText {
   transition: 0.3s;
+  transform: scale(1);
   border-radius: calc(3px + 7 * (100vw / 1440));
 }
 
@@ -160,6 +167,10 @@
   color: #f87d87;
   cursor: pointer;
   border-radius: calc(5px + 10 * (100vw / 1440));
+}
+
+.DraggingDragText {
+  opacity: 0;
 }
 
 .ChoicedDragText {
@@ -194,22 +205,18 @@
 @keyframes idle {
   from {
     transform: translate(-50%, -50%) scale(1);
-    /* border-style: dashed; */
     border-color: #4857ff;
   }
   20% {
     border-color: #ff9448;
-    /* border-style: solid; */
     transform: translate(-50%, -50%) scale(1.2);
   }
   40% {
     transform: translate(-50%, -50%) scale(1);
-    /* border-style: dashed; */
     border-color: #4857ff;
   }
   100% {
     transform: translate(-50%, -50%) scale(1);
-    /* border-style: dashed; */
     border-color: #4857ff;
   }
 }

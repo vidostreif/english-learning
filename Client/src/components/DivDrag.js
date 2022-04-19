@@ -38,6 +38,7 @@ function DivDrag({ id, text, check, choiced, used }) {
     FinishDragText: used,
     StartDragText: !used && !choiced,
     ChoicedDragText: choiced && !used,
+    DraggingDragText: isDragging,
   })
 
   return (
