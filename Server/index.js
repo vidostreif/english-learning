@@ -11,7 +11,12 @@ const PORT = process.env.PORT || 5000
 
 const app = express()
 app.use(cookieParser()) // для депарсинга cookie
-app.use(cors()) // для обработки запросов с браузера
+app.use(
+  cors({
+    credentials: true,
+    origin: process.env.CLIENT_URL,
+  })
+) // для обработки запросов с браузера
 app.use(express.json()) // для депарсинга json
 app.use(express.static(path.resolve(__dirname, 'static'))) // для отправки файлов
 app.use(fileUpload({})) // для получения файлов

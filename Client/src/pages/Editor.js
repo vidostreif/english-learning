@@ -93,7 +93,7 @@ const Editor = () => {
     setMarkers(newMarkers)
     setTaskId(data.id)
     setSearchParams({ id: data.id })
-    setUrlImg(process.env.REACT_APP_API_URL + data.imgUrl)
+    setUrlImg(`${process.env.REACT_APP_API_URL}/${data.imgUrl}`)
     setImgFile(null)
   }
 

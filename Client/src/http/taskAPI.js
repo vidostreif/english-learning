@@ -1,4 +1,4 @@
-import { $host, $authHost } from './index'
+import { $api } from './index'
 
 export const createTask = async (img, markers, id = null) => {
   const formData = new FormData()
@@ -6,7 +6,7 @@ export const createTask = async (img, markers, id = null) => {
   formData.append('id', id)
   formData.append('markers', JSON.stringify(markers))
 
-  const { data } = await $host.post('api/task', formData, {
+  const { data } = await $api.post('api/task', formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
@@ -15,12 +15,12 @@ export const createTask = async (img, markers, id = null) => {
 }
 
 export const fetchTask = async (id) => {
-  const { data } = await $host.get(`api/task/${id}`)
+  const { data } = await $api.get(`api/task/${id}`)
   return data
 }
 
 export const fetchAllTask = async (page) => {
-  const { data } = await $host.get(`api/task/`, {
+  const { data } = await $api.get(`api/task/`, {
     params: {
       page,
     },
@@ -29,7 +29,7 @@ export const fetchAllTask = async (page) => {
 }
 
 export const fetchRandomTask = async (not_id = null) => {
-  const { data } = await $host.get(`api/task/random`, {
+  const { data } = await $api.get(`api/task/random`, {
     params: {
       not_id,
     },

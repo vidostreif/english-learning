@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { AUTH_ROUTE } from '../../utils/consts'
 import './VHeader.css'
 
 export function VHeader() {
@@ -13,7 +14,7 @@ export function VHeader() {
               className="header__logo__img"
             />
           </Link>
-          <Link to="/login" className="header__login">
+          <Link to={AUTH_ROUTE} className="header__login">
             <img
               src="/user.png"
               alt="иконка пользователя"

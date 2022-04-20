@@ -84,7 +84,7 @@ const DragDrop = (props) => {
     if (searchParams.get('id') != data.id) {
       setSearchParams({ id: data.id })
     }
-    setUrlImg(process.env.REACT_APP_API_URL + data.imgUrl)
+    setUrlImg(`${process.env.REACT_APP_API_URL}/${data.imgUrl}`)
   }
 
   //Если выбрали какой-то текст

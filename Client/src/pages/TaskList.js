@@ -26,7 +26,7 @@ const TaskList = (props) => {
             <Link to={`/task?id=${element.id}`} key={element.id}>
               <img
                 className="TaskListElement"
-                src={process.env.REACT_APP_API_URL + element.imgUrl}
+                src={`${process.env.REACT_APP_API_URL}/${element.imgUrl}`}
                 alt="1"
               />
             </Link>
