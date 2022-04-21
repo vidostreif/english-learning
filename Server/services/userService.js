@@ -37,6 +37,7 @@ class UserService {
 
     return {
       ...tokens,
+      lifetimeAccessToken: tokenService.lifetimeAccessToken,
       user: userDto,
     }
   }
@@ -72,6 +73,7 @@ class UserService {
 
     return {
       ...tokens,
+      lifetimeAccessToken: tokenService.lifetimeAccessToken,
       user: userDto,
     }
   }
@@ -100,6 +102,7 @@ class UserService {
 
     return {
       ...tokens,
+      lifetimeAccessToken: tokenService.lifetimeAccessToken,
       user: userDto,
     }
   }

@@ -1,4 +1,4 @@
-import { $api, refreshToken } from '../http'
+import { $api, apiRefreshToken } from '../http'
 import {
   API_USER_LOGIN,
   API_USER_LOGOUT,
@@ -24,6 +24,6 @@ export default class AuthService {
   }
 
   static async refreshToken() {
-    return refreshToken()
+    return apiRefreshToken()
   }
 }

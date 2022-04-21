@@ -2,13 +2,15 @@ const jwt = require('jsonwebtoken')
 const { Token } = require('../models/models')
 
 class TokenService {
+  lifetimeAccessToken = 1800 //30 минут в секундах
+  lifetimeRefreshToken = '30d' //30 дней
   // генерация новой пары токенов
   generateTokens(payload) {
     const accessToken = jwt.sign(payload, process.env.JWT_ACCESS_SECRET, {
-      expiresIn: '5s',
+      expiresIn: this.lifetimeAccessToken,
     })
     const refreshToken = jwt.sign(payload, process.env.JWT_REFRESH_SECRET, {
-      expiresIn: '10s',
+      expiresIn: this.lifetimeRefreshToken,
     })
 
     return {

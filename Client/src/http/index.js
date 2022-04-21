@@ -7,27 +7,42 @@ const $api = axios.create({
   baseURL: process.env.REACT_APP_API_URL,
 })
 
-const authInterceptor = (config) => {
+const authInterceptor = async (config) => {
+  //проверям, время жизни токена, если он есть
+  //если время жизни (-10 секунд) прошло, то запрашиваем новый токен
+  const token = localStorage.getItem('token')
+  const tokenDeathTime = localStorage.getItem('tokenDeathTime')
+  if (token && tokenDeathTime && +new Date() > tokenDeathTime - 10000) {
+    await apiRefreshToken()
+  }
   config.headers.authorization = `Bearer ${localStorage.getItem('token')}`
   return config
 }
-
+//подстановка токена авторизации в запрос
 $api.interceptors.request.use(authInterceptor)
 
-const refreshToken = async () => {
-  // const response = await $api.get(
-  //   `${process.env.REACT_APP_API_URL}${API_USER_REFRESH}`
-  // )
-  const response = await axios.get(
-    `${process.env.REACT_APP_API_URL}${API_USER_REFRESH}`,
-    { withCredentials: true, credentials: 'include' }
-  )
-  localStorage.setItem('token', response.data.accessToken)
-
-  return response
+const apiRefreshToken = async () => {
+  try {
+    const response = await axios.get(
+      `${process.env.REACT_APP_API_URL}${API_USER_REFRESH}`,
+      { withCredentials: true, credentials: 'include' }
+    )
+    console.log('рефреш токена')
+    localStorage.setItem('token', response.data.accessToken)
+    localStorage.setItem(
+      'tokenDeathTime',
+      +new Date() + response.data.lifetimeAccessToken * 1000
+    )
+    return response
+  } catch (error) {
+    localStorage.removeItem('token')
+    localStorage.removeItem('tokenDeathTime')
+    console.log('Пользователь не авторизован')
+    return null
+  }
 }
 
-//обновление токенов
+//обновление токенов при ошибке авторизации
 $api.interceptors.response.use(
   (config) => {
     return config
@@ -40,15 +55,13 @@ $api.interceptors.response.use(
       !error.config._isRetry
     ) {
       originalRequest._isRetry = true // определяем, что зопрос на обновление токенов уже был
-      try {
-        await refreshToken()
+
+      if (await apiRefreshToken()) {
         return $api.request(originalRequest)
-      } catch (error) {
-        console.log('Пользователь не авторизован')
       }
     }
     throw error
   }
 )
 
-export { $api, refreshToken }
+export { $api, apiRefreshToken }
