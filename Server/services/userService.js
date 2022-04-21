@@ -35,7 +35,6 @@ class UserService {
       userRoleId: userRole.dataValues.id,
     }) //сохранение пользователя
 
-    console.log(user)
     // await mailService.sendActivationMail(
     //   email,
     //   `${process.env.API_URL}/api/user/activate/${activationLink}`
