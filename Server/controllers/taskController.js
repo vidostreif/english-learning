@@ -1,4 +1,4 @@
-const { Task, Marker, Dictionary } = require('../models/models')
+const { Task, Marker, Dictionary } = require('../db/models')
 const { Sequelize, Op } = require('sequelize')
 const ApiError = require('../exceptions/ApiError')
 const uuid = require('uuid')

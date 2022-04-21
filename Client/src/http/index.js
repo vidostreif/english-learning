@@ -21,6 +21,7 @@ const authInterceptor = async (config) => {
 //подстановка токена авторизации в запрос
 $api.interceptors.request.use(authInterceptor)
 
+//обновление токена
 const apiRefreshToken = async () => {
   try {
     const response = await axios.get(

@@ -17,6 +17,7 @@ class UserController {
       })
       return res.json(userData)
     } catch (error) {
+      console.log(error)
       next(error)
     }
   }
@@ -31,6 +32,7 @@ class UserController {
       })
       return res.json(userData)
     } catch (error) {
+      console.log(error)
       next(error)
     }
   }
@@ -42,6 +44,7 @@ class UserController {
       res.clearCookie('refreshToken')
       return res.json(token)
     } catch (error) {
+      console.log(error)
       next(error)
     }
   }
@@ -52,6 +55,7 @@ class UserController {
       await userService.activate(activationLink)
       return res.redirect(process.env.CLIENT_URL)
     } catch (error) {
+      console.log(error)
       next(error)
     }
   }
@@ -66,6 +70,7 @@ class UserController {
       })
       return res.json(userData)
     } catch (error) {
+      console.log(error)
       next(error)
     }
   }
@@ -74,6 +79,7 @@ class UserController {
     try {
       res.json(await userService.getAllUsers())
     } catch (error) {
+      console.log(error)
       next(error)
     }
   }

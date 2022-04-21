@@ -1,4 +1,4 @@
-const { User } = require('../models/models')
+const { User, UserRole } = require('../db/models')
 const bcrypt = require('bcrypt')
 const uuid = require('uuid')
 const mailService = require('./mailService')
@@ -20,16 +20,26 @@ class UserService {
 
     const hashPassword = await bcrypt.hash(password, 3) //создание хеша пароля
     const activationLink = uuid.v4() //генерация случайной строки
+
+    //если пользователь указан админскую почту, то даем ему админские права
+    let role = 'user'
+    if (email === process.env.DB_ADMINISTRATOR_EMAIL) {
+      role = 'administrator'
+    }
+    const userRole = await UserRole.findOne({ where: { name: role } })
+
     const user = await User.create({
-      email: email,
+      email,
       password: hashPassword,
       activationLink,
+      userRoleId: userRole.dataValues.id,
     }) //сохранение пользователя
 
-    await mailService.sendActivationMail(
-      email,
-      `${process.env.API_URL}/api/user/activate/${activationLink}`
-    ) //отправка письма с сылкой на активацию
+    console.log(user)
+    // await mailService.sendActivationMail(
+    //   email,
+    //   `${process.env.API_URL}/api/user/activate/${activationLink}`
+    // ) //отправка письма с сылкой на активацию
 
     const userDto = new UserDto(user) //с помощью dto обрезаем модель до трех полей email id isActivated
     const tokens = tokenService.generateTokens({ ...userDto })
@@ -39,6 +49,7 @@ class UserService {
       ...tokens,
       lifetimeAccessToken: tokenService.lifetimeAccessToken,
       user: userDto,
+      role: role,
     }
   }
 
@@ -55,9 +66,10 @@ class UserService {
   }
 
   async login(email, password) {
-    const user = await User.findOne({
+    const user = await User.scope('role').findOne({
       where: { email: email },
     })
+
     if (!user) {
       throw ApiError.badRequest(`Пользователь с таким email не найден`)
     }
@@ -93,7 +105,7 @@ class UserService {
       throw ApiError.UnauthorizedError()
     }
 
-    const user = await User.findOne({
+    const user = await User.scope('role').findOne({
       where: { id: userData.id },
     })
     const userDto = new UserDto(user)
@@ -108,7 +120,7 @@ class UserService {
   }
 
   async getAllUsers() {
-    const users = await User.findAll()
+    const users = await User.scope('role').findAll()
     return users
   }
 }

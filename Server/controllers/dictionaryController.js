@@ -1,4 +1,4 @@
-const Dictionary = require('../models/dictionaryModel')
+const { Dictionary } = require('../db/models')
 const ApiError = require('../exceptions/ApiError')
 
 class DictionaryController {

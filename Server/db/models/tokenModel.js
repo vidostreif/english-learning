@@ -1,4 +1,4 @@
-const { sequelize } = require('../db')
+const { sequelize } = require('..')
 const { DataTypes, Model } = require('sequelize')
 
 class Token extends Model {}

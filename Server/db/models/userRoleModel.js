@@ -1,9 +1,9 @@
-const { sequelize } = require('../db')
+const { sequelize } = require('..')
 const { DataTypes, Model } = require('sequelize')
 
-class Dictionary extends Model {}
+class UserRole extends Model {}
 
-Dictionary.init(
+UserRole.init(
   {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     name: { type: DataTypes.STRING, unique: true, allowNull: false },
@@ -11,9 +11,9 @@ Dictionary.init(
   {
     // underscored: true,
     sequelize,
-    // tableName: 'dictionary',
-    modelName: 'dictionary',
+    // tableName: 'userRole',
+    modelName: 'userRole',
   }
 )
 
-module.exports = Dictionary
+module.exports = UserRole

@@ -7,6 +7,7 @@ const fileUpload = require('express-fileupload')
 const router = require('./routes/index') // список маршрутов
 const errorHandler = require('./middleware/ErrorHandlingMiddleware')
 const path = require('path')
+const dbPreparation = require('./db/dbPreparation')
 const PORT = process.env.PORT || 5000
 
 const app = express()
@@ -42,6 +43,8 @@ const start = async () => {
       .sync({ alter: true })
       .then(() => {
         console.log('Re-sync db.')
+        dbPreparation()
+        console.log('db Preparation.')
       })
       .catch((e) => {
         console.log('Error re-sync db: ' + e)

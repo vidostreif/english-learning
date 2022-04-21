@@ -1,5 +1,6 @@
-const { sequelize } = require('../db')
+const { sequelize } = require('..')
 const { DataTypes, Model } = require('sequelize')
+const UserRole = require('./userRoleModel')
 
 class User extends Model {}
 
@@ -22,6 +23,16 @@ User.init(
     sequelize,
     // tableName: 'user',
     modelName: 'user',
+    scopes: {
+      role: {
+        include: [
+          {
+            model: UserRole,
+            // where: { active: true },
+          },
+        ],
+      },
+    },
   }
 )
 

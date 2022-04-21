@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken')
-const { Token } = require('../models/models')
+const { Token } = require('../db/models')
 
 class TokenService {
   lifetimeAccessToken = 1800 //30 минут в секундах
