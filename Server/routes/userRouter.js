@@ -9,7 +9,7 @@ router.post(
   body('email').isEmail(), //валидация почты
   body('password')
     .isString()
-    .isLength({ min: 6, max: 32 })
+    .isLength({ min: 8, max: 32 })
     .not()
     .isLowercase()
     .not()

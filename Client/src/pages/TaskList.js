@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import '../App.css'
 import { fetchAllTask } from '../http/taskAPI'
 import { Link } from 'react-router-dom'
-import Loader from '../components/Loader/Loader.js'
+import Loader from '../components/loader/Loader.js'
 
 const TaskList = (props) => {
   // const history = useLocation()

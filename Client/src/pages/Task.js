@@ -4,7 +4,7 @@ import DivDrag from '../components/DivDrag'
 import DropPlace from '../components/DropPlace'
 import { fetchTask, fetchRandomTask } from '../http/taskAPI'
 import { Link, useSearchParams } from 'react-router-dom'
-import Loader from '../components/Loader/Loader'
+import Loader from '../components/loader/Loader'
 
 const DragDrop = (props) => {
   const [searchParams, setSearchParams] = useSearchParams() //список параметров из url

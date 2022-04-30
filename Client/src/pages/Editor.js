@@ -5,7 +5,7 @@ import DisplayImage from '../components/DisplayImage'
 import DropPlaceBasket from '../components/DropPlaceBasket'
 import { createTask, fetchTask } from '../http/taskAPI'
 import { useSearchParams } from 'react-router-dom'
-import { VHeader } from '../components/Header/VHeader'
+import { VHeader } from '../components/header/VHeader'
 
 const Editor = () => {
   const [searchParams, setSearchParams] = useSearchParams()

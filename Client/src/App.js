@@ -3,7 +3,7 @@ import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { BrowserRouter } from 'react-router-dom'
 import AppRouter from './components/AppRouter'
-import { VHeader } from './components/Header/VHeader'
+import { VHeader } from './components/header/VHeader'
 
 function App() {
   return (

@@ -66,12 +66,16 @@ class TaskController {
 
       //Сохраняем слова и привязываем их к маркерам
       for (let index = 0; index < markers.length; index++) {
+        const newText = markers[index].text.trim().toLowerCase()
+
         let text = await Dictionary.findOne({
-          where: { name: markers[index].text },
+          where: { name: newText },
         })
 
         if (!text) {
-          text = new Dictionary({ name: markers[index].text })
+          text = new Dictionary({
+            name: newText,
+          })
           await text.save()
         }
 
