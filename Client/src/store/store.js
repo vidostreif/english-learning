@@ -58,18 +58,21 @@ export default class Store {
     }
   }
 
+  //если в стородке есть токен, то проверяем его валидность
   async checkAuth() {
     this.setAuthLoading(true)
 
-    const response = await AuthService.refreshToken()
-    console.log(response)
-    if (response) {
-      this.setAuth(true)
-      this.setUser(response.data.user)
-    } else {
-      this.setAuth(false)
-      this.setUser({})
-      // console.log(error.response?.data?.message)
+    if (localStorage.getItem('token')) {
+      const response = await AuthService.refreshToken()
+      console.log(response)
+      if (response) {
+        this.setAuth(true)
+        this.setUser(response.data.user)
+      } else {
+        this.setAuth(false)
+        this.setUser({})
+        // console.log(error.response?.data?.message)
+      }
     }
 
     this.setAuthLoading(false)

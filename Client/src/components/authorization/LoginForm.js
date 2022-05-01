@@ -2,86 +2,63 @@ import React, { useContext, useEffect, useState } from 'react'
 import { Context } from '../..'
 import { observer } from 'mobx-react-lite'
 import Loader from '../loader/Loader'
-import AuthService from '../../services/AuthService'
 import Validator from '../../utils/Validator'
+import ErrorList from './ErrorList'
 
 const LoginForm = () => {
+  const [triedToRegister, setTriedToRegister] = useState(false) //пытались зарегестрироваться
   const [email, setEmail] = useState('')
-  const [emailIsCorrect, setEmailIsCorrect] = useState(true)
+  // const [emailIsCorrect, setEmailIsCorrect] = useState(true)
   const [emailErrors, setEmailErrors] = useState([])
   const [password, setPassword] = useState('')
-  const [passwordIsCorrect, setPasswordIsCorrect] = useState(true)
+  // const [passwordIsCorrect, setPasswordIsCorrect] = useState(true)
   const [passwordErrors, setPasswordErrors] = useState([])
   const { store } = useContext(Context)
 
-  //если в стородке есть токен, то проверяем его валидность
+  //проверяем авторизацию
   useEffect(() => {
-    if (localStorage.getItem('token')) {
-      store.checkAuth()
-    }
+    store.checkAuth()
   }, [])
 
   if (store.isAuthLoading) {
     return <Loader />
   }
 
-  const getUsers = async () => {
-    console.log(await AuthService.getUsers())
+  const registration = () => {
+    setTriedToRegister(true)
+    const emailIsChecked = checkEmail(email)
+    const passwordIsChecked = checkPassword(password)
+    if (emailIsChecked && passwordIsChecked) {
+      store.registration(email, password)
+    }
   }
 
   const changeEmail = (newEmail) => {
     setEmail(newEmail)
-    let mistakes = []
-    if (!Validator.isEmail(newEmail)) {
-      mistakes.push(`Введите корректный e-mail`)
+    if (triedToRegister) {
+      checkEmail(newEmail)
     }
-    setEmailIsCorrect(mistakes.length === 0)
-    setEmailErrors(mistakes)
   }
 
   const changePassword = (newPassword) => {
     setPassword(newPassword)
-    const passLength = { min: 8, max: 32 }
-    let mistakes = []
-    if (!Validator.isLength(newPassword, passLength)) {
-      mistakes.push(
-        `Длинна пароля должна быть ${passLength.min}-${passLength.max} символов`
-      )
+    if (triedToRegister) {
+      checkPassword(newPassword)
     }
-    if (!Validator.isHasUppercase(newPassword)) {
-      mistakes.push(`Пароль должен содержать заглавную букву`)
-    }
-    if (!Validator.isHasLowercase(newPassword)) {
-      mistakes.push(`Пароль должен содержать строчную букву`)
-    }
-    if (!Validator.isHasNumeric(newPassword)) {
-      mistakes.push(`Пароль должен содержать цифру`)
-    }
+  }
 
+  const checkEmail = (newEmail) => {
+    const mistakes = Validator.checkEmail(newEmail)
+    setEmailErrors(mistakes)
+    // setEmailIsCorrect(mistakes.length === 0)
+    return mistakes.length === 0
+  }
+
+  const checkPassword = (newPassword) => {
+    const mistakes = Validator.checkPassword(newPassword)
     setPasswordErrors(mistakes)
-    setPasswordIsCorrect(mistakes.length === 0)
-  }
-
-  let ErrorEmail = <ul className="ErrorValidation"></ul>
-  if (!emailIsCorrect) {
-    ErrorEmail = (
-      <ul className="ErrorValidation">
-        {emailErrors.map((item) => (
-          <li>{item}</li>
-        ))}
-      </ul>
-    )
-  }
-
-  let ErrorPassword = <ul className="ErrorValidation"></ul>
-  if (!passwordIsCorrect) {
-    ErrorPassword = (
-      <ul className="ErrorValidation">
-        {passwordErrors.map((item) => (
-          <li>{item}</li>
-        ))}
-      </ul>
-    )
+    // setPasswordIsCorrect(mistakes.length === 0)
+    return mistakes.length === 0
   }
 
   if (!store.isAuth) {
@@ -95,7 +72,7 @@ const LoginForm = () => {
           type="email"
           placeholder="Email"
         />
-        {ErrorEmail}
+        <ErrorList list={emailErrors} />
 
         <input
           onChange={(e) => changePassword(e.target.value)}
@@ -103,12 +80,10 @@ const LoginForm = () => {
           type="password"
           placeholder="Password"
         />
-        {ErrorPassword}
+        <ErrorList list={passwordErrors} />
 
         <button onClick={() => store.login(email, password)}>Войти</button>
-        <button onClick={() => store.registration(email, password)}>
-          Зарегестрироваться
-        </button>
+        <button onClick={registration}>Зарегестрироваться</button>
       </div>
     )
   } else {
@@ -121,7 +96,6 @@ const LoginForm = () => {
             : `Пользователь не активирован`}
         </h1>
         <button onClick={() => store.logout()}>Выйти</button>
-        <button onClick={() => getUsers()}>Получить пользователей</button>
       </div>
     )
   }

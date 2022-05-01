@@ -28,12 +28,14 @@ class UserService {
     }
     const userRole = await UserRole.findOne({ where: { name: role } })
 
-    const user = await User.create({
+    let user = await User.scope('role').create({
       email,
       password: hashPassword,
       activationLink,
       userRoleId: userRole.dataValues.id,
     }) //сохранение пользователя
+
+    user = await User.scope('role').findOne({ where: { id: user.id } })
 
     // await mailService.sendActivationMail(
     //   email,
@@ -48,7 +50,7 @@ class UserService {
       ...tokens,
       lifetimeAccessToken: tokenService.lifetimeAccessToken,
       user: userDto,
-      role: role,
+      // role: role,
     }
   }
 
