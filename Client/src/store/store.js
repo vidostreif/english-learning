@@ -1,5 +1,6 @@
 import { makeAutoObservable } from 'mobx'
 import AuthService from '../services/AuthService'
+import toast from 'react-hot-toast'
 
 export default class Store {
   user = {}
@@ -25,53 +26,56 @@ export default class Store {
   async login(email, password) {
     try {
       const response = await AuthService.login(email, password)
-      console.log(response)
-      localStorage.setItem('token', response.data.accessToken)
+      toast(`И снова привет ${response.data.user.email}`, {
+        icon: '🖐',
+      })
       this.setAuth(true)
       this.setUser(response.data.user)
     } catch (error) {
-      console.log(error.response?.data?.message)
+      toast.error(error.response?.data?.message)
     }
   }
 
   async registration(email, password) {
     try {
       const response = await AuthService.registration(email, password)
-      console.log(response)
-      localStorage.setItem('token', response.data.accessToken)
+      toast(`Вы успешно зарегестрированы ${response.data.user.email}`, {
+        icon: '🎉',
+      })
       this.setAuth(true)
       this.setUser(response.data.user)
     } catch (error) {
-      console.log(error.response?.data?.message)
+      toast.error(error.response?.data?.message)
     }
   }
 
   async logout() {
     try {
       const response = await AuthService.logout()
-      console.log(response)
+      toast(`Досвидания!`, {
+        icon: '👋',
+      })
       localStorage.removeItem('token')
+      localStorage.removeItem('tokenDeathTime')
       this.setAuth(false)
       this.setUser({})
     } catch (error) {
-      console.log(error.response?.data?.message)
+      toast.error(error.response?.data?.message)
     }
   }
 
-  //если в стородке есть токен, то проверяем его валидность
+  //если в стороке есть токен, то проверяем его валидность
   async checkAuth() {
     this.setAuthLoading(true)
 
     if (localStorage.getItem('token')) {
       const response = await AuthService.refreshToken()
-      console.log(response)
       if (response) {
         this.setAuth(true)
         this.setUser(response.data.user)
       } else {
         this.setAuth(false)
         this.setUser({})
-        // console.log(error.response?.data?.message)
       }
     }
 

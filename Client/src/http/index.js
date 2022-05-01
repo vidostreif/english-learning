@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { API_USER_REFRESH } from '../utils/consts'
+import toast from 'react-hot-toast'
 
 const $api = axios.create({
   withCredentials: true,
@@ -7,6 +8,7 @@ const $api = axios.create({
   baseURL: process.env.REACT_APP_API_URL,
 })
 
+//перехват запроса на сервер
 const authInterceptor = async (config) => {
   //проверям, время жизни токена, если он есть
   //если время жизни (-10 секунд) прошло, то запрашиваем новый токен
@@ -21,31 +23,33 @@ const authInterceptor = async (config) => {
 //подстановка токена авторизации в запрос
 $api.interceptors.request.use(authInterceptor)
 
-//обновление токена
+//запрос на обновление токена
 const apiRefreshToken = async () => {
   try {
     const response = await axios.get(
       `${process.env.REACT_APP_API_URL}${API_USER_REFRESH}`,
       { withCredentials: true, credentials: 'include' }
     )
-    console.log('рефреш токена')
-    localStorage.setItem('token', response.data.accessToken)
-    localStorage.setItem(
-      'tokenDeathTime',
-      +new Date() + response.data.lifetimeAccessToken * 1000
-    )
     return response
   } catch (error) {
     localStorage.removeItem('token')
     localStorage.removeItem('tokenDeathTime')
-    console.log('Пользователь не авторизован')
+    toast.error('Ошибка авторизации!')
     return null
   }
 }
 
-//обновление токенов при ошибке авторизации
+//обновление токенов при перехвате ответа
 $api.interceptors.response.use(
   (config) => {
+    if (config.data?.accessToken) {
+      console.log(config.data?.accessToken)
+      localStorage.setItem('token', config.data.accessToken)
+      localStorage.setItem(
+        'tokenDeathTime',
+        +new Date() + config.data.lifetimeAccessToken * 1000
+      )
+    }
     return config
   },
   async (error) => {

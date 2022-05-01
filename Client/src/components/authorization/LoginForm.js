@@ -4,6 +4,7 @@ import { observer } from 'mobx-react-lite'
 import Loader from '../loader/Loader'
 import Validator from '../../utils/Validator'
 import ErrorList from './ErrorList'
+import toast from 'react-hot-toast'
 
 const LoginForm = () => {
   const [triedToRegister, setTriedToRegister] = useState(false) //пытались зарегестрироваться
@@ -30,6 +31,8 @@ const LoginForm = () => {
     const passwordIsChecked = checkPassword(password)
     if (emailIsChecked && passwordIsChecked) {
       store.registration(email, password)
+    } else {
+      toast.error('В форме регистрации есть ошибки')
     }
   }
 
