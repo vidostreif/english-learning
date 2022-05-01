@@ -5,7 +5,6 @@ import DisplayImage from '../components/DisplayImage'
 import DropPlaceBasket from '../components/DropPlaceBasket'
 import { createTask, fetchTask } from '../http/taskAPI'
 import { useSearchParams } from 'react-router-dom'
-import { VHeader } from '../components/header/VHeader'
 
 const Editor = () => {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -18,6 +17,7 @@ const Editor = () => {
     if (taskId) {
       getTaskFromServer(taskId)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const moveBox = useCallback(
@@ -50,7 +50,7 @@ const Editor = () => {
   const delMarket = (item) => {
     setMarkers((prev) =>
       prev.filter((mark, index) => {
-        return index != item.id
+        return index !== item.id
       })
     )
   }
@@ -115,7 +115,6 @@ const Editor = () => {
             <input
               id="hideSourceOnDrag"
               type="checkbox"
-              role="checkbox"
               checked={hideSourceOnDrag}
               onChange={toggle}
             />

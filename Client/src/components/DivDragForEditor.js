@@ -39,12 +39,11 @@ export const DivDragForEditor = ({
     <div
       ref={drag}
       style={{ ...style, left: left + '%', top: top + '%' }}
-      role="Box"
+      // role="Box"
     >
       <input
         id="id"
         type="text"
-        role="text"
         value={children}
         size="10"
         onChange={onChange}

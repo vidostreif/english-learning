@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useDrop } from 'react-dnd'
 import classNames from 'classnames'
 
@@ -17,6 +17,7 @@ function DropPlace({
   const [isFilled, setFilled] = useState(false) //заполнили правильно ответ
 
   //метод перетаскивания на маркер
+  // eslint-disable-next-line no-unused-vars
   const [{ isOver, isDidDrop, isActive }, drop] = useDrop(() => ({
     accept: 'div',
     drop: (item, monitor) => addTextToBoard(item.id, item.text, monitor),
@@ -48,6 +49,7 @@ function DropPlace({
         setMistake(true)
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [newInerElement])
 
   //нажали на маркер

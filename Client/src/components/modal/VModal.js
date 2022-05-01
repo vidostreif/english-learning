@@ -14,6 +14,8 @@ const VModal = ({
       case 'Escape':
         onClose()
         break
+      default:
+        break
     }
   }
 

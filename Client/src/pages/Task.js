@@ -18,12 +18,13 @@ const DragDrop = (props) => {
   const [keyMarkers, setKeyMarkers] = useState(1) // ключи для маркеров и слов
 
   useEffect(() => {
-    if (searchParams.get('id') != taskId) {
+    if (searchParams.get('id') !== taskId) {
       getTaskFromServer(searchParams.get('id'))
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams])
 
-  //удаление элемента из массива
+  //пометка маркеров как использованные
   const delItem = (idText, idMarker) => {
     // setMarkers((prev) => prev.filter((item) => item.id !== id))
     setDictionary((prevDictionary) =>
@@ -81,7 +82,7 @@ const DragDrop = (props) => {
     setMarkers(newMarkers)
     setKeyMarkers((prevKey) => prevKey + 100)
     setTaskId(data.id)
-    if (searchParams.get('id') != data.id) {
+    if (searchParams.get('id') !== data.id) {
       setSearchParams({ id: data.id })
     }
     setUrlImg(`${process.env.REACT_APP_API_URL}/${data.imgUrl}`)

@@ -19,7 +19,7 @@ const LoginForm = () => {
   //проверяем авторизацию
   useEffect(() => {
     store.checkAuth()
-  }, [])
+  }, [store])
 
   if (store.isAuthLoading) {
     return <Loader />

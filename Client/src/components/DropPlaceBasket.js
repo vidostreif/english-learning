@@ -8,6 +8,7 @@ const styles = {
 }
 
 function DropPlaceBasket({ active }) {
+  // eslint-disable-next-line no-unused-vars
   const [{ isOver, isDidDrop }, drop] = useDrop(() => ({
     accept: 'divEditor',
     drop: (item, monitor) => active(item),

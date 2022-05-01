@@ -51,7 +51,7 @@ export default class Store {
 
   async logout() {
     try {
-      const response = await AuthService.logout()
+      await AuthService.logout()
       toast(`Досвидания!`, {
         icon: '👋',
       })

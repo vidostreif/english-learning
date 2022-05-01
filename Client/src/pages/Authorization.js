@@ -1,5 +1,4 @@
-import React, { useContext, useEffect } from 'react'
-import { Context } from '..'
+import React from 'react'
 import LoginForm from '../components/authorization/LoginForm'
 
 const Authorization = (props) => {
