@@ -5,6 +5,7 @@ import DropPlace from '../components/DropPlace'
 import { fetchTask, fetchRandomTask } from '../http/taskAPI'
 import { Link, useSearchParams } from 'react-router-dom'
 import Loader from '../components/loader/Loader'
+import FiveStars from '../components/fiveStars/FiveStars'
 
 const DragDrop = (props) => {
   const [searchParams, setSearchParams] = useSearchParams() //список параметров из url
@@ -150,6 +151,7 @@ const DragDrop = (props) => {
   return (
     <>
       <div className="Task">
+        <FiveStars />
         <div className="Words">
           {!taskIsDone ? (
             dictionary.length > 0 ? (
