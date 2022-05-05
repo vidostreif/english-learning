@@ -1,8 +1,9 @@
 import { $api } from './index'
 
-export const createTask = async (img, markers, id = null) => {
+export const createTask = async (img, markers, complexity, id = null) => {
   const formData = new FormData()
   formData.append('img', img)
+  formData.append('complexity', complexity)
   formData.append('id', id)
   formData.append('markers', JSON.stringify(markers))
 

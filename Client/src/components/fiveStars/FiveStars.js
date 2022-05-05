@@ -3,12 +3,14 @@ import './FiveStars.css'
 
 const FiveStars = ({
   incomingRatingValue = 0,
-  showRatingValue = true,
+  showRatingValue = false,
   active = true,
   calBack,
 }) => {
   const ratingActive = useRef(null)
-  const [ratingValue, setRatingValue] = useState(incomingRatingValue)
+  const [ratingValue, setRatingValue] = useState(
+    incomingRatingValue > 100 ? 100 : incomingRatingValue
+  )
   const [overRatingValue, setOverRatingValue] = useState(ratingValue)
 
   useEffect(() => {

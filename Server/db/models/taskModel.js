@@ -9,6 +9,7 @@ Task.init(
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     imgUrl: { type: DataTypes.STRING, allowNull: false },
     numberOfPasses: { type: DataTypes.INTEGER, defaultValue: 0 },
+    complexity: { type: DataTypes.INTEGER, defaultValue: 0 }, //оценка сложности задания
   },
   {
     // underscored: true,

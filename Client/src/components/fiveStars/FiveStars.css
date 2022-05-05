@@ -1,8 +1,9 @@
 .rating {
   display: flex;
-  align-items: flex-end;
-  font-size: 40px;
-  line-height: 0.75;
+  align-items: center;
+  font-size: 30px;
+  padding: 0px 0px 4px 0px;
+  /* line-height: 0.75; */
 }
 .rating__body {
   position: relative;
@@ -10,7 +11,7 @@
 .rating__body::before {
   content: '★★★★★';
   display: block;
-  color: #00612f;
+  color: #ffffff;
 }
 .rating__active {
   position: absolute;
@@ -27,7 +28,7 @@
   height: 100%;
   top: 0;
   left: 0;
-  color: #ffd300;
+  color: #fdd835;
 }
 .rating__items {
   display: flex;
@@ -43,7 +44,9 @@
   opacity: 0;
 }
 .rating__value {
-  font-size: 50%;
-  line-height: 1;
-  padding: 0px 0px 0px 10px;
+  /* font-size: 25px; */
+  font-size: 80%;
+  /* line-height: 1; */
+  padding: 0px 0px 0px 5px;
+  color: #fdd835;
 }

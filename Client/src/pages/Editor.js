@@ -5,11 +5,13 @@ import DisplayImage from '../components/DisplayImage'
 import DropPlaceBasket from '../components/DropPlaceBasket'
 import { createTask, fetchTask } from '../http/taskAPI'
 import { useSearchParams } from 'react-router-dom'
+import toast from 'react-hot-toast'
 
 const Editor = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const [taskId, setTaskId] = useState(searchParams.get('id'))
   const [markers, setMarkers] = useState([])
+  const [complexity, setComplexity] = useState(1)
   const [urlImg, setUrlImg] = useState()
   const [imgFile, setImgFile] = useState()
 
@@ -33,6 +35,9 @@ const Editor = () => {
     [markers, setMarkers]
   )
 
+  const changeComplexity = (event) => {
+    setComplexity(event.target.value)
+  }
   const changeText = (id, text) => {
     setMarkers(
       update(markers, {
@@ -67,12 +72,14 @@ const Editor = () => {
   )
 
   const setTaskOnServer = () => {
-    createTask(imgFile, markers, taskId)
+    createTask(imgFile, markers, complexity, taskId)
       .then((data) => {
         setTaskParam(data)
+        // console.log(data)
+        toast.success('Задание сохранено!')
       })
       .catch((e) => {
-        console.log(e)
+        toast.error(e)
       })
   }
 
@@ -90,6 +97,7 @@ const Editor = () => {
         text: element.dictionary.name,
       }
     })
+    setComplexity(data.complexity)
     setMarkers(newMarkers)
     setTaskId(data.id)
     setSearchParams({ id: data.id })
@@ -101,6 +109,22 @@ const Editor = () => {
     <>
       <div>
         <DropPlaceBasket active={delMarket} />
+        <label>
+          Complexity:
+          <select
+            id="complexity"
+            name="complexity"
+            value={complexity}
+            onChange={changeComplexity}
+          >
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </select>
+        </label>
+
         <DisplayImage setImg={setImg} />
         <DropPlaceForEditor
           hideSourceOnDrag={hideSourceOnDrag}

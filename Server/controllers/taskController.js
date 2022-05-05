@@ -9,9 +9,10 @@ const { log } = require('console')
 class TaskController {
   async create(req, res, next) {
     try {
-      let { markers, id } = req.body
+      let { complexity, markers, id } = req.body
       id = JSON.parse(id)
       markers = JSON.parse(markers)
+      complexity = Number.parseInt(JSON.parse(complexity))
 
       let img = null
       if (req.files) {
@@ -26,6 +27,7 @@ class TaskController {
         task = await Task.findOne({
           where: { id: id },
         })
+        task.complexity = complexity
 
         if (img && task.imgUrl !== img.name) {
           //Если названия картинок не совпадают, то
@@ -42,16 +44,16 @@ class TaskController {
           let fileName = uuid.v4() + '.jpg'
           img.mv(path.resolve(__dirname, '..', 'static', fileName))
           task.imgUrl = fileName
-          await task.save()
         }
       } else {
         //Если нет id задачи то создаем новую
         let fileName = uuid.v4() + '.jpg'
         img.mv(path.resolve(__dirname, '..', 'static', fileName))
 
-        task = new Task({ imgUrl: fileName })
-        await task.save()
+        task = new Task({ imgUrl: fileName, complexity })
       }
+
+      await task.save()
 
       //удаляем старые маркеры в БД
       await Marker.destroy({
