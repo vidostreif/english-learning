@@ -10,8 +10,12 @@
 }
 .rating__body::before {
   content: '★★★★★';
+  background-color: #cecece;
+  background-clip: text;
+  color: transparent;
+  text-shadow: rgba(255, 255, 255, 0.7) 0px 1px 1px;
   display: block;
-  color: #ffffff;
+  /* color: #ffffff; */
 }
 .rating__active {
   position: absolute;

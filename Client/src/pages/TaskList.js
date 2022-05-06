@@ -30,16 +30,14 @@ const TaskList = (props) => {
               key={element.id}
               className="TaskListElement"
             >
-              <div className="TaskListElement__div">
-                <img
-                  className="TaskListElement__img"
-                  src={`${process.env.REACT_APP_API_URL}/${element.imgUrl}`}
-                  alt="1"
-                />
-                <div className="TaskList__fiveStars">
-                  <FiveStars active={false} incomingRatingValue={10 * i} />
-                  <DifficultyDisplay complexity={element.complexity} />
-                </div>
+              <img
+                className="TaskListElement__img"
+                src={`${process.env.REACT_APP_API_URL}/${element.imgUrl}`}
+                alt="1"
+              />
+              <div className="TaskList__fiveStars">
+                <FiveStars active={false} incomingRatingValue={10 * i} />
+                <DifficultyDisplay complexity={element.complexity} />
               </div>
             </Link>
           )

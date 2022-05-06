@@ -11,6 +11,14 @@ code {
     monospace;
 }
 
+body {
+  background-color: #f1f4f9;
+}
+
+a {
+  text-decoration: none;
+}
+
 /* Box sizing rules */
 *,
 *::before,
@@ -65,10 +73,10 @@ a:not([class]) {
 }
 
 /* Make images easier to work with */
-/* img {
+img {
   max-width: 100%;
   display: block;
-} */
+}
 
 /* Natural flow and rhythm in articles by default */
 article > * + * {

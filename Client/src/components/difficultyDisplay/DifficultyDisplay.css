@@ -1,7 +1,10 @@
 .DifficultyDisplay {
-  margin: 5px;
+  padding: 5px;
+  border-radius: 50px;
+  /* margin: 5px; */
   display: flex;
   align-items: flex-end;
+  /* background: #55575142; */
 }
 
 .DifficultyDisplay__Line1 {
