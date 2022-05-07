@@ -1,4 +1,4 @@
-import { $api, apiRefreshToken } from '../API'
+import { $api, apiRefreshToken } from '../api'
 import {
   API_USER_LOGIN,
   API_USER_LOGOUT,

@@ -1,4 +1,4 @@
-import { $api } from '../API/index'
+import { $api } from '../api'
 
 export const addTaskRating = async (taskId, rating) => {
   // const formData = new FormData()

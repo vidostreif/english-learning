@@ -1,5 +1,5 @@
 import { makeAutoObservable } from 'mobx'
-import AuthService from '../services/authService'
+import AuthService from '../services/authService1'
 import toast from 'react-hot-toast'
 
 export default class Store {

@@ -1,4 +1,4 @@
-import { $api } from '../http'
+import { $api } from '../api'
 import { USER_ROUTE } from '../utils/consts'
 
 export default class UserServices {
