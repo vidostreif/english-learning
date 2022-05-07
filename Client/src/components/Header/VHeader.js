@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import LoginForm from '../authorization/LoginForm'
 import VModal from '../modal/VModal'
-import './VHeader.css'
+import './VHeader.scss'
 
 export function VHeader() {
   const [isModal, setModal] = useState(false)

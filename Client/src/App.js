@@ -1,4 +1,4 @@
-import './App.css'
+import './App.scss'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { BrowserRouter } from 'react-router-dom'

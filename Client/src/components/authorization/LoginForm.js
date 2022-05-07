@@ -5,6 +5,7 @@ import Loader from '../loader/Loader'
 import Validator from '../../utils/Validator'
 import ErrorList from './ErrorList'
 import toast from 'react-hot-toast'
+import './LoginForm.scss'
 
 const LoginForm = () => {
   const [triedToRegister, setTriedToRegister] = useState(false) //пытались зарегестрироваться

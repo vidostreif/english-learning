@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import './VModal.css'
+import './VModal.scss'
 
 const VModal = ({
   visible = false,

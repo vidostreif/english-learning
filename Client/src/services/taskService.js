@@ -1,4 +1,4 @@
-import { $api } from './index'
+import { $api } from '../API/index'
 
 export const createTask = async (img, markers, complexity, id = null) => {
   const formData = new FormData()

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import './FiveStars.css'
+import './FiveStars.scss'
 
 const FiveStars = ({
   incomingRatingValue = 0,
@@ -34,7 +34,9 @@ const FiveStars = ({
     if (active) {
       setOverRatingValue(rating)
       setRatingValue(rating)
-      // calBack(rating)
+      if (calBack) {
+        calBack(rating)
+      }
     }
   }
 

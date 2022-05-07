@@ -1,5 +1,5 @@
 import React from 'react'
-import './DifficultyDisplay.css'
+import './DifficultyDisplay.scss'
 
 const DifficultyDisplay = ({ complexity = 0 }) => {
   return (

@@ -1,4 +1,4 @@
-const { UserRole } = require('../models')
+const { UserRole, TaskRating, User, Task } = require('../models')
 
 //функция предварительного заполнения БД
 module.exports = async function dbPreparation(params) {

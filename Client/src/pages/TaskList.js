@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import '../App.css'
-import { fetchAllTask } from '../http/taskAPI'
+// import '../App.css'
+import { fetchAllTask } from '../services/taskService'
 import { Link } from 'react-router-dom'
 import Loader from '../components/loader/Loader.js'
 import FiveStars from '../components/fiveStars/FiveStars'

@@ -3,7 +3,7 @@ import { DropPlaceForEditor } from '../components/DropPlaceForEditor'
 import update from 'immutability-helper'
 import DisplayImage from '../components/DisplayImage'
 import DropPlaceBasket from '../components/DropPlaceBasket'
-import { createTask, fetchTask } from '../http/taskAPI'
+import { createTask, fetchTask } from '../services/taskService'
 import { useSearchParams } from 'react-router-dom'
 import toast from 'react-hot-toast'
 
