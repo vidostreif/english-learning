@@ -115,9 +115,12 @@ class TaskController {
   }
 
   async getRandom(req, res) {
-    const { not_id } = req.query
+    const { not_id, count } = req.query
 
-    let param = { order: Sequelize.literal('random()') }
+    let param = {
+      order: Sequelize.literal('random()'),
+      limit: count ? count : 1,
+    }
     if (not_id) {
       param.where = {
         id: {
@@ -126,10 +129,10 @@ class TaskController {
       }
     }
 
-    const resu = await Task.scope('includeMarkers').findOne({
+    const resu = await Task.scope('includeMarkers').findAll({
       ...param,
     })
-    res.json(resu.dataValues)
+    res.json(resu)
   }
 }
 

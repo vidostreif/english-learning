@@ -1,20 +1,16 @@
 import React, { useState, useEffect } from 'react'
-import { fetchAllTask } from '../services/taskService'
-import Loader from '../components/loader/Loader.js'
-import TaskCard from '../components/taskCard/TaskCard'
+import { fetchRandomTask } from '../../services/taskService'
+import Loader from '../loader/Loader.js'
+import TaskCard from '../taskCard/TaskCard'
 
-const TaskList = (props) => {
+const RandomTaskList = ({ count, not_id = null }) => {
   const [taskList, setTaskList] = useState([])
 
   useEffect(() => {
-    getTasksFromServer(1)
-  }, [])
-
-  const getTasksFromServer = (page) => {
-    fetchAllTask(page).then((data) => {
+    fetchRandomTask(count, not_id).then((data) => {
       setTaskList(data)
     })
-  }
+  }, [count, not_id])
 
   return (
     <div className="TaskList">
@@ -29,4 +25,4 @@ const TaskList = (props) => {
   )
 }
 
-export default TaskList
+export default RandomTaskList

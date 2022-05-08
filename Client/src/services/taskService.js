@@ -29,10 +29,11 @@ export const fetchAllTask = async (page) => {
   return data
 }
 
-export const fetchRandomTask = async (not_id = null) => {
+export const fetchRandomTask = async (count, not_id = null) => {
   const { data } = await $api.get(`api/task/random`, {
     params: {
       not_id,
+      count,
     },
   })
   return data

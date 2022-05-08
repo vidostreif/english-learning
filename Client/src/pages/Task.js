@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react'
-// import '../App.css'
+import React, { useState, useEffect, useContext } from 'react'
+import { Context } from '../'
+import { observer } from 'mobx-react-lite'
 import DivDrag from '../components/DivDrag'
 import DropPlace from '../components/DropPlace'
 import { fetchTask, fetchRandomTask } from '../services/taskService'
@@ -7,6 +8,7 @@ import { Link, useSearchParams } from 'react-router-dom'
 import Loader from '../components/loader/Loader'
 import FiveStars from '../components/fiveStars/FiveStars'
 import { addTaskRating, fetchTaskRating } from '../services/taskRatingService'
+import RandomTaskList from '../components/randomTaskList/RandomTaskList'
 
 const DragDrop = (props) => {
   const [searchParams, setSearchParams] = useSearchParams() //список параметров из url
@@ -16,13 +18,22 @@ const DragDrop = (props) => {
   const [curMarker, setCurMarker] = useState() //маркер по которому кликнули
   const [taskIsDone, setTaskIsDone] = useState(false) // задание выполнено
   const [taskId, setTaskId] = useState() // id текущего задания
-  const [taskRating, setTaskRating] = useState(0)
+  const [taskRating, setTaskRating] = useState(0) //оценка пользователя
   const [urlImg, setUrlImg] = useState() // картинка текущего задания
   const [keyMarkers, setKeyMarkers] = useState(1) // ключи для маркеров и слов
+  const { store } = useContext(Context)
 
   useEffect(() => {
     if (searchParams.get('id') !== taskId) {
+      //запрашиваем задание с сервера
       getTaskFromServer(searchParams.get('id'))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams])
+
+  useEffect(() => {
+    //если авторизованы, запрашиваем оценку пользователя
+    if (store.isAuth) {
       fetchTaskRating(searchParams.get('id')).then((data) => {
         if (data) {
           setTaskRating(data.rating)
@@ -30,9 +41,10 @@ const DragDrop = (props) => {
           setTaskRating(0)
         }
       })
+    } else {
+      setTaskRating(0)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams])
+  }, [searchParams, store.isAuth])
 
   //пометка маркеров как использованные
   const delItem = (idText, idMarker) => {
@@ -191,12 +203,15 @@ const DragDrop = (props) => {
                   addTaskRating(taskId, rating)
                 }}
               />
-              <img
-                src="/btn/random.png"
-                alt="random"
-                onClick={() => nextRandomTask(taskId)}
-                className="NextBtn"
-              ></img>
+              <div>
+                <RandomTaskList count="3" not_id={taskId} />
+                <img
+                  src="/btn/random.png"
+                  alt="random"
+                  onClick={() => nextRandomTask(taskId)}
+                  className="NextBtn"
+                ></img>
+              </div>
             </div>
           )}
         </div>
@@ -221,7 +236,6 @@ const DragDrop = (props) => {
           <Link to={`/task_list`}>
             <img src="/btn/list.png" alt="list" className="NextBtn"></img>
           </Link>
-
           <img
             src="/btn/random.png"
             alt="random"
@@ -234,4 +248,4 @@ const DragDrop = (props) => {
   )
 }
 
-export default DragDrop
+export default observer(DragDrop)
