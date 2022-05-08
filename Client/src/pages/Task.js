@@ -24,7 +24,7 @@ const DragDrop = (props) => {
   const { store } = useContext(Context)
 
   useEffect(() => {
-    if (searchParams.get('id') !== taskId) {
+    if (+searchParams.get('id') !== taskId) {
       //запрашиваем задание с сервера
       getTaskFromServer(searchParams.get('id'))
     }
@@ -103,7 +103,7 @@ const DragDrop = (props) => {
     setMarkers(newMarkers)
     setKeyMarkers((prevKey) => prevKey + 100)
     setTaskId(data.id)
-    if (searchParams.get('id') !== data.id) {
+    if (+searchParams.get('id') !== data.id) {
       setSearchParams({ id: data.id })
     }
     setUrlImg(`${process.env.REACT_APP_API_URL}/${data.imgUrl}`)
