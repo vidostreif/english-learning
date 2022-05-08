@@ -3,7 +3,7 @@ import './FiveStars.scss'
 
 const FiveStars = ({
   incomingRatingValue = 0,
-  showRatingValue = false,
+  showRatingValue = true,
   active = true,
   calBack,
 }) => {
@@ -12,6 +12,11 @@ const FiveStars = ({
     incomingRatingValue > 100 ? 100 : incomingRatingValue
   )
   const [overRatingValue, setOverRatingValue] = useState(ratingValue)
+
+  useEffect(() => {
+    setRatingValue(incomingRatingValue)
+    setOverRatingValue(incomingRatingValue)
+  }, [incomingRatingValue])
 
   useEffect(() => {
     ratingActive.current.style.width = `${overRatingValue}%`

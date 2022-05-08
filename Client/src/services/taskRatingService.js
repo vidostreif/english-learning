@@ -1,22 +1,16 @@
 import { $api } from '../api'
 
 export const addTaskRating = async (taskId, rating) => {
-  // const formData = new FormData()
-  // formData.append('img', img)
-  // formData.append('complexity', complexity)
-  // formData.append('id', id)
-  // formData.append('markers', JSON.stringify(markers))
-  // const { data } = await $api.post('api/task', formData, {
-  //   headers: {
-  //     'Content-Type': 'multipart/form-data',
-  //   },
-  // })
-  // return data
+  const { data } = await $api.post('api/task_rating', {
+    taskId,
+    rating,
+  })
+  return data
 }
 
 export const fetchTaskRating = async (taskId) => {
-  // const { data } = await $api.get(`api/task/${id}`)
-  // return data
+  const { data } = await $api.get(`api/task_rating/${taskId}`)
+  return data
 }
 
 export const fetchAllTaskRating = async (page) => {

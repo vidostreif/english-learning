@@ -6,6 +6,7 @@ import { fetchTask, fetchRandomTask } from '../services/taskService'
 import { Link, useSearchParams } from 'react-router-dom'
 import Loader from '../components/loader/Loader'
 import FiveStars from '../components/fiveStars/FiveStars'
+import { addTaskRating, fetchTaskRating } from '../services/taskRatingService'
 
 const DragDrop = (props) => {
   const [searchParams, setSearchParams] = useSearchParams() //список параметров из url
@@ -15,19 +16,26 @@ const DragDrop = (props) => {
   const [curMarker, setCurMarker] = useState() //маркер по которому кликнули
   const [taskIsDone, setTaskIsDone] = useState(false) // задание выполнено
   const [taskId, setTaskId] = useState() // id текущего задания
+  const [taskRating, setTaskRating] = useState(0)
   const [urlImg, setUrlImg] = useState() // картинка текущего задания
   const [keyMarkers, setKeyMarkers] = useState(1) // ключи для маркеров и слов
 
   useEffect(() => {
     if (searchParams.get('id') !== taskId) {
       getTaskFromServer(searchParams.get('id'))
+      fetchTaskRating(searchParams.get('id')).then((data) => {
+        if (data) {
+          setTaskRating(data.rating)
+        } else {
+          setTaskRating(0)
+        }
+      })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams])
 
   //пометка маркеров как использованные
   const delItem = (idText, idMarker) => {
-    // setMarkers((prev) => prev.filter((item) => item.id !== id))
     setDictionary((prevDictionary) =>
       prevDictionary.map((element) =>
         element.id === idText ? { ...element, used: true } : { ...element }
@@ -151,7 +159,6 @@ const DragDrop = (props) => {
   return (
     <>
       <div className="Task">
-        <FiveStars />
         <div className="Words">
           {!taskIsDone ? (
             dictionary.length > 0 ? (
@@ -172,12 +179,25 @@ const DragDrop = (props) => {
               <Loader />
             )
           ) : (
-            <img
-              src="/btn/random.png"
-              alt="random"
-              onClick={() => nextRandomTask(taskId)}
-              className="NextBtn"
-            ></img>
+            <div className="Words__end">
+              <img
+                src="/emoji/thumbsUp.png"
+                alt="thumbs up"
+                className="Words__end__thumbsUp"
+              ></img>
+              <FiveStars
+                incomingRatingValue={taskRating}
+                calBack={(rating) => {
+                  addTaskRating(taskId, rating)
+                }}
+              />
+              <img
+                src="/btn/random.png"
+                alt="random"
+                onClick={() => nextRandomTask(taskId)}
+                className="NextBtn"
+              ></img>
+            </div>
           )}
         </div>
         <div className="Board" key={keyMarkers}>

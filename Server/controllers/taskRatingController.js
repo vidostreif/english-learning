@@ -1,49 +1,104 @@
-const { TaskRating } = require('../db/models')
+const { TaskRating, User, Task } = require('../db/models')
 const ApiError = require('../exceptions/ApiError')
 
 class TaskRatingController {
   //добавление оценки задания от пользователя
-  async addUserTaskRating(req, res) {
-    console.log(req.user)
-    console.log(req.body)
-    // const { name } = req.body
+  async addUserTaskRating(req, res, next) {
+    try {
+      const userId = req.user.id
+      const { taskId, rating } = req.body
 
-    // await TaskRating.create({ userId: 28, taskId: 1, rating: 30 })
+      const user = await User.findOne({ where: { id: userId } })
+      if (!user) {
+        next(ApiError.badRequest('Пользователь не найден'))
+      }
 
-    // const user0 = await User.findOne({ where: { id: 28 } })
-    // const task0 = await Task.findOne({ where: { id: 1 } })
-    // await user0.addTaskRating(task0, { through: { rating: 30 } })
-    // await user0.removeTaskRating(task0)
+      const task = await Task.findOne({ where: { id: taskId } })
+      if (!task) {
+        next(ApiError.badRequest('Задание не найдено'))
+      }
 
-    return res.json({ message: 'Нужно реализовать TaskRatingController!' })
+      await user.removeTaskRating(task)
+      await user.addTaskRating(task, { through: { rating: rating } })
+
+      return res.json({
+        rating: rating,
+      })
+    } catch (error) {
+      next(ApiError.badRequest(error))
+    }
   }
 
   // удаление оценки пользователя
-  async removeUserTaskRating(req, res) {
-    console.log(req.query)
-    // const { name } = req.body
-    // await user0.removeTaskRating(task0)
-    res.json({ message: 'Нужно реализовать TaskRatingController!' })
+  async removeUserTaskRating(req, res, next) {
+    try {
+      const userId = req.user.id
+      const { taskId } = req.body
+
+      const user = await User.findOne({ where: { id: userId } })
+      if (!user) {
+        next(ApiError.badRequest('Пользователь не найден'))
+      }
+
+      const task = await Task.findOne({ where: { id: taskId } })
+      if (!task) {
+        next(ApiError.badRequest('Задание не найдено'))
+      }
+
+      await user.removeTaskRating(task)
+
+      return res.status(200).json({ message: 'Оценка удалена' })
+    } catch (error) {
+      next(ApiError.badRequest(error))
+    }
   }
 
   // получить все оценки пользователя
-  async getAllUserTaskRatings(req, res) {
-    console.log(req.body)
-    // const ratings = await TaskRating.findAll()
-    return res.json({ message: 'Нужно реализовать TaskRatingController!' })
+  async getAllUserTaskRatings(req, res, next) {
+    try {
+      const userId = req.user.id
+
+      const user = await User.findOne({ where: { id: userId } })
+      if (!user) {
+        next(ApiError.badRequest('Пользователь не найден'))
+      }
+
+      const taskRatings = await user.getTaskRatings()
+
+      return res.json(taskRatings)
+    } catch (error) {
+      next(ApiError.badRequest(error))
+    }
   }
 
   // получить оценку конкретного задания
-  async getOneUserTaskRating(req, res) {
-    console.log(req.body)
-    // const { name } = req.query
-    // if (!name) {
-    //   next(ApiError.badRequest('Не задан Name'))
-    // }
-    // const resu = await Dictionary.findOne({
-    //   where: { name: name },
-    // })
-    res.json({ message: 'Нужно реализовать TaskRatingController!' })
+  async getOneUserTaskRating(req, res, next) {
+    try {
+      const userId = req.user.id
+      const { id: taskId } = req.params
+      if (!taskId) {
+        next(ApiError.badRequest('Не задан ID'))
+      }
+
+      const user = await User.findOne({ where: { id: userId } })
+      if (!user) {
+        next(ApiError.badRequest('Пользователь не найден'))
+      }
+
+      const task = await Task.findOne({ where: { id: taskId } })
+      if (!task) {
+        next(ApiError.badRequest('Задание не найдено'))
+      }
+
+      const rating = await TaskRating.findOne({
+        where: { userId, taskId },
+      })
+
+      return res.json(rating)
+    } catch (error) {
+      console.log(error)
+      next(ApiError.badRequest(error))
+    }
   }
 }
 
