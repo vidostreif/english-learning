@@ -5,8 +5,17 @@ import { BrowserRouter } from 'react-router-dom'
 import AppRouter from './components/AppRouter'
 import { VHeader } from './components/header/VHeader'
 import { Toaster } from 'react-hot-toast'
+import { useContext, useEffect } from 'react'
+import { Context } from '.'
+import { observer } from 'mobx-react-lite'
 
 function App() {
+  const { store } = useContext(Context)
+  //проверяем авторизацию
+  useEffect(() => {
+    store.checkAuth()
+  }, [store])
+
   return (
     <BrowserRouter>
       <DndProvider backend={HTML5Backend}>
@@ -44,4 +53,4 @@ function App() {
   )
 }
 
-export default App
+export default observer(App)

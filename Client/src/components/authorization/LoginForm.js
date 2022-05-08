@@ -10,10 +10,8 @@ import './LoginForm.scss'
 const LoginForm = () => {
   const [triedToRegister, setTriedToRegister] = useState(false) //пытались зарегестрироваться
   const [email, setEmail] = useState('')
-  // const [emailIsCorrect, setEmailIsCorrect] = useState(true)
   const [emailErrors, setEmailErrors] = useState([])
   const [password, setPassword] = useState('')
-  // const [passwordIsCorrect, setPasswordIsCorrect] = useState(true)
   const [passwordErrors, setPasswordErrors] = useState([])
   const { store } = useContext(Context)
 
@@ -54,14 +52,12 @@ const LoginForm = () => {
   const checkEmail = (newEmail) => {
     const mistakes = Validator.checkEmail(newEmail)
     setEmailErrors(mistakes)
-    // setEmailIsCorrect(mistakes.length === 0)
     return mistakes.length === 0
   }
 
   const checkPassword = (newPassword) => {
     const mistakes = Validator.checkPassword(newPassword)
     setPasswordErrors(mistakes)
-    // setPasswordIsCorrect(mistakes.length === 0)
     return mistakes.length === 0
   }
 
