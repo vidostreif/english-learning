@@ -1,14 +1,18 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { Context } from '../'
+import { Context } from '../..'
 import { observer } from 'mobx-react-lite'
-import DivDrag from '../components/DivDrag'
-import DropPlace from '../components/DropPlace'
-import { fetchTask, fetchRandomTask } from '../services/taskService'
+import DivDrag from '../../components/DivDrag'
+import DropPlace from '../../components/DropPlace'
+import { fetchTask, fetchRandomTask } from '../../services/taskService'
 import { Link, useSearchParams } from 'react-router-dom'
-import Loader from '../components/loader/Loader'
-import FiveStars from '../components/fiveStars/FiveStars'
-import { addTaskRating, fetchTaskRating } from '../services/taskRatingService'
-import RandomTaskList from '../components/randomTaskList/RandomTaskList'
+import Loader from '../../components/loader/Loader'
+import FiveStars from '../../components/fiveStars/FiveStars'
+import {
+  addTaskRating,
+  fetchTaskRating,
+} from '../../services/taskRatingService'
+import RandomTaskList from '../../components/randomTaskList/RandomTaskList'
+import './Task.scss'
 
 const DragDrop = (props) => {
   const [searchParams, setSearchParams] = useSearchParams() //список параметров из url
@@ -195,7 +199,7 @@ const DragDrop = (props) => {
               <img
                 src="/emoji/thumbsUp.png"
                 alt="thumbs up"
-                className="Words__end__thumbsUp"
+                className="Words__thumbsUp"
               ></img>
               <FiveStars
                 incomingRatingValue={taskRating}
@@ -203,7 +207,7 @@ const DragDrop = (props) => {
                   addTaskRating(taskId, rating)
                 }}
               />
-              <div>
+              <div className="Words__nextLevel">
                 <RandomTaskList count="3" not_id={taskId} />
                 <img
                   src="/btn/random.png"

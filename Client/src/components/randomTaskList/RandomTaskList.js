@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { fetchRandomTask } from '../../services/taskService'
 import Loader from '../loader/Loader.js'
 import TaskCard from '../taskCard/TaskCard'
+import styles from './RandomTaskList.module.scss'
 
 const RandomTaskList = ({ count, not_id = null }) => {
   const [taskList, setTaskList] = useState([])
@@ -13,10 +14,10 @@ const RandomTaskList = ({ count, not_id = null }) => {
   }, [count, not_id])
 
   return (
-    <div className="TaskList">
+    <div className={styles.RandomTaskList}>
       {taskList.length > 0 ? (
         taskList.map((element, i) => {
-          return <TaskCard task={element} key={i} />
+          return <TaskCard task={element} rootStyles={styles} key={i} />
         })
       ) : (
         <Loader />

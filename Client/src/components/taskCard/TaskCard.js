@@ -3,15 +3,23 @@ import { Link } from 'react-router-dom'
 import FiveStars from '../fiveStars/FiveStars'
 import DifficultyDisplay from '../difficultyDisplay/DifficultyDisplay'
 
-const TaskCard = ({ task }) => {
+const TaskCard = ({ task, rootStyles }) => {
   return (
-    <Link to={`/task?id=${task.id}`} key={task.id} className="TaskListElement">
+    <Link
+      to={`/task?id=${task.id}`}
+      key={task.id}
+      className={rootStyles?.TaskListElement || 'TaskListElement'}
+    >
       <img
-        className="TaskListElement__img"
+        className={rootStyles?.TaskListElement__img || 'TaskListElement__img'}
         src={`${process.env.REACT_APP_API_URL}/${task.imgUrl}`}
         alt="1"
       />
-      <div className="TaskList__fiveStars">
+      <div
+        className={
+          rootStyles?.TaskListElement__fiveStars || 'TaskListElement__fiveStars'
+        }
+      >
         <FiveStars
           showRatingValue={false}
           active={false}

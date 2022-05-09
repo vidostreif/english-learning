@@ -1,7 +1,7 @@
 import Authorization from './pages/Authorization'
 import Editor from './pages/Editor'
-import Task from './pages/Task'
-import TaskList from './pages/TaskList'
+import Task from './pages/task/Task'
+import TaskList from './pages/taskList/TaskList'
 import {
   EDITOR_ROUTE,
   TASK_ROUTE,
