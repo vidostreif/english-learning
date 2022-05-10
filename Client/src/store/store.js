@@ -5,7 +5,7 @@ import toast from 'react-hot-toast'
 export default class Store {
   user = {}
   isAuth = false
-  isAuthLoading = false
+  isAuthLoading = true
 
   constructor() {
     makeAutoObservable(this)

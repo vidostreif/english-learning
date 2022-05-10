@@ -1,13 +1,13 @@
+import { observer } from 'mobx-react-lite'
 import React from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 // import Task from '../pages/Task'
 import { authRoutes, publicRoutes } from '../routes'
 
-const AppRouter = () => {
-  const isAuth = true
+const AppRouter = ({ store }) => {
   return (
     <Routes>
-      {isAuth &&
+      {store.isAuth &&
         authRoutes.map(({ path, Component }) => (
           <Route key={path} path={path} element={<Component />} exact />
         ))}
@@ -19,4 +19,4 @@ const AppRouter = () => {
   )
 }
 
-export default AppRouter
+export default observer(AppRouter)

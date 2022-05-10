@@ -8,20 +8,22 @@ import { Toaster } from 'react-hot-toast'
 import { useContext, useEffect } from 'react'
 import { Context } from '.'
 import { observer } from 'mobx-react-lite'
+import Loader from './components/loader/Loader'
 
 function App() {
   const { store } = useContext(Context)
   //проверяем авторизацию
   useEffect(() => {
     store.checkAuth()
-  }, [store])
+  }, [])
 
   return (
     <BrowserRouter>
       <DndProvider backend={HTML5Backend}>
         <div className="App">
           <VHeader />
-          <AppRouter />
+          {store.isAuthLoading ? <Loader /> : <AppRouter store={store} />}
+
           <Toaster
             position="top-center"
             reverseOrder={false}

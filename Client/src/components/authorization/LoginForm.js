@@ -16,9 +16,9 @@ const LoginForm = () => {
   const { store } = useContext(Context)
 
   //проверяем авторизацию
-  useEffect(() => {
-    store.checkAuth()
-  }, [store])
+  // useEffect(() => {
+  //   store.checkAuth()
+  // }, [store])
 
   if (store.isAuthLoading) {
     return <Loader />
