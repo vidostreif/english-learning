@@ -4,6 +4,9 @@ import Loader from '../loader/Loader.js'
 import TaskCard from '../taskCard/TaskCard'
 import styles from './RandomTaskList.module.scss'
 
+// список заданий который запрашивает рандомные задания
+// count - количество заданий
+// not_id - кроме задания с этим id
 const RandomTaskList = ({ count, not_id = null }) => {
   const [taskList, setTaskList] = useState([])
 

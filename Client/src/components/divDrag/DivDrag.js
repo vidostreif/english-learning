@@ -1,9 +1,18 @@
 import { useDrag } from 'react-dnd'
-import React, { useState } from 'react'
-import classNames from 'classnames'
+import React, { useEffect, useState } from 'react'
+import classNames from 'classnames/bind'
+import ownStyles from './DivDrag.module.scss'
 
-function DivDrag({ id, text, check, choiced, used }) {
+// перетаскиваемый блок
+function DivDrag({ id, text, check, choiced, used, rootStyles }) {
   const [isMistake, setMistake] = useState(false) //совершили ошибку
+  const [styles, setStyles] = useState({ ...ownStyles, ...rootStyles }) //стили
+
+  useEffect(() => {
+    if (rootStyles) {
+      setStyles({ ...ownStyles, ...rootStyles })
+    }
+  }, [rootStyles])
 
   const [{ isDragging }, drag] = useDrag(() => ({
     type: 'div',
@@ -32,13 +41,14 @@ function DivDrag({ id, text, check, choiced, used }) {
   }
 
   //определяем классы текста
-  const liClasses = classNames({
+  let cx = classNames.bind(styles)
+  const liClasses = cx({
     DragText: true,
-    MistakeDragText: isMistake && !used,
-    FinishDragText: used,
-    StartDragText: !used && !choiced,
-    ChoicedDragText: choiced && !used,
-    DraggingDragText: isDragging,
+    DragText__Mistake: isMistake && !used,
+    DragText__Finish: used,
+    DragText__Start: !used && !choiced,
+    DragText__Choiced: choiced && !used,
+    DragText__Dragging: isDragging,
   })
 
   return (

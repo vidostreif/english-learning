@@ -1,6 +1,7 @@
 import React from 'react'
 import './DifficultyDisplay.scss'
 
+// отображение сложности задания
 const DifficultyDisplay = ({ complexity = 0 }) => {
   return (
     <div className="DifficultyDisplay">

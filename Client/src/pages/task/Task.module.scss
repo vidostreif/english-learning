@@ -1,0 +1,82 @@
+.Task {
+  padding: 0 5px;
+}
+
+.NextBtn {
+  transition: 0.3s;
+  border: 3px solid #008b8b00;
+  border-radius: 5px;
+  background-color: #ffffff89;
+  padding: 4px 4px;
+  margin: 5px;
+  // width: calc(15px + 40 * (100vw / 1440));
+  // height: calc(15px + 40 * (100vw / 1440));
+}
+
+.NextBtn:hover {
+  cursor: pointer;
+  color: #4857ff;
+  font-size: calc(6px + 18 * (100vw / 1440));
+  border: 3px solid #008b8b;
+  background-color: #e5f5f589;
+  transition: 0.3s;
+  transform: scale(1.2);
+}
+
+.BottomNextBtn {
+  display: flex;
+  justify-content: right;
+}
+
+.Board {
+  position: relative;
+  color: #000;
+  text-align: center;
+}
+
+.MainImg {
+  margin: 0px;
+  width: 100%;
+}
+
+.Words {
+  background: #daf0f0c0;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  width: inherit;
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 7px 0;
+}
+
+.Words__end {
+  // transition: 0.3s;
+  font-size: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  animation-name: appearance;
+  animation-duration: 0.3s;
+  // animation-iteration-count: infinite;
+  animation-delay: 0s;
+}
+
+.Words__nextLevel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@keyframes appearance {
+  from {
+    transform: scale(0.5);
+  }
+  100% {
+    transform: scale(1);
+  }
+}

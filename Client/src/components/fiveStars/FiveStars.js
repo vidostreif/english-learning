@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import './FiveStars.scss'
 
+// отображение рейтинга задания
 const FiveStars = ({
   incomingRatingValue = 0,
   showRatingValue = true,

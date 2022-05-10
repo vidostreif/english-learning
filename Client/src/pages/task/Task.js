@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { Context } from '../..'
 import { observer } from 'mobx-react-lite'
-import DivDrag from '../../components/DivDrag'
-import DropPlace from '../../components/DropPlace'
+import DivDrag from '../../components/divDrag/DivDrag'
+import DropPlace from '../../components/dropPlace/DropPlace'
 import { fetchTask, fetchRandomTask } from '../../services/taskService'
 import { Link, useSearchParams } from 'react-router-dom'
 import Loader from '../../components/loader/Loader'
@@ -12,7 +12,7 @@ import {
   fetchTaskRating,
 } from '../../services/taskRatingService'
 import RandomTaskList from '../../components/randomTaskList/RandomTaskList'
-import './Task.scss'
+import styles from './Task.module.scss'
 
 const DragDrop = (props) => {
   const [searchParams, setSearchParams] = useSearchParams() //список параметров из url
@@ -174,8 +174,8 @@ const DragDrop = (props) => {
 
   return (
     <>
-      <div className="Task">
-        <div className="Words">
+      <div className={styles.Task}>
+        <div className={styles.Words}>
           {!taskIsDone ? (
             dictionary.length > 0 ? (
               dictionary.map((element) => {
@@ -184,10 +184,10 @@ const DragDrop = (props) => {
                     key={element.id}
                     text={element.text}
                     id={element.id}
-                    // filledFunction={() => delItem(element.id)}
                     check={() => choicedText(element)}
                     choiced={element.choiced}
                     used={element.used}
+                    rootStyles={styles}
                   />
                 )
               })
@@ -195,11 +195,11 @@ const DragDrop = (props) => {
               <Loader />
             )
           ) : (
-            <div className="Words__end">
+            <div className={styles.Words__end}>
               <img
                 src="/emoji/thumbsUp.png"
                 alt="thumbs up"
-                className="Words__thumbsUp"
+                className={styles.Words__thumbsUp}
               ></img>
               <FiveStars
                 incomingRatingValue={taskRating}
@@ -207,20 +207,20 @@ const DragDrop = (props) => {
                   addTaskRating(taskId, rating)
                 }}
               />
-              <div className="Words__nextLevel">
+              <div className={styles.Words__nextLevel}>
                 <RandomTaskList count="3" not_id={taskId} />
                 <img
                   src="/btn/random.png"
                   alt="random"
                   onClick={() => nextRandomTask(taskId)}
-                  className="NextBtn"
+                  className={styles.NextBtn}
                 ></img>
               </div>
             </div>
           )}
         </div>
-        <div className="Board" key={keyMarkers}>
-          <img src={urlImg} alt="1" className="MainImg" />
+        <div className={styles.Board} key={keyMarkers}>
+          <img src={urlImg} alt="1" className={styles.MainImg} />
           {markers.map((element) => {
             return (
               <DropPlace
@@ -232,19 +232,24 @@ const DragDrop = (props) => {
                 check={() => choicedMarker(element)}
                 choiced={element.choiced}
                 used={element.used}
+                rootStyles={styles}
               />
             )
           })}
         </div>
-        <div className="BottomNextBtn">
+        <div className={styles.BottomNextBtn}>
           <Link to={`/task_list`}>
-            <img src="/btn/list.png" alt="list" className="NextBtn"></img>
+            <img
+              src="/btn/list.png"
+              alt="list"
+              className={styles.NextBtn}
+            ></img>
           </Link>
           <img
             src="/btn/random.png"
             alt="random"
             onClick={() => nextRandomTask(taskId)}
-            className="NextBtn"
+            className={styles.NextBtn}
           ></img>
         </div>
       </div>

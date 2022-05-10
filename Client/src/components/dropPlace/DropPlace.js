@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { useDrop } from 'react-dnd'
-import classNames from 'classnames'
+import classNames from 'classnames/bind'
+import ownStyles from './DropPlace.module.scss'
 
+//поле для заполнения
 function DropPlace({
   correctElement,
   top,
@@ -10,11 +12,31 @@ function DropPlace({
   check,
   choiced,
   used,
+  rootStyles,
 }) {
   const [newInerElement, setNewInerElement] = useState() // новый элемент в поле
   const [text, setText] = useState('?') //элемент в поле
   const [isMistake, setMistake] = useState(false) //совершили ошибку
   const [isFilled, setFilled] = useState(false) //заполнили правильно ответ
+  const [styles, setStyles] = useState({ ...ownStyles, ...rootStyles }) //стили
+
+  useEffect(() => {
+    if (rootStyles) {
+      setStyles({ ...ownStyles, ...rootStyles })
+    }
+  }, [rootStyles])
+
+  useEffect(() => {
+    //если поле не заполнено и пришел новый элемент с правильным текстом, то отмечаем как заполненное поле
+    if (!isFilled && newInerElement) {
+      if (correctElement.text === newInerElement.text) {
+        filledFunction(newInerElement.id, correctElement.id)
+      } else {
+        setMistake(true)
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [newInerElement])
 
   //метод перетаскивания на маркер
   // eslint-disable-next-line no-unused-vars
@@ -39,18 +61,6 @@ function DropPlace({
       text: text,
     }))
   }
-
-  useEffect(() => {
-    //если поле не заполнено и пришел новый элемент с правильным текстом, то отмечаем как заполненное поле
-    if (!isFilled && newInerElement) {
-      if (correctElement.text === newInerElement.text) {
-        filledFunction(newInerElement.id, correctElement.id)
-      } else {
-        setMistake(true)
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [newInerElement])
 
   //нажали на маркер
   const wasClick = () => {
@@ -78,13 +88,14 @@ function DropPlace({
   }
 
   //определяем классы маркера
-  const liClasses = classNames({
+  let cx = classNames.bind(styles)
+  const liClasses = cx({
     Marker: true,
-    FillMarker: isFilled,
-    EmptyMarker: !isFilled && !isMistake && !choiced && !isActive,
-    MistakeMarker: isMistake,
-    ChoicedMarker: choiced && !isFilled,
-    CanFilledMarker: isActive && !isFilled,
+    Marker__Fill: isFilled,
+    Marker__Empty: !isFilled && !isMistake && !choiced && !isActive,
+    Marker__Mistake: isMistake,
+    Marker__Choiced: choiced && !isFilled,
+    Marker__CanFilled: isActive && !isFilled,
   })
 
   return (
