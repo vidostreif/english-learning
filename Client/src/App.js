@@ -15,7 +15,7 @@ function App() {
   //проверяем авторизацию
   useEffect(() => {
     store.checkAuth()
-  }, [])
+  }, [store])
 
   return (
     <BrowserRouter>
