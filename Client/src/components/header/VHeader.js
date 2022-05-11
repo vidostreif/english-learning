@@ -19,18 +19,18 @@ export function VHeader() {
         />
 
         <div className="header">
-          <Link to="/" className="header__logo">
+          <Link to="/" className="header__logoLink">
             <img
               src="/logo.png"
               alt="логотип Okey kity"
-              className="header__logo__img"
+              className="header__logoImg"
             />
           </Link>
-          <button onClick={() => setModal(true)} className="header__login">
+          <button onClick={() => setModal(true)} className="header__loginBtn">
             <img
               src="/user.png"
               alt="иконка пользователя"
-              className="header__login__img"
+              className="header__loginImg"
             />
           </button>
         </div>

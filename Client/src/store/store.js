@@ -23,6 +23,13 @@ export default class Store {
     this.isAuthLoading = bool
   }
 
+  isAdministrator() {
+    if (this.isAuth && this.user?.userRole === 'administrator') {
+      return true
+    }
+    return false
+  }
+
   async login(email, password) {
     try {
       const response = await AuthService.login(email, password)

@@ -1,43 +1,43 @@
 import React from 'react'
-import './DifficultyDisplay.scss'
+import styles from './DifficultyDisplay.module.scss'
 
 // отображение сложности задания
 const DifficultyDisplay = ({ complexity = 0 }) => {
   return (
-    <div className="DifficultyDisplay">
+    <div className={styles.container}>
       <div
         className={
           complexity > 0
-            ? 'DifficultyDisplay__active1 DifficultyDisplay__Line1'
-            : 'DifficultyDisplay__Line1'
+            ? `${styles.container__active1} ${styles.container__line1}`
+            : styles.container__line1
         }
       ></div>
       <div
         className={
           complexity > 1
-            ? 'DifficultyDisplay__active2 DifficultyDisplay__Line2'
-            : 'DifficultyDisplay__Line2'
+            ? `${styles.container__active2} ${styles.container__line2}`
+            : styles.container__line2
         }
       ></div>
       <div
         className={
           complexity > 2
-            ? 'DifficultyDisplay__active3 DifficultyDisplay__Line3'
-            : 'DifficultyDisplay__Line3'
+            ? `${styles.container__active3} ${styles.container__line3}`
+            : styles.container__line3
         }
       ></div>
       <div
         className={
           complexity > 3
-            ? 'DifficultyDisplay__active4 DifficultyDisplay__Line4'
-            : 'DifficultyDisplay__Line4'
+            ? `${styles.container__active4} ${styles.container__line4}`
+            : styles.container__line4
         }
       ></div>
       <div
         className={
           complexity > 4
-            ? 'DifficultyDisplay__active5 DifficultyDisplay__Line5'
-            : 'DifficultyDisplay__Line5'
+            ? `${styles.container__active5} ${styles.container__line5}`
+            : styles.container__line5
         }
       ></div>
     </div>

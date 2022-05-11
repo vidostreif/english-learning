@@ -2,11 +2,12 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import FiveStars from '../fiveStars/FiveStars'
 import DifficultyDisplay from '../difficultyDisplay/DifficultyDisplay'
+import { TASK_ROUTE } from '../../utils/consts'
 
 const TaskCard = ({ task, rootStyles }) => {
   return (
     <Link
-      to={`/task?id=${task.id}`}
+      to={`${TASK_ROUTE}?id=${task.id}`}
       key={task.id}
       className={rootStyles?.TaskListElement || 'TaskListElement'}
     >

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import './FiveStars.scss'
+import styles from './FiveStars.module.scss'
 
 // отображение рейтинга задания
 const FiveStars = ({
@@ -49,18 +49,19 @@ const FiveStars = ({
   let divNumber = ''
   if (showRatingValue) {
     divNumber = (
-      <div className="rating__value">{(overRatingValue * 0.05).toFixed(1)}</div>
+      <div className={styles.rating__value}>
+        {(overRatingValue * 0.05).toFixed(1)}
+      </div>
     )
   }
 
   return (
-    <div className="rating">
-      <div className="rating__body">
-        <div className="rating__active" ref={ratingActive}></div>
-        <div className="rating__items">
+    <div className={styles.rating}>
+      <div className={styles.rating__body}>
+        <div className={styles.rating__active} ref={ratingActive}></div>
+        <div className={styles.rating__items}>
           <button
-            // type="radio"
-            className="rating__item"
+            className={styles.rating__item}
             name="rating"
             value="1"
             onMouseOver={() => mouseOver(20)}
@@ -69,7 +70,7 @@ const FiveStars = ({
           />
           <button
             // type="radio"
-            className="rating__item"
+            className={styles.rating__item}
             name="rating"
             value="2"
             onMouseOver={() => mouseOver(40)}
@@ -78,7 +79,7 @@ const FiveStars = ({
           />
           <button
             // type="radio"
-            className="rating__item"
+            className={styles.rating__item}
             name="rating"
             value="3"
             onMouseOver={() => mouseOver(60)}
@@ -87,7 +88,7 @@ const FiveStars = ({
           />
           <button
             // type="radio"
-            className="rating__item"
+            className={styles.rating__item}
             name="rating"
             value="4"
             onMouseOver={() => mouseOver(80)}
@@ -96,7 +97,7 @@ const FiveStars = ({
           />
           <button
             // type="radio"
-            className="rating__item"
+            className={styles.rating__item}
             name="rating"
             value="5"
             onMouseOver={() => mouseOver(100)}

@@ -1,0 +1,50 @@
+.container {
+  padding: 5px;
+  display: flex;
+  align-items: flex-end;
+  &__line1 {
+    margin: 1px;
+    width: 4px;
+    height: 12px;
+    background: #2fbe1929;
+  }
+  &__active1 {
+    background: #30be19;
+  }
+  &__line2 {
+    margin: 1px;
+    width: 4px;
+    height: 14px;
+    background: #c0dc8229;
+  }
+  &__active2 {
+    background: #bfdc82;
+  }
+  &__line3 {
+    margin: 1px;
+    width: 4px;
+    height: 16px;
+    background: #fdd83529;
+  }
+  &__active3 {
+    background: #fdd835;
+  }
+  &__line4 {
+    margin: 1px;
+    width: 4px;
+    height: 18px;
+    background: #ff944829;
+  }
+  &__active4 {
+    background: #ff9448;
+  }
+  &__line5 {
+    margin: 1px;
+    width: 4px;
+    height: 20px;
+    background: #cd031429;
+  }
+  &__active5 {
+    background: #cd0314;
+  }
+}

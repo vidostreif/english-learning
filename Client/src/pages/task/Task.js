@@ -13,6 +13,7 @@ import {
 } from '../../services/taskRatingService'
 import RandomTaskList from '../../components/randomTaskList/RandomTaskList'
 import styles from './Task.module.scss'
+import { EDITOR_ROUTE, TASK_LIST_ROUTE } from '../../utils/consts'
 
 const DragDrop = (props) => {
   const [searchParams, setSearchParams] = useSearchParams() //список параметров из url
@@ -241,7 +242,18 @@ const DragDrop = (props) => {
           })}
         </div>
         <div className={styles.BottomNextBtn}>
-          <Link to={`/task_list`}>
+          {store.isAdministrator() ? (
+            <Link to={`${EDITOR_ROUTE}?id=${taskId}`}>
+              <img
+                src="/btn/list.png"
+                alt="list"
+                className={styles.NextBtn}
+              ></img>
+            </Link>
+          ) : (
+            ''
+          )}
+          <Link to={TASK_LIST_ROUTE}>
             <img
               src="/btn/list.png"
               alt="list"

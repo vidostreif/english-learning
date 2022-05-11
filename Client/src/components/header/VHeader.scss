@@ -2,34 +2,25 @@
   /* background-color: azure; */
   display: flex;
   justify-content: space-between;
-}
-
-.header__logo {
-  margin: 10px 20px;
-}
-
-.header__login {
-  margin: 10px 20px;
-}
-
-.header__logo__img {
-  width: auto;
-  height: 35px;
-}
-
-@media (max-width: 426px) {
-  .header__logo__img {
-    height: 20px;
+  &__logoLink {
+    margin: 10px 20px;
   }
-}
-
-.header__login__img {
-  width: auto;
-  height: 35px;
-}
-
-@media (max-width: 426px) {
-  .header__login__img {
-    height: 20px;
+  &__loginBtn {
+    margin: 10px 20px;
+    background: none;
+  }
+  &__logoImg {
+    width: auto;
+    height: 35px;
+    @media (max-width: 426px) {
+      height: 20px;
+    }
+  }
+  &__loginImg {
+    width: auto;
+    height: 35px;
+    @media (max-width: 426px) {
+      height: 20px;
+    }
   }
 }
