@@ -85,8 +85,8 @@ const DragDrop = (props) => {
 
   //получить следующее рандомное задание
   const nextRandomTask = (id) => {
-    fetchRandomTask(id).then((data) => {
-      setTaskParam(data)
+    fetchRandomTask(1, id).then((data) => {
+      setTaskParam(data[0])
     })
   }
 
@@ -175,7 +175,10 @@ const DragDrop = (props) => {
   return (
     <>
       <div className={styles.Task}>
-        <div className={styles.Words}>
+        <div
+          className={styles.Words}
+          // style={taskIsDone ? { position: 'static' } : {}}
+        >
           {!taskIsDone ? (
             dictionary.length > 0 ? (
               dictionary.map((element) => {
@@ -204,7 +207,7 @@ const DragDrop = (props) => {
               <FiveStars
                 incomingRatingValue={taskRating}
                 calBack={(rating) => {
-                  addTaskRating(taskId, rating)
+                  if (store.isAuth) addTaskRating(taskId, rating)
                 }}
               />
               <div className={styles.Words__nextLevel}>

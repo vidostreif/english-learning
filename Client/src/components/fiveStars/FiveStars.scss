@@ -12,6 +12,12 @@
       text-shadow: rgba(255, 255, 255, 0.7) 0px 1px 1px;
       display: block;
     }
+    &:hover {
+      text-shadow: #d4ad00b3 0px 0px 3px;
+    }
+    &:active {
+      text-shadow: #000000b3 0px 0px 3px;
+    }
   }
   &__active {
     position: absolute;
@@ -42,6 +48,7 @@
     flex: 0 0 20%;
     height: 100%;
     opacity: 0;
+    cursor: pointer;
   }
   &__value {
     font-size: 80%;
