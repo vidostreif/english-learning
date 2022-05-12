@@ -19,14 +19,18 @@ User.belongsTo(UserRole)
 User.hasMany(Token, { as: 'Token', foreignKey: 'userId' })
 Token.belongsTo(User)
 
-User.belongsToMany(Task, {
-  as: 'TaskRatings',
-  through: { model: TaskRating, unique: true },
-})
-Task.belongsToMany(User, {
-  as: 'TaskRatings',
-  through: { model: TaskRating, unique: true },
-})
+// User.belongsToMany(Task, {
+//   through: TaskRating,
+// })
+// Task.belongsToMany(User, {
+//   through: TaskRating,
+// })
+
+User.hasMany(TaskRating)
+TaskRating.belongsTo(User)
+
+Task.hasMany(TaskRating)
+TaskRating.belongsTo(Task)
 
 module.exports = {
   Marker,

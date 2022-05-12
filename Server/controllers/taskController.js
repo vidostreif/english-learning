@@ -99,7 +99,7 @@ class TaskController {
   }
 
   async getAll(req, res) {
-    const resu = await Task.scope('includeMarkers').findAll()
+    const resu = await Task.scope('includeRating').findAll()
     res.json(resu)
   }
 

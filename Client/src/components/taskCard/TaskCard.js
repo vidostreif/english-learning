@@ -24,7 +24,7 @@ const TaskCard = ({ task, rootStyles }) => {
         <FiveStars
           showRatingValue={false}
           active={false}
-          incomingRatingValue={10}
+          incomingRatingValue={task.rating}
         />
         <DifficultyDisplay complexity={task.complexity} />
       </div>

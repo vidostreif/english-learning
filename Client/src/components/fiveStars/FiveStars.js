@@ -9,9 +9,12 @@ const FiveStars = ({
   calBack,
 }) => {
   const ratingActive = useRef(null)
-  const [ratingValue, setRatingValue] = useState(
-    incomingRatingValue > 100 ? 100 : incomingRatingValue
-  )
+  const [ratingValue, setRatingValue] = useState(() => {
+    if (incomingRatingValue) {
+      return incomingRatingValue > 100 ? 100 : incomingRatingValue
+    }
+    return 0
+  })
   const [overRatingValue, setOverRatingValue] = useState(ratingValue)
 
   useEffect(() => {
