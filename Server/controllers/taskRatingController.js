@@ -18,6 +18,11 @@ class TaskRatingController {
         next(ApiError.badRequest('Задание не найдено'))
       }
 
+      // const taskRatings = await TaskRating.findAll()
+      // for (const iteratortaskRating of taskRatings) {
+      //   await iteratortaskRating.destroy()
+      // }
+
       const taskRating = await TaskRating.findOne({
         where: {
           userId,
@@ -38,7 +43,7 @@ class TaskRatingController {
           taskId,
         })
       }
-      // await TaskRating.removeTaskRating(task)
+      // await user.removeTaskRating(task)
       // await user.addTaskRating(task, { through: { rating: rating } })
 
       return res.json({

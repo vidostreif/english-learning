@@ -65,6 +65,16 @@ const TaskRating = sequelize.define(
       allowNull: false,
       validate: { min: 0, max: 100 },
     }, //оценка от пользователя
+    taskId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      primaryKey: true,
+    },
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      primaryKey: true,
+    },
   },
   { timestamps: false }
 )
