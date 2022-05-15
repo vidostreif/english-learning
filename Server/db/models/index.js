@@ -13,18 +13,14 @@ Marker.belongsTo(Task) //каждый маркер приндадлежит ка
 Dictionary.hasMany(Marker, { as: 'Markers', foreignKey: 'dictionaryId' })
 Marker.belongsTo(Dictionary)
 
-UserRole.hasMany(User, { as: 'User', foreignKey: 'userRoleId' })
+UserRole.hasMany(User, { as: 'Users', foreignKey: 'userRoleId' })
 User.belongsTo(UserRole)
 
-User.hasMany(Token, { as: 'Token', foreignKey: 'userId' })
+User.hasMany(Token, { as: 'Tokens', foreignKey: 'userId' })
 Token.belongsTo(User)
 
-// User.belongsToMany(Task, {
-//   through: TaskRating,
-// })
-// Task.belongsToMany(User, {
-//   through: TaskRating,
-// })
+User.belongsToMany(Task, { as: 'RatingForTasks', through: TaskRating })
+Task.belongsToMany(User, { as: 'RatingFromUsers', through: TaskRating })
 
 User.hasMany(TaskRating)
 TaskRating.belongsTo(User)
