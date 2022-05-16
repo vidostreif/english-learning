@@ -58,7 +58,7 @@ export const DropPlaceForEditor = ({
         <img
           src={urlImg}
           alt="1"
-          className="img"
+          className={styles.img}
           key="MainImg"
           id="MainImg"
           ref={targetRef}
