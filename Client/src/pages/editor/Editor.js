@@ -56,7 +56,7 @@ const Editor = () => {
   const delMarket = (item) => {
     setMarkers((prev) =>
       prev.filter((mark, index) => {
-        return index !== item.id
+        return index !== +item.id
       })
     )
   }
@@ -66,17 +66,16 @@ const Editor = () => {
     setUrlImg(url)
   }
 
-  const [hideSourceOnDrag, setHideSourceOnDrag] = useState(true)
-  const toggle = useCallback(
-    () => setHideSourceOnDrag(!hideSourceOnDrag),
-    [hideSourceOnDrag]
-  )
+  // const [hideSourceOnDrag, setHideSourceOnDrag] = useState(true)
+  // const toggle = useCallback(
+  //   () => setHideSourceOnDrag(!hideSourceOnDrag),
+  //   [hideSourceOnDrag]
+  // )
 
   const setTaskOnServer = () => {
     createTask(imgFile, markers, complexity, taskId)
       .then((data) => {
         setTaskParam(data)
-        // console.log(data)
         toast.success('Задание сохранено!')
       })
       .catch((e) => {
@@ -136,7 +135,7 @@ const Editor = () => {
           </div>
         </div>
         <DropPlaceForEditor
-          hideSourceOnDrag={hideSourceOnDrag}
+          // hideSourceOnDrag={hideSourceOnDrag}
           urlImg={urlImg}
           markers={markers}
           moveBox={moveBox}
