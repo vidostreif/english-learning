@@ -89,9 +89,9 @@ const LoginForm = () => {
   } else {
     return (
       <div>
-        <h1>{`Пользователь авторизован как ${store.user.email}`}</h1>
+        <h1>{`Пользователь авторизован как ${store.user?.email}`}</h1>
         <h1>
-          {store.user.isActivated
+          {store.user?.isActivated
             ? `Пользователь активирован`
             : `Пользователь не активирован`}
         </h1>

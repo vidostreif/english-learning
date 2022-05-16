@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import styles from './DisplayImage.module.scss'
 
 class DisplayImage extends Component {
   constructor(props) {
@@ -22,15 +23,12 @@ class DisplayImage extends Component {
 
   render() {
     return (
-      <div>
-        <div>
-          <div>
-            {/* <img src={this.state.image} /> */}
-
-            <input type="file" name="myImage" onChange={this.onImageChange} />
-          </div>
-        </div>
-      </div>
+      <input
+        className={styles.input}
+        type="file"
+        name="myImage"
+        onChange={this.onImageChange}
+      />
     )
   }
 }

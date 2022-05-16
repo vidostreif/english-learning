@@ -1,0 +1,29 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.header__element {
+  margin: 10px;
+}
+
+.complexity {
+  padding: 3px;
+  border: 1px solid #008b8b;
+  border-radius: 5px;
+}
+
+.button {
+  margin: 10px;
+  padding: 2px 5px;
+  border: 1px solid #008b8b;
+  border-radius: 5px;
+}

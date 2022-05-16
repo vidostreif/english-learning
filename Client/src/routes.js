@@ -1,5 +1,5 @@
 import Authorization from './pages/Authorization'
-import Editor from './pages/Editor'
+import Editor from './pages/editor/Editor'
 import Task from './pages/task/Task'
 import TaskList from './pages/taskList/TaskList'
 import {

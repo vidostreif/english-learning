@@ -1,11 +1,12 @@
 import { useState, useCallback, useEffect } from 'react'
-import { DropPlaceForEditor } from '../components/DropPlaceForEditor'
+import { DropPlaceForEditor } from '../../components/dropPlaceForEditor/DropPlaceForEditor'
 import update from 'immutability-helper'
-import DisplayImage from '../components/DisplayImage'
-import DropPlaceBasket from '../components/DropPlaceBasket'
-import { createTask, fetchTask } from '../services/taskService'
+import DisplayImage from '../../components/displayImage/DisplayImage'
+import DropPlaceBasket from '../../components/DropPlaceBasket'
+import { createTask, fetchTask } from '../../services/taskService'
 import { useSearchParams } from 'react-router-dom'
 import toast from 'react-hot-toast'
+import styles from './Editor.module.scss'
 
 const Editor = () => {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -107,25 +108,33 @@ const Editor = () => {
 
   return (
     <>
-      <div>
-        <DropPlaceBasket active={delMarket} />
-        <label>
-          Complexity:
-          <select
-            id="complexity"
-            name="complexity"
-            value={complexity}
-            onChange={changeComplexity}
-          >
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-          </select>
-        </label>
-
-        <DisplayImage setImg={setImg} />
+      <div className={styles.container}>
+        <div className={styles.header}>
+          <div className={styles.header__element}>
+            <DropPlaceBasket active={delMarket} />
+          </div>
+          <div className={styles.header__element}>
+            <label>
+              Сложность:
+              <select
+                id="complexity"
+                name="complexity"
+                value={complexity}
+                onChange={changeComplexity}
+                className={styles.complexity}
+              >
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
+            </label>
+          </div>
+          <div className={styles.header__element}>
+            <DisplayImage setImg={setImg} />
+          </div>
+        </div>
         <DropPlaceForEditor
           hideSourceOnDrag={hideSourceOnDrag}
           urlImg={urlImg}
@@ -134,18 +143,9 @@ const Editor = () => {
           changeText={changeText}
           addMarker={addMarker}
         />
-        <p>
-          <label htmlFor="hideSourceOnDrag">
-            <input
-              id="hideSourceOnDrag"
-              type="checkbox"
-              checked={hideSourceOnDrag}
-              onChange={toggle}
-            />
-            <small>Hide the source item while dragging</small>
-          </label>
-        </p>
-        <button onClick={setTaskOnServer}>Сохранить</button>
+        <button className={styles.button} onClick={setTaskOnServer}>
+          Сохранить
+        </button>
       </div>
     </>
   )

@@ -3,8 +3,10 @@ import { useDrop } from 'react-dnd'
 const styles = {
   width: '100px',
   height: '100px',
-  border: '1px solid black',
+  border: '1px solid #008b8b',
   position: 'relative',
+  borderRadius: '5px',
+  backgroundColor: '#008b8b2d',
 }
 
 function DropPlaceBasket({ active }) {

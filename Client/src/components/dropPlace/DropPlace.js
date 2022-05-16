@@ -105,7 +105,7 @@ function DropPlace({
       style={divStyle}
       onClick={wasClick}
       onAnimationEnd={(e) => {
-        if (e.animationName === 'mistake') {
+        if (e.animationName === styles.mistake) {
           setMistake(false)
         }
       }}

@@ -1,14 +1,15 @@
 // import { useCallback, useState, useRef, useLayoutEffect } from 'react'
+import { useRef } from 'react'
 import { useDrop } from 'react-dnd'
 // import { ItemTypes } from './ItemTypes'
-import { DivDragForEditor } from './DivDragForEditor'
-// import update from 'immutability-helper'
+import { DivDragForEditor } from '../DivDragForEditor'
+import styles from './DropPlaceForEditor.module.scss'
 
-const styles = {
-  width: '100%',
-  border: '1px solid black',
-  position: 'relative',
-}
+// const styles = {
+//   width: '100%',
+//   border: '1px solid black',
+//   position: 'relative',
+// }
 
 export const DropPlaceForEditor = ({
   hideSourceOnDrag,
@@ -18,10 +19,7 @@ export const DropPlaceForEditor = ({
   addMarker,
   changeText,
 }) => {
-  // const [boxes, setBoxes] = useState(markers)
-
-  // const targetRef = useRef()
-  // const [dimensions, setDimensions] = useState({ width: 10, height: 10 })
+  const targetRef = useRef()
 
   // useLayoutEffect(() => {
   //   if (targetRef.current) {
@@ -32,31 +30,16 @@ export const DropPlaceForEditor = ({
   //   }
   // }, [])
 
-  // const moveBox = useCallback(
-  //   (id, left, top) => {
-  //     setBoxes(
-  //       update(boxes, {
-  //         [id]: {
-  //           $merge: { left, top },
-  //         },
-  //       })
-  //     )
-  //   },
-  //   [boxes, setBoxes]
-  // )
-
   const [, drop] = useDrop(
     () => ({
       accept: 'divEditor',
       drop(item, monitor) {
         const delta = monitor.getDifferenceFromInitialOffset()
         const left = Math.round(
-          item.left +
-            (delta.x / document.querySelector('.MainImg').clientWidth) * 100
+          item.left + (delta.x / targetRef.current.clientWidth) * 100
         )
         const top = Math.round(
-          item.top +
-            (delta.y / document.querySelector('.MainImg').clientHeight) * 100
+          item.top + (delta.y / targetRef.current.clientHeight) * 100
         )
 
         moveBox(item.id, Math.max(left, 0), Math.max(top, 0))
@@ -66,38 +49,22 @@ export const DropPlaceForEditor = ({
     [moveBox]
   )
 
-  // const changeText = (id, title) => {
-  //   setBoxes(
-  //     update(boxes, {
-  //       [id]: {
-  //         $merge: { title },
-  //       },
-  //     })
-  //   )
-  // }
-
-  // const addMarker = () => {
-  //   setBoxes([...boxes, { top: 5, left: 10, title: 'new' }])
-  // }
-
   return (
     <>
-      <button onClick={addMarker}>+</button>
-      <div ref={drop} style={styles}>
+      <button onClick={addMarker} className={styles.button}>
+        Добавить маркер
+      </button>
+      <div ref={drop} className={styles.container}>
         <img
           src={urlImg}
           alt="1"
-          className="MainImg"
+          className="img"
           key="MainImg"
           id="MainImg"
-          // ref={targetRef}
+          ref={targetRef}
         />
-        {/* <p>{dimensions.width}</p>
-      <p>{dimensions.height}</p> */}
         {Object.keys(markers).map((key) => {
           let { left, top, text } = markers[key]
-          // left = (left * dimensions.width) / 100
-          // top = (top * dimensions.height) / 100
           return (
             <DivDragForEditor
               key={key}
