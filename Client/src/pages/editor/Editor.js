@@ -12,7 +12,7 @@ const Editor = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const [taskId, setTaskId] = useState(searchParams.get('id'))
   const [markers, setMarkers] = useState([])
-  const [complexity, setComplexity] = useState(1)
+  const [complexity, setComplexity] = useState('1')
   const [urlImg, setUrlImg] = useState()
   const [imgFile, setImgFile] = useState()
 
