@@ -1,7 +1,8 @@
 import { $api } from '../api'
+import { API_TASK_RATING } from '../utils/consts'
 
 export const addTaskRating = async (taskId, rating) => {
-  const { data } = await $api.post('api/task_rating', {
+  const { data } = await $api.post(API_TASK_RATING, {
     taskId,
     rating,
   })
@@ -9,7 +10,7 @@ export const addTaskRating = async (taskId, rating) => {
 }
 
 export const fetchTaskRating = async (taskId) => {
-  const { data } = await $api.get(`api/task_rating/${taskId}`)
+  const { data } = await $api.get(`${API_TASK_RATING}/${taskId}`)
   return data
 }
 

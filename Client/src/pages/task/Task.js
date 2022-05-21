@@ -14,6 +14,7 @@ import {
 import RandomTaskList from '../../components/randomTaskList/RandomTaskList'
 import styles from './Task.module.scss'
 import { EDITOR_ROUTE, TASK_LIST_ROUTE } from '../../utils/consts'
+import { useFetching } from '../../hooks/useFetching'
 
 const DragDrop = (props) => {
   const [searchParams, setSearchParams] = useSearchParams() //список параметров из url
@@ -27,6 +28,8 @@ const DragDrop = (props) => {
   const [urlImg, setUrlImg] = useState() // картинка текущего задания
   const [keyMarkers, setKeyMarkers] = useState(1) // ключи для маркеров и слов
   const { store } = useContext(Context)
+
+  const { loading: loadingTask, fetching: fetchingTask } = useFetching() //хук обертка для работы с сервером
 
   useEffect(() => {
     if (+searchParams.get('id') !== taskId) {
@@ -50,6 +53,47 @@ const DragDrop = (props) => {
       setTaskRating(0)
     }
   }, [searchParams, store.isAuth])
+
+  //получить задание
+  const getTaskFromServer = (id) => {
+    fetchingTask(async () => {
+      await fetchTask(id).then((data) => {
+        setTaskParam(data)
+      })
+    })
+  }
+
+  //получить следующее рандомное задание
+  const nextRandomTask = (id) => {
+    fetchingTask(async () => {
+      await fetchRandomTask(1, id).then((data) => {
+        setTaskParam(data[0])
+      })
+    })
+  }
+
+  //если получили новое задание
+  const setTaskParam = (data) => {
+    const newMarkers = data.Markers.map((element, index) => {
+      return {
+        id: index + keyMarkers,
+        left: element.left,
+        top: element.top,
+        text: element.dictionary.name,
+        choiced: false,
+        used: false,
+      }
+    })
+    setTaskIsDone(false)
+    setDictionary(newMarkers)
+    setMarkers(newMarkers)
+    setKeyMarkers((prevKey) => prevKey + 100)
+    setTaskId(data.id)
+    if (+searchParams.get('id') !== data.id) {
+      setSearchParams({ id: data.id })
+    }
+    setUrlImg(`${process.env.REACT_APP_API_URL}/${data.imgUrl}`)
+  }
 
   //пометка маркеров как использованные
   const delItem = (idText, idMarker) => {
@@ -76,42 +120,6 @@ const DragDrop = (props) => {
     if (allUsed) {
       setTaskIsDone(true)
     }
-  }
-
-  const getTaskFromServer = (id) => {
-    fetchTask(id).then((data) => {
-      setTaskParam(data)
-    })
-  }
-
-  //получить следующее рандомное задание
-  const nextRandomTask = (id) => {
-    fetchRandomTask(1, id).then((data) => {
-      setTaskParam(data[0])
-    })
-  }
-
-  //если получили новое задание
-  const setTaskParam = (data) => {
-    const newMarkers = data.Markers.map((element, index) => {
-      return {
-        id: index + keyMarkers,
-        left: element.left,
-        top: element.top,
-        text: element.dictionary.name,
-        choiced: false,
-        used: false,
-      }
-    })
-    setTaskIsDone(false)
-    setDictionary(newMarkers)
-    setMarkers(newMarkers)
-    setKeyMarkers((prevKey) => prevKey + 100)
-    setTaskId(data.id)
-    if (+searchParams.get('id') !== data.id) {
-      setSearchParams({ id: data.id })
-    }
-    setUrlImg(`${process.env.REACT_APP_API_URL}/${data.imgUrl}`)
   }
 
   //Если выбрали какой-то текст
@@ -176,12 +184,10 @@ const DragDrop = (props) => {
   return (
     <>
       <div className={styles.Task}>
-        <div
-          className={styles.Words}
-          // style={taskIsDone ? { position: 'static' } : {}}
-        >
+        {/* Отображения слов для задания или, при завершении задания, выбор следующего */}
+        <div className={styles.Words}>
           {!taskIsDone ? (
-            dictionary.length > 0 ? (
+            !loadingTask ? (
               dictionary.map((element) => {
                 return (
                   <DivDrag
@@ -223,24 +229,36 @@ const DragDrop = (props) => {
             </div>
           )}
         </div>
+
+        {/* Отображение доски задания с картинкой и маркерами */}
         <div className={styles.Board} key={keyMarkers}>
-          <img src={urlImg} alt="1" className={styles.MainImg} />
-          {markers.map((element) => {
-            return (
-              <DropPlace
-                key={element.id}
-                correctElement={element}
-                top={element.top}
-                left={element.left}
-                filledFunction={(idText, idMarker) => delItem(idText, idMarker)}
-                check={() => choicedMarker(element)}
-                choiced={element.choiced}
-                used={element.used}
-                rootStyles={styles}
-              />
-            )
-          })}
+          {!loadingTask ? (
+            <>
+              <img src={urlImg} alt="1" className={styles.MainImg} />
+              {markers.map((element) => {
+                return (
+                  <DropPlace
+                    key={element.id}
+                    correctElement={element}
+                    top={element.top}
+                    left={element.left}
+                    filledFunction={(idText, idMarker) =>
+                      delItem(idText, idMarker)
+                    }
+                    check={() => choicedMarker(element)}
+                    choiced={element.choiced}
+                    used={element.used}
+                    rootStyles={styles}
+                  />
+                )
+              })}
+            </>
+          ) : (
+            <Loader />
+          )}
         </div>
+
+        {/* Кнопки перехода */}
         <div className={styles.BottomNextBtn}>
           {store.isAdministrator() ? (
             <Link to={`${EDITOR_ROUTE}?id=${taskId}`}>
