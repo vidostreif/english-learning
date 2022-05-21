@@ -4,18 +4,23 @@ import Loader from '../../components/loader/Loader.js'
 import TaskCard from '../../components/taskCard/TaskCard'
 import styles from './TaskList.module.scss'
 import VSelect from '../../components/ui/VSelect/VSelect'
+import { useFetching } from '../../hooks/useFetching'
 
 const TaskList = (props) => {
   const [taskList, setTaskList] = useState([])
   const [selectedSort, setSelectedSort] = useState('')
+
+  const { loading, fetching } = useFetching()
 
   useEffect(() => {
     getTasksFromServer(1, selectedSort)
   }, [selectedSort])
 
   const getTasksFromServer = (page, sort) => {
-    fetchAllTask(page, sort).then((data) => {
-      setTaskList(data)
+    fetching(async () => {
+      await fetchAllTask(page, sort).then((data) => {
+        setTaskList(data)
+      })
     })
   }
 
@@ -44,14 +49,13 @@ const TaskList = (props) => {
         />
       </div>
       <div className={styles.TaskList}>
-        {taskList.length > 0 ? (
-          taskList.map((element, i) => {
-            return <TaskCard task={element} rootStyles={styles} key={i} />
-          })
-        ) : (
-          <Loader />
-        )}
+        {taskList.length > 0
+          ? taskList.map((element, i) => {
+              return <TaskCard task={element} rootStyles={styles} key={i} />
+            })
+          : ''}
       </div>
+      {loading ? <Loader /> : ''}
     </div>
   )
 }

@@ -84,9 +84,9 @@ $api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config
     if (
-      error.response.status === 401 &&
+      error.response?.status === 401 &&
       error.config &&
-      !error.config._isRetry
+      !error.config?._isRetry
     ) {
       originalRequest._isRetry = true // определяем, что зопрос на обновление токенов уже был
 
