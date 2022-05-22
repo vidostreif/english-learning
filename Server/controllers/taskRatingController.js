@@ -1,5 +1,6 @@
 const { TaskRating, User, Task } = require('../db/models')
 const ApiError = require('../exceptions/ApiError')
+const taskRatingService = require('../services/taskRatingService')
 
 class TaskRatingController {
   //добавление оценки задания от пользователя
@@ -8,24 +9,10 @@ class TaskRatingController {
       const userId = req.user.id
       const { taskId, rating } = req.body
 
-      const user = await User.findOne({ where: { id: userId } })
-      if (!user) {
-        next(ApiError.badRequest('Пользователь не найден'))
-      }
-
-      const task = await Task.findOne({ where: { id: taskId } })
-      if (!task) {
-        next(ApiError.badRequest('Задание не найдено'))
-      }
-
-      // await user.removeTaskRating(task)
-      await user.addRatingForTask(task, { through: { rating: rating } })
-
       return res.json({
-        rating: rating,
+        rating: await taskRatingService.add(userId, taskId, rating),
       })
     } catch (error) {
-      console.log(error)
       next(ApiError.badRequest(error))
     }
   }
@@ -36,17 +23,7 @@ class TaskRatingController {
       const userId = req.user.id
       const { taskId } = req.body
 
-      const user = await User.findOne({ where: { id: userId } })
-      if (!user) {
-        next(ApiError.badRequest('Пользователь не найден'))
-      }
-
-      const task = await Task.findOne({ where: { id: taskId } })
-      if (!task) {
-        next(ApiError.badRequest('Задание не найдено'))
-      }
-
-      await user.removeTaskRating(task)
+      await taskRatingService.remove(userId, taskId)
 
       return res.status(200).json({ message: 'Оценка удалена' })
     } catch (error) {
@@ -59,14 +36,7 @@ class TaskRatingController {
     try {
       const userId = req.user.id
 
-      const user = await User.findOne({ where: { id: userId } })
-      if (!user) {
-        next(ApiError.badRequest('Пользователь не найден'))
-      }
-
-      const taskRatings = await user.getTaskRatings()
-
-      return res.json(taskRatings)
+      return res.json(await taskRatingService.getAllForUser(userId))
     } catch (error) {
       next(ApiError.badRequest(error))
     }
@@ -77,27 +47,9 @@ class TaskRatingController {
     try {
       const userId = req.user.id
       const { id: taskId } = req.params
-      if (!taskId) {
-        next(ApiError.badRequest('Не задан ID'))
-      }
 
-      const user = await User.findOne({ where: { id: userId } })
-      if (!user) {
-        next(ApiError.badRequest('Пользователь не найден'))
-      }
-
-      const task = await Task.findOne({ where: { id: taskId } })
-      if (!task) {
-        next(ApiError.badRequest('Задание не найдено'))
-      }
-
-      const rating = await TaskRating.findOne({
-        where: { userId, taskId },
-      })
-
-      return res.json(rating)
+      return res.json(await taskRatingService.getOneForUser(userId, taskId))
     } catch (error) {
-      console.log(error)
       next(ApiError.badRequest(error))
     }
   }

@@ -1,19 +1,21 @@
-const { Task, Marker, Dictionary, TaskRating } = require('../db/models')
+const { Task, Marker, Dictionary } = require('../db/models')
 const { Sequelize, Op } = require('sequelize')
 const ApiError = require('../exceptions/ApiError')
 const uuid = require('uuid')
 const fs = require('fs')
 const path = require('path')
-const { log } = require('console')
+const taskRatingService = require('../services/taskRatingService')
 
 class TaskController {
   async create(req, res, next) {
     try {
+      const userId = req.user.id
       let { complexity, markers, id } = req.body
       id = JSON.parse(id)
       markers = JSON.parse(markers)
       complexity = Number.parseInt(JSON.parse(complexity))
 
+      // получение картинки
       let img = null
       if (req.files) {
         img = req.files.img
@@ -22,8 +24,8 @@ class TaskController {
       }
 
       let task = null
+      //если есть id задачи, то ищем задачу в БД
       if (id) {
-        //если есть id задачи, то ищем задачу в БД
         task = await Task.findOne({
           where: { id: id },
         })
@@ -32,21 +34,20 @@ class TaskController {
         if (img && task.imgUrl !== img.name) {
           //Если названия картинок не совпадают, то
           //Удаляем старую картинку
-          // console.log(path.resolve(__dirname, '..', 'static', task.imgUrl))
           fs.unlink(
             path.resolve(__dirname, '..', 'static', task.imgUrl),
             (err) => {
               if (err) throw err
             }
           )
-          //И сохраняем новую картинку
 
+          //И сохраняем новую картинку
           let fileName = uuid.v4() + '.jpg'
           img.mv(path.resolve(__dirname, '..', 'static', fileName))
           task.imgUrl = fileName
         }
-      } else {
-        //Если нет id задачи то создаем новую
+      } //Если нет id задачи то создаем новую задачу
+      else {
         let fileName = uuid.v4() + '.jpg'
         img.mv(path.resolve(__dirname, '..', 'static', fileName))
 
@@ -54,6 +55,11 @@ class TaskController {
       }
 
       await task.save()
+
+      // если небыло id задания сохраняем первую оценку от автора задания
+      if (!id) {
+        taskRatingService.add(userId, task.id, 100)
+      }
 
       //удаляем старые маркеры в БД
       await Marker.destroy({
