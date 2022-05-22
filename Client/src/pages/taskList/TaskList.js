@@ -6,15 +6,15 @@ import styles from './TaskList.module.scss'
 import VSelect from '../../components/ui/VSelect/VSelect'
 import { useFetching } from '../../hooks/useFetching'
 
-const limit = 8
+const limit = 8 // количество заданий загружаемых за один запрос
 
 const TaskList = (props) => {
   const [taskList, setTaskList] = useState([]) // спсиок заданий
   const [currentPage, setCurrentPage] = useState(1) // последняя загруженная страница
-  const [totalPages, setTotalPages] = useState(Infinity) // загружена последняя страница заданий
-  const [selectedSort, setSelectedSort] = useState('') // выбранный метод сортировки
-  const lastElement = useRef() // последний элемент массива
-  const observer = useRef() // для слежки за видимостью последнего элемента
+  const [totalPages, setTotalPages] = useState(Infinity) // всего страниц
+  const [selectedSort, setSelectedSort] = useState('easyFirst') // выбранный метод сортировки
+  const lastElement = useRef() // элемент после листа, при отоброжении которго подгружаются новые посты
+  const observer = useRef() // для слежки за видимостью элемента после листа
   const { loading, fetching } = useFetching() // обертка для отображения состояния загрузки данных с сервера
 
   // подгрузка постов при прокрутке страницы
@@ -34,12 +34,19 @@ const TaskList = (props) => {
 
   useEffect(() => {
     getTasksFromServer(currentPage, selectedSort)
-  }, [currentPage])
+  }, [currentPage, selectedSort])
+
+  // смена сортировки
+  const SelectSort = (sort) => {
+    setSelectedSort(sort)
+    setCurrentPage(1)
+    setTaskList([])
+  }
 
   // запрос списка заданий
   const getTasksFromServer = (page, sort) => {
     fetching(async () => {
-      await fetchAllTask(page, limit, 'highlyRatedFirst')
+      await fetchAllTask(page, limit, sort)
         .then((data) => {
           setTaskList((taskList) => [...taskList, ...data.tasks])
           setTotalPages(data.totalPages)
@@ -50,16 +57,12 @@ const TaskList = (props) => {
     })
   }
 
-  // const sortTasks = (sort) => {
-  //   setSelectedSort(sort)
-  // }
-
   return (
     <div className={styles.container}>
       <div>
         <VSelect
           value={selectedSort}
-          onChange={(sort) => setSelectedSort(sort)}
+          onChange={(sort) => SelectSort(sort)}
           defaultValue="Сортировка"
           options={[
             { value: 'newFirst', name: 'Сначала новые' },
