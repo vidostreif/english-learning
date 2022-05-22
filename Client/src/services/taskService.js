@@ -21,10 +21,11 @@ export const fetchTask = async (id) => {
   return data
 }
 
-export const fetchAllTask = async (page, sort) => {
+export const fetchAllTask = async (page, limit, sort) => {
   const { data } = await $api.get(API_TASK, {
     params: {
       page,
+      limit,
       sort,
     },
   })

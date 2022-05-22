@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { fetchAllTask } from '../../services/taskService'
 import Loader from '../../components/loader/Loader.js'
 import TaskCard from '../../components/taskCard/TaskCard'
@@ -6,21 +6,47 @@ import styles from './TaskList.module.scss'
 import VSelect from '../../components/ui/VSelect/VSelect'
 import { useFetching } from '../../hooks/useFetching'
 
-const TaskList = (props) => {
-  const [taskList, setTaskList] = useState([])
-  const [selectedSort, setSelectedSort] = useState('')
+const limit = 8
 
-  const { loading, fetching } = useFetching()
+const TaskList = (props) => {
+  const [taskList, setTaskList] = useState([]) // спсиок заданий
+  const [currentPage, setCurrentPage] = useState(1) // последняя загруженная страница
+  const [totalPages, setTotalPages] = useState(Infinity) // загружена последняя страница заданий
+  const [selectedSort, setSelectedSort] = useState('') // выбранный метод сортировки
+  const lastElement = useRef() // последний элемент массива
+  const observer = useRef() // для слежки за видимостью последнего элемента
+  const { loading, fetching } = useFetching() // обертка для отображения состояния загрузки данных с сервера
+
+  // подгрузка постов при прокрутке страницы
+  useEffect(() => {
+    if (loading) return // если в состоянии загрузки, то выходим
+    if (observer.current) observer.current.disconnect() // если observer за кем-то наблюдает, то отключаем наблюдение
+
+    // когда видим указанный div то прибавляем страницу
+    const callback = function (entries, observer) {
+      if (entries[0].isIntersecting && currentPage < totalPages) {
+        setCurrentPage((currentPage) => currentPage + 1)
+      }
+    }
+    observer.current = new IntersectionObserver(callback)
+    observer.current.observe(lastElement.current)
+  }, [loading])
 
   useEffect(() => {
-    getTasksFromServer(1, selectedSort)
-  }, [selectedSort])
+    getTasksFromServer(currentPage, selectedSort)
+  }, [currentPage])
 
+  // запрос списка заданий
   const getTasksFromServer = (page, sort) => {
     fetching(async () => {
-      await fetchAllTask(page, sort).then((data) => {
-        setTaskList(data)
-      })
+      await fetchAllTask(page, limit, sort)
+        .then((data) => {
+          setTaskList((taskList) => [...taskList, ...data.tasks])
+          setTotalPages(data.totalPages)
+        })
+        .catch(() => {
+          setTotalPages(0) // если произошла ошибка, то сообщаем, что это последняя страница
+        })
     })
   }
 
@@ -55,7 +81,7 @@ const TaskList = (props) => {
             })
           : ''}
       </div>
-      {loading ? <Loader /> : ''}
+      <div ref={lastElement}>{loading ? <Loader /> : ''}</div>
     </div>
   )
 }

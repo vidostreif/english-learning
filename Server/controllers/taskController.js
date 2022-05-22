@@ -1,4 +1,4 @@
-const { Task, Marker, Dictionary } = require('../db/models')
+const { Task, Marker, Dictionary, TaskRating } = require('../db/models')
 const { Sequelize, Op } = require('sequelize')
 const ApiError = require('../exceptions/ApiError')
 const uuid = require('uuid')
@@ -99,7 +99,39 @@ class TaskController {
   }
 
   async getAll(req, res) {
-    const resu = await Task.scope('includeRating').findAll()
+    // complexity- строка или массив строк со значение от 1 до 5
+    // limit - выбираемое количество
+    // page - запрашиваемая страница
+    let { limit = 10, page = 1, complexity } = req.query
+
+    console.log(limit, page, complexity)
+    limit = parseInt(JSON.parse(limit))
+    page = parseInt(JSON.parse(page))
+
+    let param = {
+      offset: limit * (page - 1),
+      limit,
+    }
+    const filter = {}
+    if (complexity) {
+      complexity = parseInt(JSON.parse(complexity))
+      filter.where = {
+        complexity,
+      }
+    }
+
+    const resu = {}
+    resu.tasks = await Task.scope('includeRating').findAll({
+      ...param,
+      ...filter,
+    })
+
+    resu.count = await Task.count({
+      ...filter,
+    })
+
+    resu.currentPage = page
+    resu.totalPages = Math.ceil(resu.count / limit) // всего страниц
     res.json(resu)
   }
 

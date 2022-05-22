@@ -46,6 +46,7 @@ Task.init(
             },
           ],
           group: ['task.id'],
+          subQuery: false, // отключение создания подзапроса, что бы работал limit
         }
       },
     },
