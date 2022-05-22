@@ -99,40 +99,72 @@ class TaskController {
   }
 
   async getAll(req, res) {
-    // complexity- строка или массив строк со значение от 1 до 5
-    // limit - выбираемое количество
-    // page - запрашиваемая страница
-    let { limit = 10, page = 1, complexity } = req.query
+    try {
+      // complexity- строка или массив строк со значение от 1 до 5
+      // limit - выбираемое количество
+      // page - запрашиваемая страница
+      let { limit = 10, page = 1, complexity, sort } = req.query
 
-    console.log(limit, page, complexity)
-    limit = parseInt(JSON.parse(limit))
-    page = parseInt(JSON.parse(page))
+      limit = parseInt(JSON.parse(limit))
+      page = parseInt(JSON.parse(page))
 
-    let param = {
-      offset: limit * (page - 1),
-      limit,
-    }
-    const filter = {}
-    if (complexity) {
-      complexity = parseInt(JSON.parse(complexity))
-      filter.where = {
-        complexity,
+      let param = {
+        offset: limit * (page - 1),
+        limit,
       }
+      const filter = {}
+      if (complexity) {
+        complexity = parseInt(JSON.parse(complexity))
+        filter.where = {
+          complexity,
+        }
+      }
+
+      if (sort) {
+        switch (sort) {
+          case 'newFirst':
+            param.order = [['createdAt', 'DESC']]
+            break
+          case 'popularFirst':
+            param.order = [['numberOfPasses', 'DESC']]
+            break
+          case 'hardFirst':
+            param.order = [['complexity', 'DESC']]
+            break
+          case 'easyFirst':
+            param.order = [['complexity', 'ASC']]
+            break
+          case 'highlyRatedFirst':
+            param.order = [[Sequelize.literal('rating'), 'DESC']]
+            break
+          case 'lowRatedFirst':
+            param.order = [[Sequelize.literal('rating'), 'ASC']]
+            break
+          default:
+            next(
+              ApiError.badRequest(
+                'Неудалось определить сортировку по значению: ' + sort
+              )
+            )
+        }
+      }
+
+      const resu = {}
+      resu.tasks = await Task.scope('includeRating').findAll({
+        ...param,
+        ...filter,
+      })
+
+      resu.count = await Task.count({
+        ...filter,
+      })
+
+      resu.currentPage = page
+      resu.totalPages = Math.ceil(resu.count / limit) // всего страниц
+      res.json(resu)
+    } catch (error) {
+      next(ApiError.badRequest(error))
     }
-
-    const resu = {}
-    resu.tasks = await Task.scope('includeRating').findAll({
-      ...param,
-      ...filter,
-    })
-
-    resu.count = await Task.count({
-      ...filter,
-    })
-
-    resu.currentPage = page
-    resu.totalPages = Math.ceil(resu.count / limit) // всего страниц
-    res.json(resu)
   }
 
   async getOne(req, res) {

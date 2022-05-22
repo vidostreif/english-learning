@@ -39,7 +39,7 @@ const TaskList = (props) => {
   // запрос списка заданий
   const getTasksFromServer = (page, sort) => {
     fetching(async () => {
-      await fetchAllTask(page, limit, sort)
+      await fetchAllTask(page, limit, 'highlyRatedFirst')
         .then((data) => {
           setTaskList((taskList) => [...taskList, ...data.tasks])
           setTotalPages(data.totalPages)
