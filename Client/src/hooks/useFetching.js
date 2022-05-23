@@ -17,12 +17,13 @@ export const useFetching = () => {
         if (isMounted.current) {
           setLoading(true)
         } //если объект существует
+
         return await callback() //вызов переданной функции
       } catch (error) {
         //если отображать ошибку, то выводим тост с ошибкой
         if (displayError) {
           if (isMounted.current) {
-            setError(error.message)
+            setError(error.response?.data?.message || error.message)
           }
           // иначе пробрасываем ошибку в место вызова функции
         } else {

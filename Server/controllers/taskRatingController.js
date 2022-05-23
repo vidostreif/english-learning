@@ -1,20 +1,15 @@
-const { TaskRating, User, Task } = require('../db/models')
 const ApiError = require('../exceptions/ApiError')
 const taskRatingService = require('../services/taskRatingService')
 
 class TaskRatingController {
   //добавление оценки задания от пользователя
   async addUserTaskRating(req, res, next) {
-    try {
-      const userId = req.user.id
-      const { taskId, rating } = req.body
+    const userId = req.user.id
+    const { taskId, rating } = req.body
 
-      return res.json({
-        rating: await taskRatingService.add(userId, taskId, rating),
-      })
-    } catch (error) {
-      next(ApiError.badRequest(error))
-    }
+    return res.json({
+      rating: await taskRatingService.add(userId, taskId, rating),
+    })
   }
 
   // удаление оценки пользователя
@@ -27,6 +22,9 @@ class TaskRatingController {
 
       return res.status(200).json({ message: 'Оценка удалена' })
     } catch (error) {
+      if (error instanceof ApiError) {
+        next(error)
+      }
       next(ApiError.badRequest(error))
     }
   }
@@ -38,6 +36,9 @@ class TaskRatingController {
 
       return res.json(await taskRatingService.getAllForUser(userId))
     } catch (error) {
+      if (error instanceof ApiError) {
+        next(error)
+      }
       next(ApiError.badRequest(error))
     }
   }
@@ -50,6 +51,9 @@ class TaskRatingController {
 
       return res.json(await taskRatingService.getOneForUser(userId, taskId))
     } catch (error) {
+      if (error instanceof ApiError) {
+        next(error)
+      }
       next(ApiError.badRequest(error))
     }
   }

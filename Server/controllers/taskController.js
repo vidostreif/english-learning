@@ -1,103 +1,13 @@
 const { Task, Marker, Dictionary } = require('../db/models')
 const { Sequelize, Op } = require('sequelize')
-const ApiError = require('../exceptions/ApiError')
-const uuid = require('uuid')
-const fs = require('fs')
-const path = require('path')
-const taskRatingService = require('../services/taskRatingService')
+const taskService = require('../services/taskService')
 
 class TaskController {
-  async create(req, res, next) {
-    try {
-      const userId = req.user.id
-      let { complexity, markers, id } = req.body
-      id = JSON.parse(id)
-      markers = JSON.parse(markers)
-      complexity = Number.parseInt(JSON.parse(complexity))
+  async addOrUpdate(req, res, next) {
+    const userId = req.user.id
+    let { complexity, markers, id } = req.body
 
-      // получение картинки
-      let img = null
-      if (req.files) {
-        img = req.files.img
-      } else if (!id) {
-        throw 'Попытка сохранения задания без картинки!'
-      }
-
-      let task = null
-      //если есть id задачи, то ищем задачу в БД
-      if (id) {
-        task = await Task.findOne({
-          where: { id: id },
-        })
-        task.complexity = complexity
-
-        if (img && task.imgUrl !== img.name) {
-          //Если названия картинок не совпадают, то
-          //Удаляем старую картинку
-          fs.unlink(
-            path.resolve(__dirname, '..', 'static', task.imgUrl),
-            (err) => {
-              if (err) throw err
-            }
-          )
-
-          //И сохраняем новую картинку
-          let fileName = uuid.v4() + '.jpg'
-          img.mv(path.resolve(__dirname, '..', 'static', fileName))
-          task.imgUrl = fileName
-        }
-      } //Если нет id задачи то создаем новую задачу
-      else {
-        let fileName = uuid.v4() + '.jpg'
-        img.mv(path.resolve(__dirname, '..', 'static', fileName))
-
-        task = new Task({ imgUrl: fileName, complexity })
-      }
-
-      await task.save()
-
-      // если небыло id задания сохраняем первую оценку от автора задания
-      if (!id) {
-        taskRatingService.add(userId, task.id, 100)
-      }
-
-      //удаляем старые маркеры в БД
-      await Marker.destroy({
-        where: {
-          taskId: task.id,
-        },
-      })
-
-      //Сохраняем маркеры в БД
-      const markersInDB = await Marker.bulkCreate(markers)
-      await task.setMarkers(markersInDB)
-
-      //Сохраняем слова и привязываем их к маркерам
-      for (let index = 0; index < markers.length; index++) {
-        const newText = markers[index].text.trim().toLowerCase()
-
-        let text = await Dictionary.findOne({
-          where: { name: newText },
-        })
-
-        if (!text) {
-          text = new Dictionary({
-            name: newText,
-          })
-          await text.save()
-        }
-
-        await markersInDB[index].setDictionary(text)
-      }
-
-      const resu = await Task.scope('includeMarkers').findOne({
-        where: { id: task.id },
-      })
-
-      res.json(resu)
-    } catch (error) {
-      next(ApiError.badRequest(error.message))
-    }
+    res.json(await taskService.addOrUpdate(userId, id, complexity, markers))
   }
 
   async delete(req, res) {
@@ -105,78 +15,70 @@ class TaskController {
   }
 
   async getAll(req, res) {
-    try {
-      // complexity- строка или массив строк со значение от 1 до 5
-      // limit - выбираемое количество
-      // page - запрашиваемая страница
-      let { limit = 10, page = 1, complexity, sort } = req.query
+    // complexity- строка или массив строк со значение от 1 до 5
+    // limit - выбираемое количество
+    // page - запрашиваемая страница
+    let { limit = 10, page = 1, complexity, sort } = req.query
 
-      limit = parseInt(JSON.parse(limit))
-      page = parseInt(JSON.parse(page))
+    limit = parseInt(JSON.parse(limit))
+    page = parseInt(JSON.parse(page))
 
-      let param = {
-        offset: limit * (page - 1),
-        limit,
-      }
-      const filter = {}
-      if (complexity) {
-        complexity = parseInt(JSON.parse(complexity))
-        filter.where = {
-          complexity,
-        }
-      }
-
-      if (sort) {
-        switch (sort) {
-          case 'newFirst':
-            param.order = [['createdAt', 'DESC']]
-            break
-          case 'popularFirst':
-            param.order = [['numberOfPasses', 'DESC']]
-            break
-          case 'hardFirst':
-            param.order = [['complexity', 'DESC']]
-            break
-          case 'easyFirst':
-            param.order = [['complexity', 'ASC']]
-            break
-          case 'highlyRatedFirst':
-            param.order = [[Sequelize.literal('rating'), 'DESC']]
-            break
-          case 'lowRatedFirst':
-            param.order = [[Sequelize.literal('rating'), 'ASC']]
-            break
-          default:
-            next(
-              ApiError.badRequest(
-                'Неудалось определить сортировку по значению: ' + sort
-              )
-            )
-        }
-      }
-
-      const resu = {}
-      resu.tasks = await Task.scope('includeRating').findAll({
-        ...param,
-        ...filter,
-      })
-
-      resu.count = await Task.count({
-        ...filter,
-      })
-
-      resu.currentPage = page
-      resu.totalPages = Math.ceil(resu.count / limit) // всего страниц
-      res.json(resu)
-    } catch (error) {
-      next(ApiError.badRequest(error))
+    let param = {
+      offset: limit * (page - 1),
+      limit,
     }
+    const filter = {}
+    if (complexity) {
+      complexity = parseInt(JSON.parse(complexity))
+      filter.where = {
+        complexity,
+      }
+    }
+
+    if (sort) {
+      switch (sort) {
+        case 'newFirst':
+          param.order = [['createdAt', 'DESC']]
+          break
+        case 'popularFirst':
+          param.order = [['numberOfPasses', 'DESC']]
+          break
+        case 'hardFirst':
+          param.order = [['complexity', 'DESC']]
+          break
+        case 'easyFirst':
+          param.order = [['complexity', 'ASC']]
+          break
+        case 'highlyRatedFirst':
+          param.order = [[Sequelize.literal('rating'), 'DESC']]
+          break
+        case 'lowRatedFirst':
+          param.order = [[Sequelize.literal('rating'), 'ASC']]
+          break
+        default:
+          throw 'Неудалось определить сортировку по значению: ' + sort
+      }
+    }
+
+    const resu = {}
+    resu.tasks = await Task.scope('includeRating').findAll({
+      ...param,
+      ...filter,
+    })
+
+    resu.count = await Task.count({
+      ...filter,
+    })
+
+    resu.currentPage = page
+    resu.totalPages = Math.ceil(resu.count / limit) // всего страниц
+    res.json(resu)
   }
 
-  async getOne(req, res) {
+  async getOne(req, res, next) {
     const { id } = req.params
     if (!id) {
-      next(ApiError.badRequest('Не задан ID'))
+      throw 'Не задан ID'
     }
     const resu = await Task.scope('includeMarkers').findOne({
       where: { id: id },
@@ -203,6 +105,13 @@ class TaskController {
       ...param,
     })
     res.json(resu)
+  }
+
+  // увеличение счетчика прохождения задания
+  async wasPassed(req, res) {
+    const { id } = req.params
+
+    res.json(await taskService.wasPassed(id))
   }
 }
 

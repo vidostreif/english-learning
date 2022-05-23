@@ -19,7 +19,7 @@ const TaskList = (props) => {
 
   // подгрузка постов при прокрутке страницы
   useEffect(() => {
-    if (loading) return // если в состоянии загрузки, то выходим
+    // if (loading) return // если в состоянии загрузки, то выходим
     if (observer.current) observer.current.disconnect() // если observer за кем-то наблюдает, то отключаем наблюдение
 
     // когда видим указанный div то прибавляем страницу
@@ -30,7 +30,7 @@ const TaskList = (props) => {
     }
     observer.current = new IntersectionObserver(callback)
     observer.current.observe(lastElement.current)
-  }, [loading])
+  }, [currentPage, totalPages])
 
   useEffect(() => {
     getTasksFromServer(currentPage, selectedSort)
@@ -51,8 +51,9 @@ const TaskList = (props) => {
           setTaskList((taskList) => [...taskList, ...data.tasks])
           setTotalPages(data.totalPages)
         })
-        .catch(() => {
+        .catch((error) => {
           setTotalPages(0) // если произошла ошибка, то сообщаем, что это последняя страница
+          throw error
         })
     })
   }
@@ -84,7 +85,7 @@ const TaskList = (props) => {
             })
           : ''}
       </div>
-      <div ref={lastElement}>{loading ? <Loader /> : ''}</div>
+      <div ref={lastElement}>{currentPage < totalPages ? <Loader /> : ''}</div>
     </div>
   )
 }

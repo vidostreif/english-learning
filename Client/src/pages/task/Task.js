@@ -3,7 +3,11 @@ import { Context } from '../..'
 import { observer } from 'mobx-react-lite'
 import DivDrag from '../../components/divDrag/DivDrag'
 import DropPlace from '../../components/dropPlace/DropPlace'
-import { fetchTask, fetchRandomTask } from '../../services/taskService'
+import {
+  fetchTask,
+  fetchRandomTask,
+  setTaskPassed,
+} from '../../services/taskService'
 import { Link, useSearchParams } from 'react-router-dom'
 import Loader from '../../components/loader/Loader'
 import FiveStars from '../../components/fiveStars/FiveStars'
@@ -119,6 +123,7 @@ const DragDrop = (props) => {
 
     if (allUsed) {
       setTaskIsDone(true)
+      setTaskPassed(taskId) // увеличение счетчика прохождения задания на сервере
     }
   }
 

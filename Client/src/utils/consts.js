@@ -8,6 +8,7 @@ export const USER = '/user'
 const API = '/api'
 
 export const API_TASK = `${API}${TASK_ROUTE}`
+export const API_TASK_PASSED = `${API}${TASK_ROUTE}/passed`
 export const API_TASK_RANDOM = `${API}${TASK_ROUTE}/random`
 
 export const API_TASK_RATING = `${API}${TASK_RATING}`

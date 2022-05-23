@@ -1,5 +1,5 @@
 import { $api } from '../api'
-import { API_TASK, API_TASK_RANDOM } from '../utils/consts'
+import { API_TASK, API_TASK_PASSED, API_TASK_RANDOM } from '../utils/consts'
 
 export const createTask = async (img, markers, complexity, id = null) => {
   const formData = new FormData()
@@ -8,7 +8,7 @@ export const createTask = async (img, markers, complexity, id = null) => {
   formData.append('id', id)
   formData.append('markers', JSON.stringify(markers))
 
-  const { data } = await $api.post('api/task', formData, {
+  const { data } = await $api.post(API_TASK, formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
@@ -17,6 +17,8 @@ export const createTask = async (img, markers, complexity, id = null) => {
 }
 
 export const fetchTask = async (id) => {
+  console.log(await $api.post(`${API_TASK_PASSED}/${id}`))
+
   const { data } = await $api.get(`${API_TASK}/${id}`)
   return data
 }
@@ -40,4 +42,9 @@ export const fetchRandomTask = async (count, not_id = null) => {
     },
   })
   return data
+}
+
+// увеличение счетчика прохождения задания
+export const setTaskPassed = async (id) => {
+  await $api.post(`${API_TASK_PASSED}/${id}`)
 }

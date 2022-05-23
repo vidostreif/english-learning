@@ -5,6 +5,20 @@ class ApiError extends Error {
     this.errors = errors
   }
 
+  //оболочка для выполнения кода в контроллерах
+  static tryShell(callback) {
+    return async (req, res, next) => {
+      try {
+        return await callback(req, res, next)
+      } catch (error) {
+        if (error instanceof ApiError) {
+          next(error)
+        }
+        next(ApiError.badRequest(error))
+      }
+    }
+  }
+
   static UnauthorizedError() {
     return new ApiError(401, 'Пользователь не авторизован')
   }
