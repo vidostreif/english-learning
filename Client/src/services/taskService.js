@@ -17,8 +17,6 @@ export const createTask = async (img, markers, complexity, id = null) => {
 }
 
 export const fetchTask = async (id) => {
-  console.log(await $api.post(`${API_TASK_PASSED}/${id}`))
-
   const { data } = await $api.get(`${API_TASK}/${id}`)
   return data
 }
