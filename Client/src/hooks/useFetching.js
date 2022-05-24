@@ -6,6 +6,7 @@ import { useIsMounted } from './useIsMounted'
 //хук обертка для запроса к серверу, который выводит тостер с ошибкой в случае некоректного выполнения
 export const useFetching = () => {
   const isMounted = useIsMounted() //используем хук для определения что объект не демонтирован
+  const [numberOfRequests, setNumberOfRequests] = useState(0) // количество текущий запросов
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 
@@ -15,6 +16,7 @@ export const useFetching = () => {
     async (callback, displayError = true) => {
       try {
         if (isMounted.current) {
+          setNumberOfRequests((numberOfRequests) => numberOfRequests + 1) // увеличиваем количество текущий запросов
           setLoading(true)
         } //если объект существует
 
@@ -32,7 +34,10 @@ export const useFetching = () => {
       } finally {
         //finally выполняется в любом случае до передачи управления вызываемой функции
         if (isMounted.current) {
-          setLoading(false)
+          setNumberOfRequests((numberOfRequests) => {
+            if (numberOfRequests <= 1) setLoading(false) // если это последний работавший запрос, то указываем, что больше не загружаем
+            return numberOfRequests - 1 // уменьшаем количество текущий запросов
+          })
         }
       }
     },

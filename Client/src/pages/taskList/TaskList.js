@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { fetchAllTask } from '../../services/taskService'
 import Loader from '../../components/loader/Loader.js'
 import TaskCard from '../../components/taskCard/TaskCard'
@@ -17,9 +17,13 @@ const TaskList = (props) => {
   const observer = useRef() // для слежки за видимостью элемента после листа
   const { loading, fetching } = useFetching() // обертка для отображения состояния загрузки данных с сервера
 
+  useEffect(() => {
+    getTasksFromServer(currentPage, selectedSort)
+  }, [currentPage, selectedSort])
+
   // подгрузка постов при прокрутке страницы
   useEffect(() => {
-    // if (loading) return // если в состоянии загрузки, то выходим
+    if (loading) return // если в состоянии загрузки, то выходим
     if (observer.current) observer.current.disconnect() // если observer за кем-то наблюдает, то отключаем наблюдение
 
     // когда видим указанный div то прибавляем страницу
@@ -30,11 +34,7 @@ const TaskList = (props) => {
     }
     observer.current = new IntersectionObserver(callback)
     observer.current.observe(lastElement.current)
-  }, [currentPage, totalPages])
-
-  useEffect(() => {
-    getTasksFromServer(currentPage, selectedSort)
-  }, [currentPage, selectedSort])
+  }, [currentPage, totalPages, loading])
 
   // смена сортировки
   const SelectSort = (sort) => {
@@ -44,19 +44,22 @@ const TaskList = (props) => {
   }
 
   // запрос списка заданий
-  const getTasksFromServer = (page, sort) => {
-    fetching(async () => {
-      await fetchAllTask(page, limit, sort)
-        .then((data) => {
-          setTaskList((taskList) => [...taskList, ...data.tasks])
-          setTotalPages(data.totalPages)
-        })
-        .catch((error) => {
-          setTotalPages(0) // если произошла ошибка, то сообщаем, что это последняя страница
-          throw error
-        })
-    })
-  }
+  const getTasksFromServer = useCallback(
+    (page, sort) => {
+      fetching(async () => {
+        await fetchAllTask(page, limit, sort)
+          .then((data) => {
+            setTaskList((taskList) => [...taskList, ...data.tasks])
+            setTotalPages(data.totalPages)
+          })
+          .catch((error) => {
+            setTotalPages(0) // если произошла ошибка, то сообщаем, что это последняя страница
+            throw error
+          })
+      })
+    },
+    [fetching]
+  )
 
   return (
     <div className={styles.container}>
