@@ -3,6 +3,7 @@ const router = new Router()
 const userController = require('../controllers/userController')
 const { body } = require('express-validator')
 const authMiddleware = require('../middleware/authMiddleware')
+const ApiError = require('../exceptions/ApiError')
 
 router.post(
   '/registration',
@@ -18,17 +19,17 @@ router.post(
     .isNumeric()
     .not()
     .isAlpha(), //валидация пароля
-  userController.registration
+  ApiError.tryShell(userController.registration)
 )
-router.post('/login', userController.login)
-router.post('/logout', userController.logout)
-router.get('/activate/:link', userController.activate)
-router.get('/refresh', userController.refresh)
+router.post('/login', ApiError.tryShell(userController.login))
+router.post('/logout', ApiError.tryShell(userController.logout))
+router.get('/activate/:link', ApiError.tryShell(userController.activate))
+router.get('/refresh', ApiError.tryShell(userController.refresh))
 router.get(
   '/users',
   authMiddleware.isAuthorized,
   authMiddleware.isAdministarator,
-  userController.getUsers
+  ApiError.tryShell(userController.getUsers)
 )
 
 module.exports = router

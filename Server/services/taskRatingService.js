@@ -1,17 +1,16 @@
 const { User, Task, TaskRating } = require('../db/models')
-const ApiError = require('../exceptions/ApiError')
 
 class TaskRatingService {
   //добавление новой оценки
   async add(userId, taskId, rating) {
     const user = await User.findOne({ where: { id: userId } })
     if (!user) {
-      throw ApiError.badRequest('Пользователь не найден')
+      throw new Error('Пользователь не найден')
     }
 
     const task = await Task.findOne({ where: { id: taskId } })
     if (!task) {
-      throw ApiError.badRequest('Задание не найдено')
+      throw new Error('Задание не найдено')
     }
 
     // await user.removeTaskRating(task)
@@ -24,12 +23,12 @@ class TaskRatingService {
   async remove(userId, taskId) {
     const user = await User.findOne({ where: { id: userId } })
     if (!user) {
-      throw ApiError.badRequest('Пользователь не найден')
+      throw new Error('Пользователь не найден')
     }
 
     const task = await Task.findOne({ where: { id: taskId } })
     if (!task) {
-      throw ApiError.badRequest('Задание не найдено')
+      throw new Error('Задание не найдено')
     }
 
     return await user.removeTaskRating(task)
@@ -39,7 +38,7 @@ class TaskRatingService {
   async getAllForUser(userId) {
     const user = await User.findOne({ where: { id: userId } })
     if (!user) {
-      throw ApiError.badRequest('Пользователь не найден')
+      throw new Error('Пользователь не найден')
     }
 
     return await user.getTaskRatings()
@@ -48,21 +47,21 @@ class TaskRatingService {
   // получить оценку пользователя по конкретному заданию
   async getOneForUser(userId, taskId) {
     if (!taskId) {
-      throw ApiError.badRequest('Не задан ID задания')
+      throw new Error('Не задан ID задания')
     }
 
     if (!userId) {
-      throw ApiError.badRequest('Не задан ID пользователя')
+      throw new Error('Не задан ID пользователя')
     }
 
     const user = await User.findOne({ where: { id: userId } })
     if (!user) {
-      throw ApiError.badRequest('Пользователь не найден')
+      throw new Error('Пользователь не найден')
     }
 
     const task = await Task.findOne({ where: { id: taskId } })
     if (!task) {
-      throw ApiError.badRequest('Задание не найдено')
+      throw new Error('Задание не найдено')
     }
 
     return await TaskRating.findOne({

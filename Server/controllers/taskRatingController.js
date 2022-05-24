@@ -1,4 +1,3 @@
-const ApiError = require('../exceptions/ApiError')
 const taskRatingService = require('../services/taskRatingService')
 
 class TaskRatingController {
@@ -14,48 +13,27 @@ class TaskRatingController {
 
   // удаление оценки пользователя
   async removeUserTaskRating(req, res, next) {
-    try {
-      const userId = req.user.id
-      const { taskId } = req.body
+    const userId = req.user.id
+    const { taskId } = req.body
 
-      await taskRatingService.remove(userId, taskId)
+    await taskRatingService.remove(userId, taskId)
 
-      return res.status(200).json({ message: 'Оценка удалена' })
-    } catch (error) {
-      if (error instanceof ApiError) {
-        next(error)
-      }
-      next(ApiError.badRequest(error))
-    }
+    return res.status(200).json({ message: 'Оценка удалена' })
   }
 
   // получить все оценки пользователя
   async getAllUserTaskRatings(req, res, next) {
-    try {
-      const userId = req.user.id
+    const userId = req.user.id
 
-      return res.json(await taskRatingService.getAllForUser(userId))
-    } catch (error) {
-      if (error instanceof ApiError) {
-        next(error)
-      }
-      next(ApiError.badRequest(error))
-    }
+    return res.json(await taskRatingService.getAllForUser(userId))
   }
 
   // получить оценку пользователя по конкретному заданию
   async getOneUserTaskRating(req, res, next) {
-    try {
-      const userId = req.user.id
-      const { id: taskId } = req.params
+    const userId = req.user.id
+    const { id: taskId } = req.params
 
-      return res.json(await taskRatingService.getOneForUser(userId, taskId))
-    } catch (error) {
-      if (error instanceof ApiError) {
-        next(error)
-      }
-      next(ApiError.badRequest(error))
-    }
+    return res.json(await taskRatingService.getOneForUser(userId, taskId))
   }
 }
 

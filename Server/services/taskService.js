@@ -1,7 +1,6 @@
 const { User, Task, TaskRating, Marker } = require('../db/models')
 const uuid = require('uuid')
 const fs = require('fs')
-const ApiError = require('../exceptions/ApiError')
 const taskRatingService = require('./taskRatingService')
 const { Sequelize } = require('sequelize')
 
@@ -17,7 +16,7 @@ class TaskService {
     if (req.files) {
       img = req.files.img
     } else if (!taskId) {
-      throw 'Попытка сохранения задания без картинки!'
+      throw new Error('Попытка сохранения задания без картинки!')
     }
 
     let task = null
@@ -97,7 +96,7 @@ class TaskService {
   // увеличение счетчика прохождения задания
   async wasPassed(taskId) {
     if (!taskId) {
-      throw 'Не задан ID задания'
+      throw new Error('Не задан ID задания')
     }
 
     // инкремент количества прохождений

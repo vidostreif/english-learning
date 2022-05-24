@@ -14,7 +14,7 @@ class ApiError extends Error {
         if (error instanceof ApiError) {
           next(error)
         }
-        next(ApiError.badRequest(error))
+        next(ApiError.badRequest(error.message))
       }
     }
   }

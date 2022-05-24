@@ -13,9 +13,7 @@ class UserService {
       where: { email: email },
     })
     if (candidate) {
-      throw ApiError.badRequest(
-        `Пользователь с почтовым адресом ${email} уже существует`
-      )
+      throw new Error(`Пользователь с почтовым адресом ${email} уже существует`)
     }
 
     const hashPassword = await bcrypt.hash(password, 3) //создание хеша пароля
@@ -60,7 +58,7 @@ class UserService {
       where: { activationLink },
     })
     if (!user) {
-      throw ApiError.badRequest('Некорректная ссылка активации')
+      throw new Error('Некорректная ссылка активации')
     }
     user.isActivated = true
     await user.save()
@@ -72,12 +70,12 @@ class UserService {
     })
 
     if (!user) {
-      throw ApiError.badRequest(`Пользователь с таким email не найден`)
+      throw new Error(`Пользователь с таким email не найден`)
     }
     //проверяем пароль
     const isPassEquals = await bcrypt.compare(password, user.password)
     if (!isPassEquals) {
-      throw ApiError.badRequest(`Не верный пароль`)
+      throw new Error(`Не верный пароль`)
     }
 
     const userDto = new UserDto(user)

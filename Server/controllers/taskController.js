@@ -56,7 +56,9 @@ class TaskController {
           param.order = [[Sequelize.literal('rating'), 'ASC']]
           break
         default:
-          throw 'Неудалось определить сортировку по значению: ' + sort
+          throw new Error(
+            'Неудалось определить сортировку по значению: ' + sort
+          )
       }
     }
 
@@ -78,7 +80,7 @@ class TaskController {
   async getOne(req, res, next) {
     const { id } = req.params
     if (!id) {
-      throw 'Не задан ID'
+      throw new Error('Не задан ID')
     }
     const resu = await Task.scope('includeMarkers').findOne({
       where: { id: id },
