@@ -12,11 +12,18 @@ const TaskCard = ({ task, rootStyles }) => {
       key={task.id}
       className={rootStyles?.TaskListElement || 'TaskListElement'}
     >
-      <img
-        className={rootStyles?.TaskListElement__img || 'TaskListElement__img'}
-        src={`${process.env.REACT_APP_API_URL}/${task.imgUrl}`}
-        alt="1"
-      />
+      <div
+        className={
+          rootStyles?.TaskListElement__imgConteiner ||
+          'TaskListElement__imgConteiner'
+        }
+      >
+        <img
+          className={rootStyles?.TaskListElement__img || 'TaskListElement__img'}
+          src={`${process.env.REACT_APP_API_URL}/${task.imgUrl}`}
+          alt="1"
+        />
+      </div>
       <div
         className={
           rootStyles?.TaskListElement__fiveStars || 'TaskListElement__fiveStars'

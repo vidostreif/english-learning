@@ -10,7 +10,7 @@
   /* flex: 1 0 300px; */
   display: flex;
   flex-direction: column;
-  /* justify-content: center; */
+  justify-content: space-between;
   align-items: center;
   width: 350px;
   /* position: relative; */
@@ -20,9 +20,18 @@
   box-shadow: 0 0 5px 2px rgba(221, 221, 221, 1);
 }
 
-.TaskListElement__img {
-  max-height: 300px;
+.TaskListElement__imgConteiner {
+  display: flex;
+  // justify-content: center;
+  align-items: center;
+  min-height: 220px;
   max-width: 100%;
+  border-radius: 10px 10px 0px 0px;
+}
+
+.TaskListElement__img {
+  max-height: 250px;
+  // max-width: 100%;
   border-radius: 10px 10px 0px 0px;
 }
 
