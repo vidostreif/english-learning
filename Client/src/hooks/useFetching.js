@@ -18,7 +18,7 @@ export const useFetching = () => {
           setLoading(true)
         } //если объект существует
 
-        return await callback() //вызов переданной функции
+        return await callback(isMounted.current) //вызов переданной функции с объектом в котором объявлялся useFetching
       } catch (error) {
         //если отображать ошибку, то выводим тост с ошибкой
         if (displayError) {

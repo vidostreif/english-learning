@@ -60,18 +60,20 @@ const DragDrop = (props) => {
 
   //получить задание
   const getTaskFromServer = (id) => {
-    fetchingTask(async () => {
+    fetchingTask(async (current) => {
       await fetchTask(id).then((data) => {
-        setTaskParam(data)
+        // если этот объект еще монтирован
+        if (current) setTaskParam(data)
       })
     })
   }
 
   //получить следующее рандомное задание
   const nextRandomTask = (id) => {
-    fetchingTask(async () => {
+    fetchingTask(async (current) => {
       await fetchRandomTask(1, id).then((data) => {
-        setTaskParam(data[0])
+        // если этот объект еще монтирован
+        if (current) setTaskParam(data[0])
       })
     })
   }
