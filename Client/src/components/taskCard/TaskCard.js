@@ -4,6 +4,7 @@ import FiveStars from '../fiveStars/FiveStars'
 import DifficultyDisplay from '../difficultyDisplay/DifficultyDisplay'
 import { TASK_ROUTE } from '../../utils/consts'
 
+// карточка задания для списка заданий
 const TaskCard = ({ task, rootStyles }) => {
   return (
     <Link

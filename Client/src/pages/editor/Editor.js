@@ -7,6 +7,7 @@ import { createTask, fetchTask } from '../../services/taskService'
 import { useSearchParams } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import styles from './Editor.module.scss'
+import { useFetching } from '../../hooks/useFetching'
 
 const Editor = () => {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -15,6 +16,8 @@ const Editor = () => {
   const [complexity, setComplexity] = useState('1')
   const [urlImg, setUrlImg] = useState()
   const [imgFile, setImgFile] = useState()
+
+  const { loading, fetching } = useFetching() //хук обертка для работы с сервером
 
   useEffect(() => {
     if (taskId) {
@@ -73,14 +76,12 @@ const Editor = () => {
   // )
 
   const setTaskOnServer = () => {
-    createTask(imgFile, markers, complexity, taskId)
-      .then((data) => {
+    fetching(async () => {
+      await createTask(imgFile, markers, complexity, taskId).then((data) => {
         setTaskParam(data)
         toast.success('Задание сохранено!')
       })
-      .catch((e) => {
-        toast.error(e)
-      })
+    })
   }
 
   const getTaskFromServer = (id) => {

@@ -1,20 +1,21 @@
-const { User, Task, TaskRating, Marker } = require('../db/models')
+const { User, Task, TaskRating, Marker, Dictionary } = require('../db/models')
 const uuid = require('uuid')
 const fs = require('fs')
 const taskRatingService = require('./taskRatingService')
 const { Sequelize } = require('sequelize')
+const path = require('path')
 
 class TaskService {
   //добавление или обновление параметров задания
-  async addOrUpdate(userId, taskId, complexity, markers) {
+  async addOrUpdate(userId, taskId, complexity, markers, files) {
     taskId = JSON.parse(taskId)
     markers = JSON.parse(markers)
     complexity = Number.parseInt(JSON.parse(complexity))
 
     // получение картинки
     let img = null
-    if (req.files) {
-      img = req.files.img
+    if (files) {
+      img = files.img
     } else if (!taskId) {
       throw new Error('Попытка сохранения задания без картинки!')
     }

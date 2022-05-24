@@ -5,9 +5,12 @@ const taskService = require('../services/taskService')
 class TaskController {
   async addOrUpdate(req, res, next) {
     const userId = req.user.id
-    let { complexity, markers, id } = req.body
+    const { complexity, markers, id } = req.body
+    const files = req.files
 
-    res.json(await taskService.addOrUpdate(userId, id, complexity, markers))
+    res.json(
+      await taskService.addOrUpdate(userId, id, complexity, markers, files)
+    )
   }
 
   async delete(req, res) {
