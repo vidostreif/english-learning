@@ -41,22 +41,40 @@ class TaskController {
     if (sort) {
       switch (sort) {
         case 'newFirst':
-          param.order = [['createdAt', 'DESC']]
+          param.order = [
+            ['createdAt', 'DESC'],
+            ['id', 'DESC'],
+          ]
           break
         case 'popularFirst':
-          param.order = [['numberOfPasses', 'DESC']]
+          param.order = [
+            ['numberOfPasses', 'DESC'],
+            ['id', 'DESC'],
+          ]
           break
         case 'hardFirst':
-          param.order = [['complexity', 'DESC']]
+          param.order = [
+            ['complexity', 'DESC'],
+            ['id', 'DESC'],
+          ]
           break
         case 'easyFirst':
-          param.order = [['complexity', 'ASC']]
+          param.order = [
+            ['complexity', 'ASC'],
+            ['id', 'ASC'],
+          ]
           break
         case 'highlyRatedFirst':
-          param.order = [[Sequelize.literal('rating'), 'DESC']]
+          param.order = [
+            [Sequelize.literal('rating'), 'DESC'],
+            ['id', 'DESC'],
+          ]
           break
         case 'lowRatedFirst':
-          param.order = [[Sequelize.literal('rating'), 'ASC']]
+          param.order = [
+            [Sequelize.literal('rating'), 'ASC'],
+            ['id', 'ASC'],
+          ]
           break
         default:
           throw new Error(
