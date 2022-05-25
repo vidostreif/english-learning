@@ -13,12 +13,19 @@ module.exports = async function dbPreparation(params) {
   //Пересохраняем все картинки в новом формате
   const tasks = await Task.findAll()
 
-  tasks.forEach(async (task) => {
+  // tasks.forEach(async (task) => {
+  //   if (task.imgUrl.indexOf('webp') < 0) {
+  //     task.imgUrl = await saveImg(task.imgUrl)
+  //     await task.save()
+  //   }
+  // })
+
+  for (const task of tasks) {
     if (task.imgUrl.indexOf('webp') < 0) {
       task.imgUrl = await saveImg(task.imgUrl)
       await task.save()
     }
-  })
+  }
 
   //Удаляем все не нужные картинки
   const tasks2 = await Task.findAll()
@@ -27,15 +34,18 @@ module.exports = async function dbPreparation(params) {
     files.forEach((file) => {
       let del = true
       tasks2.forEach(async (task) => {
-        if (task.imgUrl === file || 'mini_' + task.imgUrl === file) {
+        if (file.indexOf(task.imgUrl) > -1) {
           del = false
         }
       })
 
       if (del) {
-        fs.unlink(path.resolve(__dirname, '../..', 'static', file), (err) => {
-          if (err) throw err
-        })
+        fs.unlinkSync(
+          path.resolve(__dirname, '../..', 'static', file),
+          (err) => {
+            if (err) throw err
+          }
+        )
 
         console.log(file)
       }
@@ -60,9 +70,12 @@ const saveImg = async (oldfileName) => {
   // сохраняем миниатюру
   await sharp(oldImgPath).resize(350).toFile(imgPathMini)
 
-  fs.unlink(path.resolve(__dirname, '../..', 'static', oldfileName), (err) => {
-    if (err) throw err
-  })
+  fs.unlinkSync(
+    path.resolve(__dirname, '../..', 'static', oldfileName),
+    (err) => {
+      if (err) throw err
+    }
+  )
 
   return fileName
 }
