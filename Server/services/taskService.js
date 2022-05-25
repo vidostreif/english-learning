@@ -4,6 +4,7 @@ const fs = require('fs')
 const taskRatingService = require('./taskRatingService')
 const { Sequelize } = require('sequelize')
 const path = require('path')
+const sharp = require('sharp')
 
 class TaskService {
   //добавление или обновление параметров задания
@@ -31,24 +32,19 @@ class TaskService {
       if (img && task.imgUrl !== img.name) {
         //Если названия картинок не совпадают, то
         //Удаляем старую картинку
-        fs.unlink(
-          path.resolve(__dirname, '..', 'static', task.imgUrl),
-          (err) => {
-            if (err) throw err
-          }
-        )
+        this.delImg(task.imgUrl)
 
         //И сохраняем новую картинку
-        let fileName = uuid.v4() + '.jpg'
-        img.mv(path.resolve(__dirname, '..', 'static', fileName))
-        task.imgUrl = fileName
+        // const fileName = uuid.v4() + '.jpg'
+        // img.mv(path.resolve(__dirname, '..', 'static', fileName))
+        task.imgUrl = await this.saveImg(img)
       }
     } //Если нет id задачи то создаем новую задачу
     else {
-      let fileName = uuid.v4() + '.jpg'
-      img.mv(path.resolve(__dirname, '..', 'static', fileName))
+      // const fileName = uuid.v4() + '.jpg'
+      // img.mv(path.resolve(__dirname, '..', 'static', fileName))
 
-      task = new Task({ imgUrl: fileName, complexity })
+      task = new Task({ imgUrl: await this.saveImg(img), complexity })
     }
 
     await task.save()
@@ -104,6 +100,38 @@ class TaskService {
     await Task.increment({ numberOfPasses: 1 }, { where: { id: taskId } })
 
     return 'Количество прохождений увеличино'
+  }
+
+  // сохранение новой картинки
+  async saveImg(img) {
+    const newUuid = uuid.v4()
+    const fileName = newUuid + '.webp'
+    const imgPath = path.resolve(__dirname, '..', 'static', fileName)
+    const imgPathMini = path.resolve(
+      __dirname,
+      '..',
+      'static',
+      'mini_' + fileName
+    )
+
+    await sharp(img.data).toFile(imgPath)
+    // сохраняем миниатюру
+    await sharp(img.data).resize(350).toFile(imgPathMini)
+
+    return fileName
+  }
+
+  // удаление старой картинки
+  async delImg(imgName) {
+    const dirPath = path.resolve(__dirname, '..', 'static')
+    // основную
+    fs.unlink(path.resolve(dirPath, imgName), (err) => {
+      if (err) throw err
+    })
+    // миниатюру
+    fs.unlink(path.resolve(dirPath, 'mini_' + imgName), (err) => {
+      if (err) throw err
+    })
   }
 }
 
