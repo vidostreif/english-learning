@@ -20,7 +20,7 @@ const TaskCard = ({ task, rootStyles }) => {
       >
         <img
           className={rootStyles?.TaskListElement__img || 'TaskListElement__img'}
-          src={`${process.env.REACT_APP_API_URL}/${task.imgUrl}`}
+          src={`${process.env.REACT_APP_API_URL}/mini_${task.imgUrl}`}
           alt="1"
         />
       </div>
