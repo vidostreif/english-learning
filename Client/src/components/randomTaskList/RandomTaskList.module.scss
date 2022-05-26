@@ -7,7 +7,7 @@
 }
 
 .TaskListElement {
-  flex: 1 0 100px;
+  flex: 1 0 120px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -16,9 +16,20 @@
   background-color: #fff;
   box-shadow: 0 0 5px 2px rgba(221, 221, 221, 1);
 
+  &__imgConteiner {
+    display: flex;
+    // justify-content: center;
+    align-items: center;
+    min-height: 150px;
+    max-width: 100%;
+    border-radius: 10px 10px 0px 0px;
+    @media (max-width: 1440px) {
+      min-height: calc(170 * (100vw / 1440));
+    }
+  }
+
   &__img {
     max-height: 200px;
-    max-width: 100%;
     border-radius: 10px 10px 0px 0px;
     @media (max-width: 1440px) {
       max-height: calc(200 * (100vw / 1440));
