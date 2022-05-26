@@ -15,9 +15,6 @@ const TaskList = (props) => {
   const [taskList, setTaskList] = useState([]) // спсиок заданий
   const [currentPage, setCurrentPage] = useState(1) // последняя загруженная страница
   const [totalPages, setTotalPages] = useState(1) // всего страниц
-  // const [selectedSort, setSelectedSort] = useState(
-  //   settingsStore.settings.taskSort || 'easyFirst'
-  // ) // выбранный метод сортировки
   const lastElement = useRef() // элемент после листа, при отоброжении которго подгружаются новые посты
   const observer = useRef() // для слежки за видимостью элемента после листа
   const { loading, fetching } = useFetching() // обертка для отображения состояния загрузки данных с сервера
@@ -61,7 +58,6 @@ const TaskList = (props) => {
 
   // смена сортировки
   const SelectSort = (sort) => {
-    // settingsStore.setSelectedSort(sort)
     settingsStore.setSettings('taskSort', sort)
     setCurrentPage(1)
     setTaskList([])
