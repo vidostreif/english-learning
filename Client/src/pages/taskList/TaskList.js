@@ -1,25 +1,48 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
+import { observer } from 'mobx-react-lite'
 import { fetchAllTask } from '../../services/taskService'
 import Loader from '../../components/loader/Loader.js'
 import TaskCard from '../../components/taskCard/TaskCard'
 import styles from './TaskList.module.scss'
 import VSelect from '../../components/ui/VSelect/VSelect'
 import { useFetching } from '../../hooks/useFetching'
+import { useStores } from '../../store/rootStore'
 
 const limit = 8 // количество заданий загружаемых за один запрос
 
 const TaskList = (props) => {
+  const { settingsStore } = useStores()
   const [taskList, setTaskList] = useState([]) // спсиок заданий
   const [currentPage, setCurrentPage] = useState(1) // последняя загруженная страница
-  const [totalPages, setTotalPages] = useState(Infinity) // всего страниц
-  const [selectedSort, setSelectedSort] = useState('easyFirst') // выбранный метод сортировки
+  const [totalPages, setTotalPages] = useState(1) // всего страниц
+  // const [selectedSort, setSelectedSort] = useState(
+  //   settingsStore.settings.taskSort || 'easyFirst'
+  // ) // выбранный метод сортировки
   const lastElement = useRef() // элемент после листа, при отоброжении которго подгружаются новые посты
   const observer = useRef() // для слежки за видимостью элемента после листа
   const { loading, fetching } = useFetching() // обертка для отображения состояния загрузки данных с сервера
 
+  // запрос списка заданий
+  const getTasksFromServer = useCallback(
+    async (page, sort) => {
+      await fetching(async () => {
+        await fetchAllTask(page, limit, sort)
+          .then((data) => {
+            setTaskList((taskList) => [...taskList, ...data.tasks])
+            setTotalPages(data.totalPages)
+          })
+          .catch((error) => {
+            setTotalPages(0) // если произошла ошибка, то сообщаем, что это последняя страница
+            throw error
+          })
+      })
+    },
+    [fetching]
+  )
+
   useEffect(() => {
-    getTasksFromServer(currentPage, selectedSort)
-  }, [currentPage, selectedSort])
+    getTasksFromServer(currentPage, settingsStore.settings.taskSort)
+  }, [currentPage, settingsStore.settings.taskSort, getTasksFromServer])
 
   // подгрузка постов при прокрутке страницы
   useEffect(() => {
@@ -38,34 +61,17 @@ const TaskList = (props) => {
 
   // смена сортировки
   const SelectSort = (sort) => {
-    setSelectedSort(sort)
+    // settingsStore.setSelectedSort(sort)
+    settingsStore.setSettings('taskSort', sort)
     setCurrentPage(1)
     setTaskList([])
   }
-
-  // запрос списка заданий
-  const getTasksFromServer = useCallback(
-    (page, sort) => {
-      fetching(async () => {
-        await fetchAllTask(page, limit, sort)
-          .then((data) => {
-            setTaskList((taskList) => [...taskList, ...data.tasks])
-            setTotalPages(data.totalPages)
-          })
-          .catch((error) => {
-            setTotalPages(0) // если произошла ошибка, то сообщаем, что это последняя страница
-            throw error
-          })
-      })
-    },
-    [fetching]
-  )
 
   return (
     <div className={styles.container}>
       <div>
         <VSelect
-          value={selectedSort}
+          value={settingsStore.settings.taskSort || 'easyFirst'}
           onChange={(sort) => SelectSort(sort)}
           defaultValue="Сортировка"
           options={[
@@ -93,4 +99,4 @@ const TaskList = (props) => {
   )
 }
 
-export default TaskList
+export default observer(TaskList)

@@ -2,13 +2,14 @@ import { makeAutoObservable } from 'mobx'
 import AuthService from '../services/authService'
 import toast from 'react-hot-toast'
 
-export default class Store {
+export default class AuthStore {
   user = {}
   isAuth = false
   isAuthLoading = true
 
-  constructor() {
+  constructor(rootStore) {
     makeAutoObservable(this)
+    this.rootStore = rootStore
   }
 
   setAuth(bool) {

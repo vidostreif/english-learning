@@ -1,19 +1,11 @@
-import React, { createContext } from 'react'
+import React from 'react'
 import ReactDOM from 'react-dom'
 import './index.scss'
 import App from './App'
-import Store from './store/store'
-
-const store = new Store()
-export const Context = createContext({
-  store,
-})
 
 ReactDOM.render(
   <React.StrictMode>
-    <Context.Provider value={{ store }}>
-      <App />
-    </Context.Provider>
+    <App />
   </React.StrictMode>,
   document.getElementById('root')
 )

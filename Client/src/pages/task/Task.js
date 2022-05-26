@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
-import { Context } from '../..'
+import React, { useState, useEffect } from 'react'
 import { observer } from 'mobx-react-lite'
 import DivDrag from '../../components/divDrag/DivDrag'
 import DropPlace from '../../components/dropPlace/DropPlace'
@@ -19,6 +18,7 @@ import RandomTaskList from '../../components/randomTaskList/RandomTaskList'
 import styles from './Task.module.scss'
 import { EDITOR_ROUTE, TASK_LIST_ROUTE } from '../../utils/consts'
 import { useFetching } from '../../hooks/useFetching'
+import { useStores } from '../../store/rootStore'
 
 const DragDrop = (props) => {
   const [searchParams, setSearchParams] = useSearchParams() //список параметров из url
@@ -31,7 +31,7 @@ const DragDrop = (props) => {
   const [taskRating, setTaskRating] = useState(0) //оценка пользователя
   const [urlImg, setUrlImg] = useState() // картинка текущего задания
   const [keyMarkers, setKeyMarkers] = useState(1) // ключи для маркеров и слов
-  const { store } = useContext(Context)
+  const { authStore } = useStores()
 
   const { loading: loadingTask, fetching: fetchingTask } = useFetching() //хук обертка для работы с сервером
 
@@ -45,7 +45,7 @@ const DragDrop = (props) => {
 
   useEffect(() => {
     //если авторизованы, запрашиваем оценку пользователя
-    if (store.isAuth) {
+    if (authStore.isAuth) {
       fetchTaskRating(searchParams.get('id')).then((data) => {
         if (data) {
           setTaskRating(data.rating)
@@ -56,7 +56,7 @@ const DragDrop = (props) => {
     } else {
       setTaskRating(0)
     }
-  }, [searchParams, store.isAuth])
+  }, [searchParams, authStore.isAuth])
 
   //получить задание
   const getTaskFromServer = (id) => {
@@ -221,7 +221,7 @@ const DragDrop = (props) => {
               <FiveStars
                 incomingRatingValue={taskRating}
                 calBack={(rating) => {
-                  if (store.isAuth) addTaskRating(taskId, rating)
+                  if (authStore.isAuth) addTaskRating(taskId, rating)
                 }}
               />
               <div className={styles.Words__nextLevel}>
@@ -267,7 +267,7 @@ const DragDrop = (props) => {
 
         {/* Кнопки перехода */}
         <div className={styles.BottomNextBtn}>
-          {store.isAdministrator() ? (
+          {authStore.isAdministrator() ? (
             <Link to={`${EDITOR_ROUTE}?id=${taskId}`}>
               <img
                 src="/btn/list.png"

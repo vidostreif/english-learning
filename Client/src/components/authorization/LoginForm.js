@@ -1,11 +1,11 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { Context } from '../..'
+import React, { useState } from 'react'
 import { observer } from 'mobx-react-lite'
 import Loader from '../loader/Loader'
 import Validator from '../../utils/Validator'
 import ErrorList from './ErrorList'
 import toast from 'react-hot-toast'
 import './LoginForm.scss'
+import { useStores } from '../../store/rootStore'
 
 const LoginForm = () => {
   const [triedToRegister, setTriedToRegister] = useState(false) //пытались зарегестрироваться
@@ -13,14 +13,14 @@ const LoginForm = () => {
   const [emailErrors, setEmailErrors] = useState([])
   const [password, setPassword] = useState('')
   const [passwordErrors, setPasswordErrors] = useState([])
-  const { store } = useContext(Context)
+  const { authStore } = useStores()
 
   //проверяем авторизацию
   // useEffect(() => {
   //   store.checkAuth()
   // }, [store])
 
-  if (store.isAuthLoading) {
+  if (authStore.isAuthLoading) {
     return <Loader />
   }
 
@@ -29,7 +29,7 @@ const LoginForm = () => {
     const emailIsChecked = checkEmail(email)
     const passwordIsChecked = checkPassword(password)
     if (emailIsChecked && passwordIsChecked) {
-      store.registration(email, password)
+      authStore.registration(email, password)
     } else {
       toast.error('В форме регистрации есть ошибки')
     }
@@ -61,7 +61,7 @@ const LoginForm = () => {
     return mistakes.length === 0
   }
 
-  if (!store.isAuth) {
+  if (!authStore.isAuth) {
     return (
       <div>
         <h1>Авторизуйтесь или зарегестрируйтесь</h1>
@@ -82,20 +82,20 @@ const LoginForm = () => {
         />
         <ErrorList list={passwordErrors} />
 
-        <button onClick={() => store.login(email, password)}>Войти</button>
+        <button onClick={() => authStore.login(email, password)}>Войти</button>
         <button onClick={registration}>Зарегестрироваться</button>
       </div>
     )
   } else {
     return (
       <div>
-        <h1>{`Пользователь авторизован как ${store.user?.email}`}</h1>
+        <h1>{`Пользователь авторизован как ${authStore.user?.email}`}</h1>
         <h1>
-          {store.user?.isActivated
+          {authStore.user?.isActivated
             ? `Пользователь активирован`
             : `Пользователь не активирован`}
         </h1>
-        <button onClick={() => store.logout()}>Выйти</button>
+        <button onClick={() => authStore.logout()}>Выйти</button>
       </div>
     )
   }

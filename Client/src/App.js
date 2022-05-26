@@ -5,24 +5,33 @@ import { BrowserRouter } from 'react-router-dom'
 import AppRouter from './components/AppRouter'
 import { VHeader } from './components/header/VHeader'
 import { Toaster } from 'react-hot-toast'
-import { useContext, useEffect } from 'react'
-import { Context } from '.'
+import { useEffect } from 'react'
 import { observer } from 'mobx-react-lite'
 import Loader from './components/loader/Loader'
+import { useStores } from './store/rootStore'
 
 function App() {
-  const { store } = useContext(Context)
+  const { authStore, settingsStore } = useStores()
   //проверяем авторизацию
   useEffect(() => {
-    store.checkAuth()
-  }, [store])
+    authStore.checkAuth()
+  }, [authStore])
+
+  // загружаем настройки
+  useEffect(() => {
+    settingsStore.loadSettings()
+  }, [settingsStore])
 
   return (
     <BrowserRouter>
       <DndProvider backend={HTML5Backend}>
         <div className="App">
           <VHeader />
-          {store.isAuthLoading ? <Loader /> : <AppRouter store={store} />}
+          {authStore.isAuthLoading || settingsStore.isSettingsLoading ? (
+            <Loader />
+          ) : (
+            <AppRouter />
+          )}
 
           <Toaster
             position="top-center"
