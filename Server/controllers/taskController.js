@@ -13,125 +13,38 @@ class TaskController {
     )
   }
 
-  async delete(req, res) {
-    res.json({ message: 'Нужно реализовать TaskController!' })
+  async destroyOne(req, res, next) {
+    const { id } = req.params
+
+    res.json(await taskService.destroyOne(id))
   }
 
-  async getAll(req, res) {
-    // complexity- строка или массив строк со значение от 1 до 5
-    // limit - выбираемое количество
-    // page - запрашиваемая страница
-    let { limit = 10, page = 1, complexity, sort } = req.query
+  async restoreOne(req, res, next) {
+    const { id } = req.params
 
-    limit = parseInt(JSON.parse(limit))
-    page = parseInt(JSON.parse(page))
+    res.json(await taskService.restoreOne(id))
+  }
 
-    let param = {
-      offset: limit * (page - 1),
-      limit,
-    }
-    const filter = {}
-    if (complexity) {
-      complexity = parseInt(JSON.parse(complexity))
-      filter.where = {
-        complexity,
-      }
-    }
+  async getAll(req, res, next) {
+    let { limit, page, complexity, sort } = req.query
 
-    if (sort) {
-      switch (sort) {
-        case 'newFirst':
-          param.order = [
-            ['createdAt', 'DESC'],
-            ['id', 'DESC'],
-          ]
-          break
-        case 'popularFirst':
-          param.order = [
-            ['numberOfPasses', 'DESC'],
-            ['id', 'DESC'],
-          ]
-          break
-        case 'hardFirst':
-          param.order = [
-            ['complexity', 'DESC'],
-            ['id', 'DESC'],
-          ]
-          break
-        case 'easyFirst':
-          param.order = [
-            ['complexity', 'ASC'],
-            ['id', 'ASC'],
-          ]
-          break
-        case 'highlyRatedFirst':
-          param.order = [
-            [Sequelize.literal('rating'), 'DESC'],
-            ['id', 'DESC'],
-          ]
-          break
-        case 'lowRatedFirst':
-          param.order = [
-            [Sequelize.literal('rating'), 'ASC'],
-            ['id', 'ASC'],
-          ]
-          break
-        default:
-          throw new Error(
-            'Неудалось определить сортировку по значению: ' + sort
-          )
-      }
-    }
-
-    const resu = {}
-    resu.tasks = await Task.scope('includeRating').findAll({
-      ...param,
-      ...filter,
-    })
-
-    resu.count = await Task.count({
-      ...filter,
-    })
-
-    resu.currentPage = page
-    resu.totalPages = Math.ceil(resu.count / limit) // всего страниц
-    res.json(resu)
+    res.json(await taskService.getAll(limit, page, complexity, sort))
   }
 
   async getOne(req, res, next) {
     const { id } = req.params
-    if (!id) {
-      throw new Error('Не задан ID')
-    }
-    const resu = await Task.scope('includeMarkers').findOne({
-      where: { id: id },
-    })
-    res.json(resu.dataValues)
+
+    res.json(await taskService.getOne(id))
   }
 
-  async getRandom(req, res) {
+  async getRandom(req, res, next) {
     const { not_id, count } = req.query
 
-    let param = {
-      order: Sequelize.literal('random()'),
-      limit: count ? count : 1,
-    }
-    if (not_id) {
-      param.where = {
-        id: {
-          [Op.ne]: not_id,
-        },
-      }
-    }
-
-    const resu = await Task.scope('includeMarkers').findAll({
-      ...param,
-    })
-    res.json(resu)
+    res.json(await taskService.getRandom(count, not_id))
   }
 
   // увеличение счетчика прохождения задания
-  async wasPassed(req, res) {
+  async wasPassed(req, res, next) {
     const { id } = req.params
 
     res.json(await taskService.wasPassed(id))

@@ -17,6 +17,7 @@ Task.init(
     // underscored: true,
     sequelize,
     // tableName: 'task',
+    paranoid: true,
     modelName: 'task',
     scopes: {
       includeMarkers() {

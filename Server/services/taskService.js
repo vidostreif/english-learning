@@ -2,7 +2,7 @@ const { User, Task, TaskRating, Marker, Dictionary } = require('../db/models')
 const uuid = require('uuid')
 const fs = require('fs')
 const taskRatingService = require('./taskRatingService')
-const { Sequelize } = require('sequelize')
+const { Sequelize, Op } = require('sequelize')
 const path = require('path')
 const sharp = require('sharp')
 
@@ -33,17 +33,11 @@ class TaskService {
         //Если названия картинок не совпадают, то
         //Удаляем старую картинку
         this.delImg(task.imgUrl)
-
         //И сохраняем новую картинку
-        // const fileName = uuid.v4() + '.jpg'
-        // img.mv(path.resolve(__dirname, '..', 'static', fileName))
         task.imgUrl = await this.saveImg(img)
       }
     } //Если нет id задачи то создаем новую задачу
     else {
-      // const fileName = uuid.v4() + '.jpg'
-      // img.mv(path.resolve(__dirname, '..', 'static', fileName))
-
       task = new Task({ imgUrl: await this.saveImg(img), complexity })
     }
 
@@ -88,6 +82,146 @@ class TaskService {
     })
 
     return resu
+  }
+
+  // complexity- строка или массив строк со значение от 1 до 5
+  // limit - выбираемое количество
+  // page - запрашиваемая страница
+  // sort - метод сортировки
+  async getAll(limit, page, complexity, sort) {
+    limit = parseInt(JSON.parse(limit || 10))
+    page = parseInt(JSON.parse(page || 1))
+
+    let param = {
+      offset: limit * (page - 1),
+      limit,
+    }
+    const filter = {}
+    if (complexity) {
+      complexity = parseInt(JSON.parse(complexity))
+      filter.where = {
+        complexity,
+      }
+    }
+
+    if (sort) {
+      switch (sort) {
+        case 'newFirst':
+          param.order = [
+            ['createdAt', 'DESC'],
+            ['id', 'DESC'],
+          ]
+          break
+        case 'popularFirst':
+          param.order = [
+            ['numberOfPasses', 'DESC'],
+            ['id', 'DESC'],
+          ]
+          break
+        case 'hardFirst':
+          param.order = [
+            ['complexity', 'DESC'],
+            ['id', 'DESC'],
+          ]
+          break
+        case 'easyFirst':
+          param.order = [
+            ['complexity', 'ASC'],
+            ['id', 'ASC'],
+          ]
+          break
+        case 'highlyRatedFirst':
+          param.order = [
+            [Sequelize.literal('rating'), 'DESC'],
+            ['id', 'DESC'],
+          ]
+          break
+        case 'lowRatedFirst':
+          param.order = [
+            [Sequelize.literal('rating'), 'ASC'],
+            ['id', 'ASC'],
+          ]
+          break
+        default:
+          throw new Error(
+            'Неудалось определить сортировку по значению: ' + sort
+          )
+      }
+    }
+
+    const resu = {}
+    resu.tasks = await Task.scope('includeRating').findAll({
+      ...param,
+      ...filter,
+    })
+
+    resu.count = await Task.count({
+      ...filter,
+    })
+
+    resu.currentPage = page
+    resu.totalPages = Math.ceil(resu.count / limit) // всего страниц
+
+    return resu
+  }
+
+  async getOne(taskId) {
+    if (!taskId) {
+      throw new Error('Не задан ID')
+    }
+
+    const resu = await Task.scope('includeMarkers').findOne({
+      where: { id: taskId },
+    })
+
+    return resu.dataValues
+  }
+
+  async getRandom(count, not_id) {
+    let param = {
+      order: Sequelize.literal('random()'),
+      limit: count ? count : 1,
+    }
+    if (not_id) {
+      param.where = {
+        id: {
+          [Op.ne]: not_id,
+        },
+      }
+    }
+
+    return await Task.scope('includeMarkers').findAll({
+      ...param,
+    })
+  }
+
+  // force - если true, то полностью удаляемтся из БД
+  //         если false, то не удаляется из БД, а в поле deletedAt устанавливается время удаления
+  async destroyOne(taskId, force = false) {
+    if (!taskId) {
+      throw new Error('Не задан ID')
+    }
+
+    await Task.destroy({
+      where: { id: taskId },
+      force,
+    })
+
+    return 'Задание удалено'
+  }
+
+  // восстанавливает помеченное на удаление задание
+  async restoreOne(taskId) {
+    if (!taskId) {
+      throw new Error('Не задан ID')
+    }
+
+    await Task.restore({
+      where: { id: taskId },
+      force,
+    })
+
+    return 'Задание удалено'
   }
 
   // увеличение счетчика прохождения задания

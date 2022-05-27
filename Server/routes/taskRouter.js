@@ -10,6 +10,12 @@ router.post(
   authMiddleware.isAdministarator,
   ApiError.tryShell(taskController.addOrUpdate)
 )
+router.post(
+  '/restore/:id',
+  authMiddleware.isAuthorized,
+  authMiddleware.isAdministarator,
+  ApiError.tryShell(taskController.restoreOne)
+)
 router.post('/passed/:id', ApiError.tryShell(taskController.wasPassed))
 router.get('/', ApiError.tryShell(taskController.getAll))
 router.get('/random', ApiError.tryShell(taskController.getRandom))
@@ -18,7 +24,7 @@ router.delete(
   '/',
   authMiddleware.isAuthorized,
   authMiddleware.isAdministarator,
-  ApiError.tryShell(taskController.delete)
+  ApiError.tryShell(taskController.destroyOne)
 )
 
 module.exports = router
