@@ -1,7 +1,7 @@
 import { makeAutoObservable } from 'mobx'
 
 export default class SettingsStore {
-  settings = {}
+  settings = { taskSort: 'easyFirst' }
   isSettingsLoading = true
 
   constructor(rootStore) {
@@ -36,11 +36,12 @@ export default class SettingsStore {
     this.setSettingsLoading(true)
 
     let settings = localStorage.getItem('settings')
+
     if (settings) {
       settings = JSON.parse(settings)
     }
 
-    if (typeof settings === 'object') {
+    if (settings && typeof settings === 'object') {
       this.setSett(settings)
     }
 
