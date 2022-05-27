@@ -2,6 +2,8 @@ const ApiError = require('../exceptions/ApiError')
 const bcrypt = require('bcrypt')
 const userService = require('../services/userService')
 const { validationResult } = require('express-validator')
+
+const maxAge = 2592000000 // один месяц
 class UserController {
   async registration(req, res, next) {
     const errors = validationResult(req)
@@ -11,7 +13,7 @@ class UserController {
     const { email, password } = req.body
     const userData = await userService.registration(email, password)
     res.cookie('refreshToken', userData.refreshToken, {
-      maxAge: 30 * 24 * 60 * 60 * 1000,
+      maxAge,
       httpOnly: true,
     })
     return res.json(userData)
@@ -21,7 +23,7 @@ class UserController {
     const { email, password } = req.body
     const userData = await userService.login(email, password)
     res.cookie('refreshToken', userData.refreshToken, {
-      maxAge: 30 * 24 * 60 * 60 * 1000,
+      maxAge,
       httpOnly: true,
     })
     return res.json(userData)
@@ -44,7 +46,7 @@ class UserController {
     const { refreshToken } = req.cookies
     const userData = await userService.refresh(refreshToken)
     res.cookie('refreshToken', userData.refreshToken, {
-      maxAge: 30 * 24 * 60 * 60 * 1000,
+      maxAge,
       httpOnly: true,
     })
     return res.json(userData)
