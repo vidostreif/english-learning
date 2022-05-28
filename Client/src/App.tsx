@@ -40,24 +40,7 @@ function App() {
             // containerStyle={{
             //   position: 'absolute',
             // }}
-          >
-            {/* {(t) => (
-              <ToastBar toast={t} >
-                {({ icon, message }) => (
-                  <>
-                    {t.type === 'loading' && (
-                      <>{icon}
-                      {message}</>                      
-                    )}
-                    {t.type !== 'loading' && (
-                      <div style={{display: 'flex'}} onClick={() => toast.dismiss(t.id)}><div className="">{icon}</div>
-                      {message}</div>
-                    )}
-                  </>
-                )}
-                 </ToastBar>              
-            )} */}
-          </Toaster>
+          ></Toaster>
         </div>
       </DndProvider>
     </BrowserRouter>
