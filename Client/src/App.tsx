@@ -10,7 +10,7 @@ import { observer } from 'mobx-react-lite'
 import Loader from './components/loader/Loader'
 import { useStores } from './store/rootStore'
 
-function App() {
+const App: React.FC = () => {
   const { authStore, settingsStore } = useStores()
   //проверяем авторизацию
   useEffect(() => {

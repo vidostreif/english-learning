@@ -4,8 +4,24 @@ import FiveStars from '../fiveStars/FiveStars'
 import DifficultyDisplay from '../difficultyDisplay/DifficultyDisplay'
 import { TASK_ROUTE } from '../../utils/consts'
 
+// type TPTask = {
+//   readonly id: string
+//   readonly rating: number
+//   readonly complexity: number
+//   readonly imgUrl: string
+// }
+
+// type TPStyles = {
+//   readonly [key: string]: string
+// }
+
+type TitleProps = {
+  readonly task: Task
+  readonly rootStyles: StylesModule
+}
+
 // карточка задания для списка заданий
-const TaskCard = ({ task, rootStyles }) => {
+const TaskCard: React.FC<TitleProps> = ({ task, rootStyles }) => {
   return (
     <Link
       to={`${TASK_ROUTE}?id=${task.id}`}
