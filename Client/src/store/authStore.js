@@ -1,6 +1,7 @@
 import { makeAutoObservable } from 'mobx'
 import AuthService from '../services/authService'
 import toast from 'react-hot-toast'
+import EventService from '../services/eventService'
 
 export default class AuthStore {
   user = {}
@@ -10,6 +11,7 @@ export default class AuthStore {
   constructor(rootStore) {
     makeAutoObservable(this)
     this.rootStore = rootStore
+    EventService.on('logout', this, this.clear)
   }
 
   setAuth(bool) {
@@ -29,6 +31,17 @@ export default class AuthStore {
       return true
     }
     return false
+  }
+
+  clear() {
+    try {
+      localStorage.removeItem('token')
+      localStorage.removeItem('tokenDeathTime')
+      this.setAuth(false)
+      this.setUser({})
+    } catch (error) {
+      toast.error(error.response?.data?.message)
+    }
   }
 
   async login(email, password) {
@@ -63,10 +76,7 @@ export default class AuthStore {
       toast(`Досвидания!`, {
         icon: '👋',
       })
-      localStorage.removeItem('token')
-      localStorage.removeItem('tokenDeathTime')
-      this.setAuth(false)
-      this.setUser({})
+      this.clear()
     } catch (error) {
       toast.error(error.response?.data?.message)
     }
@@ -81,10 +91,11 @@ export default class AuthStore {
       if (response) {
         this.setAuth(true)
         this.setUser(response.data.user)
-      } else {
-        this.setAuth(false)
-        this.setUser({})
       }
+      // else {
+      //   console.log(1)
+      //   this.clear()
+      // }
     }
 
     this.setAuthLoading(false)

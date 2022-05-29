@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { API_USER_REFRESH } from '../utils/consts'
 import toast from 'react-hot-toast'
+import EventService from '../services/eventService'
 
 const $api = axios.create({
   withCredentials: true,
@@ -22,12 +23,7 @@ const authInterceptor = async (config) => {
   const tokenDeathTime = localStorage.getItem('tokenDeathTime')
 
   //если токен устарел и он сейчас не обновляется, то запрашиваем новый токен
-  if (
-    !refreshTokenIsUpdating &&
-    token &&
-    tokenDeathTime &&
-    +new Date() > tokenDeathTime - 10000
-  ) {
+  if (token && tokenDeathTime && +new Date() > tokenDeathTime - 10000) {
     await apiRefreshToken()
   }
 
@@ -45,6 +41,7 @@ $api.interceptors.request.use(authInterceptor)
 
 //запрос на обновление токена
 const apiRefreshToken = async () => {
+  console.log(1)
   if (refreshTokenIsUpdating) return
   refreshTokenIsUpdating = true
   let response = null
@@ -59,9 +56,9 @@ const apiRefreshToken = async () => {
       +new Date() + response.data.lifetimeAccessToken * 1000
     )
   } catch (error) {
-    console.log(error)
-    localStorage.removeItem('token')
-    localStorage.removeItem('tokenDeathTime')
+    // localStorage.removeItem('token')
+    // localStorage.removeItem('tokenDeathTime')
+    EventService.emit('logout')
     toast.error('Ошибка авторизации!')
     response = null
   }
@@ -92,9 +89,8 @@ $api.interceptors.response.use(
     ) {
       originalRequest._isRetry = true // определяем, что зопрос на обновление токенов уже был
 
-      if (!refreshTokenIsUpdating) {
-        await apiRefreshToken()
-      }
+      await apiRefreshToken()
+
       //если токен сейчас обновляется, то ожидаем завершения обновления
       while (refreshTokenIsUpdating) {
         await sleep(100)

@@ -60,7 +60,10 @@ class TokenService {
     const tokenData = await Token.findOne({
       where: { refreshToken },
     })
-    tokenData.destroy()
+    if (tokenData) {
+      tokenData.destroy()
+    }
+
     return tokenData
   }
 
