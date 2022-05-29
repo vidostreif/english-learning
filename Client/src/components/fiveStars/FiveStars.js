@@ -6,7 +6,7 @@ const FiveStars = ({
   incomingRatingValue = 0,
   showRatingValue = true,
   active = true,
-  calBack,
+  calBack = undefined,
 }) => {
   const ratingActive = useRef(null)
   const [ratingValue, setRatingValue] = useState(() => {

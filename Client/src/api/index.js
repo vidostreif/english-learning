@@ -41,7 +41,6 @@ $api.interceptors.request.use(authInterceptor)
 
 //запрос на обновление токена
 const apiRefreshToken = async () => {
-  console.log(1)
   if (refreshTokenIsUpdating) return
   refreshTokenIsUpdating = true
   let response = null
