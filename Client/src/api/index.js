@@ -45,6 +45,7 @@ $api.interceptors.request.use(authInterceptor)
 
 //запрос на обновление токена
 const apiRefreshToken = async () => {
+  if (refreshTokenIsUpdating) return
   refreshTokenIsUpdating = true
   let response = null
   try {
@@ -58,6 +59,7 @@ const apiRefreshToken = async () => {
       +new Date() + response.data.lifetimeAccessToken * 1000
     )
   } catch (error) {
+    console.log(error)
     localStorage.removeItem('token')
     localStorage.removeItem('tokenDeathTime')
     toast.error('Ошибка авторизации!')

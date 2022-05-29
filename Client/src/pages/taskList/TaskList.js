@@ -25,7 +25,16 @@ const TaskList = (props) => {
       await fetching(async () => {
         await fetchAllTask(page, limit, sort)
           .then((data) => {
-            setTaskList((taskList) => [...taskList, ...data.tasks])
+            setTaskList((taskList) => {
+              const newTaskList = [
+                ...taskList,
+                ...data.tasks.filter(
+                  (newTask) =>
+                    !taskList.find((oldTask) => oldTask.id === newTask.id)
+                ),
+              ]
+              return newTaskList
+            })
             setTotalPages(data.totalPages)
           })
           .catch((error) => {
