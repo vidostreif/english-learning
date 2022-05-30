@@ -18,6 +18,7 @@ const style: React.CSSProperties = {
   transform: 'translate(-50%, -50%)',
 }
 
+// маркер для редактора
 export const DivDragForEditor: React.FC<IProps> = ({
   id,
   left,
@@ -40,7 +41,7 @@ export const DivDragForEditor: React.FC<IProps> = ({
     return <div ref={drag} />
   }
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     changeText(id, e.target.value)
   }
 

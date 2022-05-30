@@ -5,11 +5,14 @@ import Loader from '../loader/Loader.js'
 import TaskCard from '../taskCard/TaskCard'
 import styles from './RandomTaskList.module.scss'
 
+interface IProps {
+  readonly count: number // количество заданий
+  readonly not_id: number // кроме задания с этим id
+}
+
 // список заданий который запрашивает рандомные задания
-// count - количество заданий
-// not_id - кроме задания с этим id
-const RandomTaskList = ({ count, not_id = null }) => {
-  const [taskList, setTaskList] = useState([])
+const RandomTaskList: React.FC<IProps> = ({ count, not_id = null }) => {
+  const [taskList, setTaskList] = useState<Array<ITask>>([])
   const { loading, fetching } = useFetching() // обертка для отображения состояния загрузки данных с сервера
 
   useEffect(() => {

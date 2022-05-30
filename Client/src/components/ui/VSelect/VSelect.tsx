@@ -12,6 +12,7 @@ interface IProps {
   readonly onChange: (value: string) => void
 }
 
+// селектор
 const VSelect: React.FC<IProps> = ({
   options,
   defaultValue,
@@ -22,9 +23,7 @@ const VSelect: React.FC<IProps> = ({
     <select
       name={defaultValue}
       value={value}
-      onChange={(event: React.ChangeEvent<HTMLSelectElement>): void =>
-        onChange(event.target.value)
-      }
+      onChange={(event) => onChange(event.target.value)}
     >
       <option disabled value="">
         {defaultValue}

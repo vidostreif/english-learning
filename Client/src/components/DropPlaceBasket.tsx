@@ -1,7 +1,7 @@
 import { useDrop } from 'react-dnd'
 
 interface IProps {
-  readonly active: (marker: IMarker) => void
+  readonly active: (id: number | undefined) => void // событие активации корзины
 }
 
 const styles: React.CSSProperties = {
@@ -13,11 +13,12 @@ const styles: React.CSSProperties = {
   backgroundColor: '#008b8b2d',
 }
 
+// мусорная корзина для редактора
 const DropPlaceBasket: React.FC<IProps> = ({ active }) => {
   // eslint-disable-next-line no-unused-vars
   const [{ isOver, isDidDrop }, drop] = useDrop(() => ({
     accept: 'divEditor',
-    drop: (item: IMarker, monitor) => active(item),
+    drop: (item: IMarker, monitor) => active(item.id),
     collect: (monitor) => ({
       isOver: !!monitor.isOver(),
       isDidDrop: !!monitor.didDrop(),

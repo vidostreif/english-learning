@@ -5,6 +5,7 @@ import { authRoutes, publicRoutes } from '../routes'
 import { useStores } from '../store/rootStore'
 import { TASK_LIST_ROUTE } from '../utils/consts'
 
+// основной роутер
 const AppRouter: React.FC = () => {
   const { authStore } = useStores()
   return (

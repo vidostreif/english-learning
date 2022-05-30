@@ -1,11 +1,17 @@
 import { $api } from '../api'
 import { API_TASK, API_TASK_PASSED, API_TASK_RANDOM } from '../utils/consts'
 
-export const createTask = async (img, markers, complexity, id = null) => {
+// сохранение задания
+export const createTask = async (
+  img: File | null,
+  markers: Array<IMarker>,
+  complexity: number,
+  id: number | null = null
+) => {
   const formData = new FormData()
-  formData.append('img', img)
-  formData.append('complexity', complexity)
-  formData.append('id', id)
+  if (img) formData.append('img', img)
+  formData.append('complexity', JSON.stringify(complexity))
+  if (id) formData.append('id', JSON.stringify(id))
   formData.append('markers', JSON.stringify(markers))
 
   const { data } = await $api.post(API_TASK, formData, {
@@ -13,15 +19,22 @@ export const createTask = async (img, markers, complexity, id = null) => {
       'Content-Type': 'multipart/form-data',
     },
   })
+
   return data
 }
 
-export const fetchTask = async (id) => {
+// получение задания
+export const fetchTask = async (id: number) => {
   const { data } = await $api.get(`${API_TASK}/${id}`)
   return data
 }
 
-export const fetchAllTask = async (page, limit, sort) => {
+// получение списка заданий
+export const fetchAllTask = async (
+  page: number,
+  limit: number,
+  sort: number
+) => {
   const { data } = await $api.get(API_TASK, {
     params: {
       page,
@@ -32,7 +45,11 @@ export const fetchAllTask = async (page, limit, sort) => {
   return data
 }
 
-export const fetchRandomTask = async (count, not_id = null) => {
+// получение рандомного списка заданий
+export const fetchRandomTask = async (
+  count: number,
+  not_id: number | null = null
+) => {
   const { data } = await $api.get(API_TASK_RANDOM, {
     params: {
       not_id,
@@ -43,6 +60,6 @@ export const fetchRandomTask = async (count, not_id = null) => {
 }
 
 // увеличение счетчика прохождения задания
-export const setTaskPassed = async (id) => {
+export const setTaskPassed = async (id: number) => {
   await $api.post(`${API_TASK_PASSED}/${id}`)
 }

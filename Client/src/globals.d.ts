@@ -7,17 +7,25 @@ declare module '*.module.scss' {
 }
 
 declare interface ITask {
-  id: string
+  id: number
   rating: number
   complexity: number
   imgUrl: string
 }
 
 declare interface IMarker {
-  id: number
+  id?: number
   left: number
   top: number
   text: string
+}
+
+declare interface ITaskFromServer extends ITask {
+  Markers: Array<{
+    left: number
+    top: number
+    dictionary: { name: string }
+  }>
 }
 
 declare interface IStylesModule {
