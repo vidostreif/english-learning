@@ -1,6 +1,10 @@
 import { useDrop } from 'react-dnd'
 
-const styles = {
+interface IProps {
+  readonly active: (marker: IMarker) => void
+}
+
+const styles: React.CSSProperties = {
   width: '100px',
   height: '100px',
   border: '1px solid #008b8b',
@@ -9,11 +13,11 @@ const styles = {
   backgroundColor: '#008b8b2d',
 }
 
-function DropPlaceBasket({ active }) {
+const DropPlaceBasket: React.FC<IProps> = ({ active }) => {
   // eslint-disable-next-line no-unused-vars
   const [{ isOver, isDidDrop }, drop] = useDrop(() => ({
     accept: 'divEditor',
-    drop: (item, monitor) => active(item),
+    drop: (item: IMarker, monitor) => active(item),
     collect: (monitor) => ({
       isOver: !!monitor.isOver(),
       isDidDrop: !!monitor.didDrop(),

@@ -6,13 +6,20 @@ declare module '*.module.scss' {
   export default classes
 }
 
-declare type Task = {
+declare interface ITask {
   id: string
   rating: number
   complexity: number
   imgUrl: string
 }
 
-declare type StylesModule = {
+declare interface IMarker {
+  id: number
+  left: number
+  top: number
+  text: string
+}
+
+declare interface IStylesModule {
   readonly [key: string]: string
 }

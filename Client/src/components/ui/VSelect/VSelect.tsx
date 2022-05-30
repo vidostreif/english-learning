@@ -1,18 +1,18 @@
 import React from 'react'
 
-type TPOptions = {
+interface IOptions {
   readonly value: string
   readonly name: string
 }
 
-type TitleProps = {
-  readonly options: Array<TPOptions>
+interface IProps {
+  readonly options: Array<IOptions>
   readonly defaultValue: string
   readonly value: string
   readonly onChange: (value: string) => void
 }
 
-const VSelect: React.FC<TitleProps> = ({
+const VSelect: React.FC<IProps> = ({
   options,
   defaultValue,
   value,

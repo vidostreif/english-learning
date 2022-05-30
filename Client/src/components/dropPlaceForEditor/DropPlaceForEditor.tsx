@@ -1,17 +1,18 @@
-// import { useCallback, useState, useRef, useLayoutEffect } from 'react'
-import { useRef } from 'react'
-import { useDrop } from 'react-dnd'
-// import { ItemTypes } from './ItemTypes'
+import React, { useRef } from 'react'
+import { useDrop, XYCoord } from 'react-dnd'
 import { DivDragForEditor } from '../DivDragForEditor'
 import styles from './DropPlaceForEditor.module.scss'
 
-// const styles = {
-//   width: '100%',
-//   border: '1px solid black',
-//   position: 'relative',
-// }
+interface IProps {
+  readonly hideSourceOnDrag: boolean
+  readonly urlImg: string // адрес картинки
+  readonly markers: Array<IMarker> // массив маркеров
+  readonly addMarker: (e: React.MouseEvent<HTMLButtonElement>) => void // событие перемещения маркера
+  readonly moveBox: (id: number, left: number, top: number) => void // событие добавления нового маркера
+  readonly changeText: (id: number, value: string) => void // событие изменения текста
+}
 
-export const DropPlaceForEditor = ({
+export const DropPlaceForEditor: React.FC<IProps> = ({
   hideSourceOnDrag,
   urlImg,
   markers,
@@ -19,7 +20,7 @@ export const DropPlaceForEditor = ({
   addMarker,
   changeText,
 }) => {
-  const targetRef = useRef()
+  const targetRef = useRef<HTMLImageElement>(null!)
 
   // useLayoutEffect(() => {
   //   if (targetRef.current) {
@@ -33,12 +34,14 @@ export const DropPlaceForEditor = ({
   const [, drop] = useDrop(
     () => ({
       accept: 'divEditor',
-      drop(item, monitor) {
-        const delta = monitor.getDifferenceFromInitialOffset()
-        const left = Math.round(
+      drop(item: IMarker, monitor) {
+        const delta: XYCoord | null = monitor.getDifferenceFromInitialOffset()
+        if (!delta) return undefined
+
+        const left: number = Math.round(
           item.left + (delta.x / targetRef.current.clientWidth) * 100
         )
-        const top = Math.round(
+        const top: number = Math.round(
           item.top + (delta.y / targetRef.current.clientHeight) * 100
         )
 
@@ -63,19 +66,19 @@ export const DropPlaceForEditor = ({
           id="MainImg"
           ref={targetRef}
         />
-        {Object.keys(markers).map((key) => {
-          let { left, top, text } = markers[key]
+        {markers.map((marker, index) => {
+          let { left, top, text } = marker
+
           return (
             <DivDragForEditor
-              key={key}
-              id={key}
+              key={index}
+              id={index}
               left={left}
               top={top}
               hideSourceOnDrag={hideSourceOnDrag}
               changeText={changeText}
-            >
-              {text}
-            </DivDragForEditor>
+              value={text}
+            />
           )
         })}
       </div>

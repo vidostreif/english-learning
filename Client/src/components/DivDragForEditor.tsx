@@ -1,6 +1,15 @@
 import { useDrag } from 'react-dnd'
 
-const style = {
+interface IProps {
+  readonly id: number // id маркера
+  readonly left: number // позиция по горизонтали
+  readonly top: number // позиция по вертикали
+  readonly hideSourceOnDrag: boolean
+  readonly value: string // текст маркера
+  readonly changeText: (id: number, value: string) => void // срабатывает при изименении текста
+}
+
+const style: React.CSSProperties = {
   position: 'absolute',
   border: '1px dashed gray',
   backgroundColor: 'white',
@@ -9,12 +18,12 @@ const style = {
   transform: 'translate(-50%, -50%)',
 }
 
-export const DivDragForEditor = ({
+export const DivDragForEditor: React.FC<IProps> = ({
   id,
   left,
   top,
   hideSourceOnDrag,
-  children,
+  value,
   changeText,
 }) => {
   const [{ isDragging }, drag] = useDrag(
@@ -31,8 +40,8 @@ export const DivDragForEditor = ({
     return <div ref={drag} />
   }
 
-  const onChange = (s) => {
-    changeText(id, s.target.value)
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    changeText(id, e.target.value)
   }
 
   return (
@@ -41,13 +50,7 @@ export const DivDragForEditor = ({
       style={{ ...style, left: left + '%', top: top + '%' }}
       // role="Box"
     >
-      <input
-        id="id"
-        type="text"
-        value={children}
-        size="10"
-        onChange={onChange}
-      />
+      <input id="id" type="text" value={value} size={10} onChange={onChange} />
     </div>
   )
 }

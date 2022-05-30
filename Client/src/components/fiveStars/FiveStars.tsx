@@ -1,14 +1,21 @@
 import React, { useEffect, useRef, useState } from 'react'
 import styles from './FiveStars.module.scss'
 
+interface IProps {
+  readonly incomingRatingValue: number // стартовый рейтинг
+  readonly showRatingValue: boolean // показывать цифры рейтинга
+  readonly active: boolean // доступный для выбора нового рейтинга
+  readonly calBack?: (value: number) => void // срабатывает при попытке изменить рейтинг
+}
+
 // отображение рейтинга задания
-const FiveStars = ({
+const FiveStars: React.FC<IProps> = ({
   incomingRatingValue = 0,
   showRatingValue = true,
   active = true,
-  calBack = undefined,
+  calBack,
 }) => {
-  const ratingActive = useRef(null)
+  const ratingActive = useRef<HTMLDivElement>(null!)
   const [ratingValue, setRatingValue] = useState(() => {
     if (incomingRatingValue) {
       return incomingRatingValue > 100 ? 100 : incomingRatingValue
@@ -27,19 +34,19 @@ const FiveStars = ({
     ratingActive.current.style.transition = `0.2s`
   }, [overRatingValue])
 
-  const mouseOver = (rating) => {
+  const mouseOver = (rating: number): void => {
     if (active) {
       setOverRatingValue(rating)
     }
   }
 
-  const mouseOut = () => {
+  const mouseOut = (): void => {
     if (active) {
       setOverRatingValue(ratingValue)
     }
   }
 
-  const onClick = (rating) => {
+  const onClick = (rating: number): void => {
     if (active) {
       setOverRatingValue(rating)
       setRatingValue(rating)
@@ -49,7 +56,7 @@ const FiveStars = ({
     }
   }
 
-  let divNumber = ''
+  let divNumber: JSX.Element = <></>
   if (showRatingValue) {
     divNumber = (
       <div className={styles.rating__value}>

@@ -9,14 +9,19 @@ import {
   AUTH_ROUTE,
 } from './utils/consts'
 
-export const authRoutes = [
+interface IRouteParam {
+  readonly path: string
+  readonly Component: React.FC
+}
+
+export const authRoutes: Array<IRouteParam> = [
   {
     path: EDITOR_ROUTE,
     Component: Editor,
   },
 ]
 
-export const publicRoutes = [
+export const publicRoutes: Array<IRouteParam> = [
   {
     path: TASK_ROUTE,
     Component: Task,
