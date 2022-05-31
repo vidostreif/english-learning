@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import LoginForm from '../authorization/LoginForm'
+import LoginForm from '../authorization/LoginForm.tsx'
 import VModal from '../modal/VModal'
 import './VHeader.scss'
 
@@ -20,18 +20,10 @@ export function VHeader() {
 
         <div className="header">
           <Link to="/" className="header__logoLink">
-            <img
-              src="/logo.png"
-              alt="логотип Okey kity"
-              className="header__logoImg"
-            />
+            <img src="/logo.png" alt="логотип Okey kity" className="header__logoImg" />
           </Link>
           <button onClick={() => setModal(true)} className="header__loginBtn">
-            <img
-              src="/user.png"
-              alt="иконка пользователя"
-              className="header__loginImg"
-            />
+            <img src="/user.png" alt="иконка пользователя" className="header__loginImg" />
           </button>
         </div>
       </header>

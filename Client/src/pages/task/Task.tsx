@@ -14,7 +14,7 @@ import { useFetching } from '../../hooks/useFetching'
 import { useStores } from '../../store/rootStore'
 import toast from 'react-hot-toast'
 
-const DragDrop = () => {
+const DragDrop: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams() //список параметров из url
   const [dictionary, setDictionary] = useState<Array<IMarkerForGame>>([]) //список слов
   const [markers, setMarkers] = useState<Array<IMarkerForGame>>([]) //список маркеров

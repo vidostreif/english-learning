@@ -1,24 +1,29 @@
 import { makeAutoObservable } from 'mobx'
 
-export default class SettingsStore {
-  settings = { taskSort: 'easyFirst' }
-  isSettingsLoading = true
+interface ISettings {
+  [key: string]: string
+}
 
-  constructor(rootStore) {
+export default class SettingsStore implements ISettigsStore {
+  settings: ISettings = { taskSort: 'easyFirst' }
+  isSettingsLoading = true
+  rootStore: IRootStore
+
+  constructor(rootStore: IRootStore) {
     makeAutoObservable(this)
     this.rootStore = rootStore
   }
 
-  setSett(settings) {
+  setSettings(settings: ISettings) {
     this.settings = settings
   }
 
-  setSettings(key, value) {
+  setSettingsItem(key: string, value: string) {
     this.settings[key] = value
     localStorage.setItem('settings', JSON.stringify(this.settings))
   }
 
-  setSettingsLoading(bool) {
+  setSettingsLoading(bool: boolean) {
     this.isSettingsLoading = bool
   }
 
@@ -42,7 +47,7 @@ export default class SettingsStore {
     }
 
     if (settings && typeof settings === 'object') {
-      this.setSett(settings)
+      this.setSettings(settings)
     }
 
     this.setSettingsLoading(false)

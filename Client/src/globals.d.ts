@@ -10,6 +10,10 @@ declare interface IStylesModule {
   readonly [key: string]: string
 }
 
+interface IErrorMessage {
+  message: string
+}
+
 declare interface ITask {
   id: number
   rating: number
@@ -42,4 +46,12 @@ declare interface ITaskRating {
   rating: number
   taskId: number
   userId: number
+}
+
+declare interface IUser {
+  id: number
+  name: string
+  email: string
+  isActivated: boolean
+  userRole: string
 }

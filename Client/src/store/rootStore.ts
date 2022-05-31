@@ -3,7 +3,9 @@ import AuthStore from './authStore'
 import SettingsStore from './settingsStore'
 
 // Root Store Declaration
-export default class RootStore {
+export default class RootStore implements IRootStore {
+  settingsStore: ISettigsStore
+  authStore: IAuthStore
   constructor() {
     this.settingsStore = new SettingsStore(this)
     this.authStore = new AuthStore(this)

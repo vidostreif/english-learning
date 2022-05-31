@@ -3,10 +3,6 @@ import axios, { AxiosError } from 'axios'
 import toast from 'react-hot-toast'
 import { useIsMounted } from './useIsMounted'
 
-interface IErrorMessage {
-  message: string
-}
-
 //хук обертка для запроса к серверу, который выводит тостер с ошибкой в случае некоректного выполнения
 export const useFetching = () => {
   const isMounted = useIsMounted() //используем хук для определения что объект не демонтирован
