@@ -8,12 +8,12 @@ export const useFetching = () => {
   const isMounted = useIsMounted() //используем хук для определения что объект не демонтирован
   const [numberOfRequests, setNumberOfRequests] = useState(0) // количество текущий запросов
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)
+  const [error, setError] = useState('')
 
   //Запрос к серверу
   // используем useCallback с пустой зависимостью что бы функция создавалась только один раз
   const fetching = useCallback(
-    async (callback, displayError = true) => {
+    async (callback: Function, displayError: boolean = true) => {
       try {
         if (isMounted.current) {
           setNumberOfRequests((numberOfRequests) => numberOfRequests + 1) // увеличиваем количество текущий запросов
@@ -21,11 +21,18 @@ export const useFetching = () => {
         } //если объект существует
 
         return await callback(isMounted.current) //вызов переданной функции с объектом в котором объявлялся useFetching
-      } catch (error) {
+      } catch (error: unknown) {
+        console.log(error)
+
         //если отображать ошибку, то выводим тост с ошибкой
         if (displayError) {
           if (isMounted.current) {
-            setError(error.response?.data?.message || error.message)
+            if (error instanceof Error) {
+              setError(error.message)
+            }
+            // else  {
+            //   setError(error.response?.data?.message)
+            // }
           }
           // иначе пробрасываем ошибку в место вызова функции
         } else {
@@ -45,7 +52,7 @@ export const useFetching = () => {
   )
 
   // очищаем ошибку
-  const clearError = useCallback(() => setError(null), [])
+  const clearError = useCallback(() => setError(''), [])
 
   //Выводим ошибку
   useEffect(() => {

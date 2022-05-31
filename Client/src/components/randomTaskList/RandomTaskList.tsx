@@ -7,7 +7,7 @@ import styles from './RandomTaskList.module.scss'
 
 interface IProps {
   readonly count: number // количество заданий
-  readonly not_id: number // кроме задания с этим id
+  readonly not_id: number | null // кроме задания с этим id
 }
 
 // список заданий который запрашивает рандомные задания

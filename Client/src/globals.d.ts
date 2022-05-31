@@ -20,6 +20,12 @@ declare interface IMarker {
   text: string
 }
 
+declare interface IMarkerForGame extends IMarker {
+  id: number
+  used: boolean
+  choiced: boolean
+}
+
 declare interface ITaskFromServer extends ITask {
   Markers: Array<{
     left: number

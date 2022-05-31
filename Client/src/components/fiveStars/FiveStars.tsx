@@ -3,8 +3,8 @@ import styles from './FiveStars.module.scss'
 
 interface IProps {
   readonly incomingRatingValue: number // стартовый рейтинг
-  readonly showRatingValue: boolean // показывать цифры рейтинга
-  readonly active: boolean // доступный для выбора нового рейтинга
+  readonly showRatingValue?: boolean // показывать цифры рейтинга
+  readonly active?: boolean // доступный для выбора нового рейтинга
   readonly calBack?: (value: number) => void // срабатывает при попытке изменить рейтинг
 }
 

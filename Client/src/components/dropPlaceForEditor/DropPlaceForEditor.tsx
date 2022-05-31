@@ -48,12 +48,8 @@ export const DropPlaceForEditor: React.FC<IProps> = ({
           return undefined
         }
 
-        const left: number = Math.round(
-          item.left + (delta.x / targetRef.current.clientWidth) * 100
-        )
-        const top: number = Math.round(
-          item.top + (delta.y / targetRef.current.clientHeight) * 100
-        )
+        const left: number = Math.round(item.left + (delta.x / targetRef.current.clientWidth) * 100)
+        const top: number = Math.round(item.top + (delta.y / targetRef.current.clientHeight) * 100)
 
         moveMarker(item.id, Math.max(left, 0), Math.max(top, 0))
         return undefined
@@ -68,14 +64,7 @@ export const DropPlaceForEditor: React.FC<IProps> = ({
         Добавить маркер
       </button>
       <div ref={drop} className={styles.container}>
-        <img
-          src={urlImg}
-          alt="1"
-          className={styles.img}
-          key="MainImg"
-          id="MainImg"
-          ref={targetRef}
-        />
+        <img src={urlImg} alt="1" className={styles.img} key="MainImg" id="MainImg" ref={targetRef} />
         {markers.map((marker, index) => {
           let { left, top, text } = marker
 
