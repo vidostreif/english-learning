@@ -40,7 +40,7 @@ const DragDrop = () => {
   useEffect(() => {
     //если авторизованы, запрашиваем оценку пользователя
     if (authStore.isAuth) {
-      fetchTaskRating(searchParams.get('id')).then((data) => {
+      fetchTaskRating(Number(searchParams.get('id'))).then((data) => {
         if (data) {
           setTaskRating(data.rating)
         } else {
@@ -211,7 +211,7 @@ const DragDrop = () => {
               <FiveStars
                 incomingRatingValue={taskRating}
                 calBack={(rating) => {
-                  if (authStore.isAuth) addTaskRating(taskId, rating)
+                  if (authStore.isAuth && taskId) addTaskRating(taskId, rating)
                 }}
               />
               <div className={styles.Words__nextLevel}>

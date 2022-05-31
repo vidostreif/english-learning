@@ -1,14 +1,18 @@
 import { useCallback, useState, useEffect } from 'react'
-
+import axios, { AxiosError } from 'axios'
 import toast from 'react-hot-toast'
 import { useIsMounted } from './useIsMounted'
+
+interface IErrorMessage {
+  message: string
+}
 
 //хук обертка для запроса к серверу, который выводит тостер с ошибкой в случае некоректного выполнения
 export const useFetching = () => {
   const isMounted = useIsMounted() //используем хук для определения что объект не демонтирован
   const [numberOfRequests, setNumberOfRequests] = useState(0) // количество текущий запросов
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false) // состояние выполнения запроса
+  const [error, setError] = useState('') // ошибка
 
   //Запрос к серверу
   // используем useCallback с пустой зависимостью что бы функция создавалась только один раз
@@ -22,17 +26,19 @@ export const useFetching = () => {
 
         return await callback(isMounted.current) //вызов переданной функции с объектом в котором объявлялся useFetching
       } catch (error: unknown) {
-        console.log(error)
-
         //если отображать ошибку, то выводим тост с ошибкой
         if (displayError) {
           if (isMounted.current) {
-            if (error instanceof Error) {
+            if (axios.isAxiosError(error)) {
+              // если ошибка от axios то берем данные из response
+              setError((error.response?.data as IErrorMessage).message)
+            } else if (error instanceof Error) {
+              // если типовая ошибка, то просто выводим сообщение
               setError(error.message)
+            } else {
+              // если не определили, то пробрасываем дальше
+              throw error
             }
-            // else  {
-            //   setError(error.response?.data?.message)
-            // }
           }
           // иначе пробрасываем ошибку в место вызова функции
         } else {
@@ -51,6 +57,8 @@ export const useFetching = () => {
     [isMounted]
   )
 
+  // получаем сколько активных запросов в текущий момент
+  const GetNumberOfRequests = useCallback(() => numberOfRequests, [numberOfRequests])
   // очищаем ошибку
   const clearError = useCallback(() => setError(''), [])
 
@@ -62,5 +70,5 @@ export const useFetching = () => {
     }
   }, [error, clearError])
 
-  return { loading, fetching, error, clearError }
+  return { loading, fetching, error, clearError, GetNumberOfRequests }
 }

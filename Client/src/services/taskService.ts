@@ -7,7 +7,7 @@ export const createTask = async (
   markers: Array<IMarker>,
   complexity: number,
   id: number | null = null
-) => {
+): Promise<ITaskFromServer> => {
   const formData = new FormData()
   if (img) formData.append('img', img)
   formData.append('complexity', JSON.stringify(complexity))
@@ -24,17 +24,13 @@ export const createTask = async (
 }
 
 // получение задания
-export const fetchTask = async (id: number) => {
+export const fetchTask = async (id: number): Promise<ITaskFromServer> => {
   const { data } = await $api.get(`${API_TASK}/${id}`)
   return data
 }
 
 // получение списка заданий
-export const fetchAllTask = async (
-  page: number,
-  limit: number,
-  sort: number
-) => {
+export const fetchAllTask = async (page: number, limit: number, sort: number): Promise<Array<ITaskFromServer>> => {
   const { data } = await $api.get(API_TASK, {
     params: {
       page,
@@ -46,10 +42,7 @@ export const fetchAllTask = async (
 }
 
 // получение рандомного списка заданий
-export const fetchRandomTask = async (
-  count: number,
-  not_id: number | null = null
-) => {
+export const fetchRandomTask = async (count: number, not_id: number | null = null): Promise<Array<ITaskFromServer>> => {
   const { data } = await $api.get(API_TASK_RANDOM, {
     params: {
       not_id,
@@ -60,6 +53,6 @@ export const fetchRandomTask = async (
 }
 
 // увеличение счетчика прохождения задания
-export const setTaskPassed = async (id: number) => {
+export const setTaskPassed = async (id: number): Promise<void> => {
   await $api.post(`${API_TASK_PASSED}/${id}`)
 }

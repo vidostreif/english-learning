@@ -1,8 +1,8 @@
 import { $api } from '../api'
-import { USER_ROUTE } from '../utils/consts'
+import { API_USER_USERS } from '../utils/consts'
 
 export default class UserServices {
   static async fetchUsers() {
-    return $api.post(`${USER_ROUTE}/users`)
+    return $api.post(API_USER_USERS)
   }
 }

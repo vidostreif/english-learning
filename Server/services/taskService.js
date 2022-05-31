@@ -143,9 +143,7 @@ class TaskService {
           ]
           break
         default:
-          throw new Error(
-            'Неудалось определить сортировку по значению: ' + sort
-          )
+          throw new Error('Неудалось определить сортировку по значению: ' + sort)
       }
     }
 
@@ -241,12 +239,7 @@ class TaskService {
     const newUuid = uuid.v4()
     const fileName = newUuid + '.webp'
     const imgPath = path.resolve(__dirname, '..', 'static', fileName)
-    const imgPathMini = path.resolve(
-      __dirname,
-      '..',
-      'static',
-      'mini_' + fileName
-    )
+    const imgPathMini = path.resolve(__dirname, '..', 'static', 'mini_' + fileName)
 
     await sharp(img.data).toFile(imgPath)
     // сохраняем миниатюру

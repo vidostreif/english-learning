@@ -6,6 +6,10 @@ declare module '*.module.scss' {
   export default classes
 }
 
+declare interface IStylesModule {
+  readonly [key: string]: string
+}
+
 declare interface ITask {
   id: number
   rating: number
@@ -34,6 +38,8 @@ declare interface ITaskFromServer extends ITask {
   }>
 }
 
-declare interface IStylesModule {
-  readonly [key: string]: string
+declare interface ITaskRating {
+  rating: number
+  taskId: number
+  userId: number
 }
