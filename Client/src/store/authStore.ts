@@ -2,16 +2,17 @@ import { makeAutoObservable } from 'mobx'
 import AuthService from '../services/authService'
 import toast from 'react-hot-toast'
 import EventService from '../services/eventService'
+import RootStore from './rootStore'
 
 const guest: IUser = { id: 0, name: 'Гость', email: '', isActivated: false, userRole: 'guest' }
 
-export default class AuthStore implements IAuthStore {
+export default class AuthStore {
   user: IUser = guest
   isAuth: boolean = false
   isAuthLoading: boolean = true
-  rootStore: IRootStore
+  rootStore: RootStore
 
-  constructor(rootStore: IRootStore) {
+  constructor(rootStore: RootStore) {
     makeAutoObservable(this)
     this.rootStore = rootStore
     EventService.on('logout', this, this.clear)

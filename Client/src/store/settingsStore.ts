@@ -1,15 +1,16 @@
 import { makeAutoObservable } from 'mobx'
+import RootStore from './rootStore'
 
 interface ISettings {
   [key: string]: string
 }
 
-export default class SettingsStore implements ISettigsStore {
+export default class SettingsStore {
   settings: ISettings = { taskSort: 'easyFirst' }
   isSettingsLoading = true
-  rootStore: IRootStore
+  rootStore: RootStore
 
-  constructor(rootStore: IRootStore) {
+  constructor(rootStore: RootStore) {
     makeAutoObservable(this)
     this.rootStore = rootStore
   }
