@@ -3,22 +3,29 @@ import { useDrop } from 'react-dnd'
 import classNames from 'classnames/bind'
 import ownStyles from './DropPlace.module.scss'
 
+interface IProps {
+  readonly correctElement: IMarkerForGame // параметры правильного маркера
+  readonly top: number // положение по вертикали
+  readonly left: number // положение по горизонтали
+  readonly filledFunction: (idText: number, idMarker: number) => void // событие заполнения маркера
+  readonly check: () => IElement | null // проверка корректности заполнения
+  readonly choiced: boolean // выбран в текущий момент
+  readonly used: boolean // заполнен правильным словом
+  readonly rootStyles: IStylesModule // стили которые передаются от родителя
+}
+
+interface IElement {
+  readonly id: number
+  readonly text: string
+}
+
 //поле для заполнения
-function DropPlace({
-  correctElement,
-  top,
-  left,
-  filledFunction,
-  check,
-  choiced,
-  used,
-  rootStyles,
-}) {
-  const [newInerElement, setNewInerElement] = useState() // новый элемент в поле
+const DropPlace: React.FC<IProps> = ({ correctElement, top, left, filledFunction, check, choiced, used, rootStyles }) => {
+  const [newInerElement, setNewInerElement] = useState<IElement>() // новый элемент в поле
   const [text, setText] = useState('?') //элемент в поле
   const [isMistake, setMistake] = useState(false) //совершили ошибку
   const [isFilled, setFilled] = useState(false) //заполнили правильно ответ
-  const [styles, setStyles] = useState({ ...ownStyles, ...rootStyles }) //стили
+  const [styles, setStyles] = useState<IStylesModule>({ ...ownStyles, ...rootStyles }) //стили
 
   useEffect(() => {
     if (rootStyles) {
@@ -42,7 +49,7 @@ function DropPlace({
   // eslint-disable-next-line no-unused-vars
   const [{ isOver, isDidDrop, isActive }, drop] = useDrop(() => ({
     accept: 'div',
-    drop: (item, monitor) => addTextToBoard(item.id, item.text, monitor),
+    drop: (item: IElement, monitor) => addTextToBoard(item.id, item.text, monitor),
     collect: (monitor) => ({
       isOver: !!monitor.isOver(),
       isDidDrop: !!monitor.didDrop(),
@@ -54,7 +61,7 @@ function DropPlace({
   }))
 
   //если перетащили слово на маркер
-  const addTextToBoard = (id, text, monitor) => {
+  const addTextToBoard = (id: number, text: string, monitor: any) => {
     setNewInerElement((inerElement) => ({
       ...inerElement,
       id: id,
@@ -65,7 +72,7 @@ function DropPlace({
   //нажали на маркер
   const wasClick = () => {
     if (!used) {
-      const element = check()
+      const element: IElement | null = check()
       if (element) {
         setNewInerElement((inerElement) => ({
           ...inerElement,
@@ -99,19 +106,21 @@ function DropPlace({
   })
 
   return (
-    <div
-      className={liClasses}
-      ref={drop}
-      style={divStyle}
-      onClick={wasClick}
-      onAnimationEnd={(e) => {
-        if (e.animationName === styles.mistake) {
-          setMistake(false)
-        }
-      }}
-    >
-      {text}
-    </div>
+    <>
+      <div
+        className={liClasses}
+        ref={drop}
+        style={divStyle}
+        onClick={wasClick}
+        onAnimationEnd={(e) => {
+          if (e.animationName === styles.mistake) {
+            setMistake(false)
+          }
+        }}
+      >
+        {text}
+      </div>
+    </>
   )
 }
 

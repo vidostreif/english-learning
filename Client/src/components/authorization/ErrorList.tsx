@@ -1,6 +1,10 @@
 import React from 'react'
 
-const ErrorList = ({ list }) => {
+interface IProps {
+  list: Array<string>
+}
+
+const ErrorList: React.FC<IProps> = ({ list }) => {
   if (list.length === 0) {
     return <ul className="ErrorValidation"></ul>
   } else {

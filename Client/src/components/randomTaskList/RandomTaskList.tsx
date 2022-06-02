@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useFetching } from '../../hooks/useFetching'
 import { fetchRandomTask } from '../../services/taskService'
-import Loader from '../loader/Loader.js'
+import Loader from '../loader/Loader'
 import TaskCard from '../taskCard/TaskCard'
 import styles from './RandomTaskList.module.scss'
 

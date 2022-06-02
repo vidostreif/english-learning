@@ -159,7 +159,12 @@ const DragDrop: React.FC = () => {
   }
 
   //Если выбрали какой-то маркер
-  const choicedMarker = (element: IMarkerForGame) => {
+  const choicedMarker = (
+    element: IMarkerForGame
+  ): {
+    id: number
+    text: string
+  } | null => {
     if (curText) {
       const returnElement = { id: curText.id, text: curText.text }
       dropChoiceText()

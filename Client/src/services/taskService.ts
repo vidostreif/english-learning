@@ -1,5 +1,11 @@
 import { $api } from '../api'
+import { ETaskSort } from '../globalEnum'
 import { API_TASK, API_TASK_PASSED, API_TASK_RANDOM } from '../utils/consts'
+
+interface IAllTasks {
+  tasks: Array<ITaskFromServer>
+  totalPages: number
+}
 
 // сохранение задания
 export const createTask = async (
@@ -30,7 +36,7 @@ export const fetchTask = async (id: number): Promise<ITaskFromServer> => {
 }
 
 // получение списка заданий
-export const fetchAllTask = async (page: number, limit: number, sort: number): Promise<Array<ITaskFromServer>> => {
+export const fetchAllTask = async (page: number, limit: number, sort: ETaskSort): Promise<IAllTasks> => {
   const { data } = await $api.get(API_TASK, {
     params: {
       page,

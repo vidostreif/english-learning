@@ -4,15 +4,15 @@ import Loader from '../loader/Loader'
 import Validator from '../../utils/Validator'
 import ErrorList from './ErrorList'
 import toast from 'react-hot-toast'
-import './LoginForm.scss'
+import styles from './LoginForm.module.scss'
 import { useStores } from '../../store/rootStore'
 
-const LoginForm = () => {
+const LoginForm: React.FC = () => {
   const [triedToRegister, setTriedToRegister] = useState(false) //пытались зарегестрироваться
   const [email, setEmail] = useState('')
-  const [emailErrors, setEmailErrors] = useState([])
+  const [emailErrors, setEmailErrors] = useState<Array<string>>([])
   const [password, setPassword] = useState('')
-  const [passwordErrors, setPasswordErrors] = useState([])
+  const [passwordErrors, setPasswordErrors] = useState<Array<string>>([])
   const { authStore } = useStores()
 
   //проверяем авторизацию
@@ -35,27 +35,27 @@ const LoginForm = () => {
     }
   }
 
-  const changeEmail = (newEmail) => {
+  const changeEmail = (newEmail: string) => {
     setEmail(newEmail)
     if (triedToRegister) {
       checkEmail(newEmail)
     }
   }
 
-  const changePassword = (newPassword) => {
+  const changePassword = (newPassword: string) => {
     setPassword(newPassword)
     if (triedToRegister) {
       checkPassword(newPassword)
     }
   }
 
-  const checkEmail = (newEmail) => {
+  const checkEmail = (newEmail: string) => {
     const mistakes = Validator.checkEmail(newEmail)
     setEmailErrors(mistakes)
     return mistakes.length === 0
   }
 
-  const checkPassword = (newPassword) => {
+  const checkPassword = (newPassword: string) => {
     const mistakes = Validator.checkPassword(newPassword)
     setPasswordErrors(mistakes)
     return mistakes.length === 0
@@ -66,20 +66,10 @@ const LoginForm = () => {
       <div>
         <h1>Авторизуйтесь или зарегестрируйтесь</h1>
 
-        <input
-          onChange={(e) => changeEmail(e.target.value)}
-          value={email}
-          type="email"
-          placeholder="Email"
-        />
+        <input onChange={(e) => changeEmail(e.target.value)} value={email} type="email" placeholder="Email" />
         <ErrorList list={emailErrors} />
 
-        <input
-          onChange={(e) => changePassword(e.target.value)}
-          value={password}
-          type="password"
-          placeholder="Password"
-        />
+        <input onChange={(e) => changePassword(e.target.value)} value={password} type="password" placeholder="Password" />
         <ErrorList list={passwordErrors} />
 
         <button onClick={() => authStore.login(email, password)}>Войти</button>
@@ -90,11 +80,7 @@ const LoginForm = () => {
     return (
       <div>
         <h1>{`Пользователь авторизован как ${authStore.user?.email}`}</h1>
-        <h1>
-          {authStore.user?.isActivated
-            ? `Пользователь активирован`
-            : `Пользователь не активирован`}
-        </h1>
+        <h1>{authStore.user?.isActivated ? `Пользователь активирован` : `Пользователь не активирован`}</h1>
         <button onClick={() => authStore.logout()}>Выйти</button>
       </div>
     )

@@ -1,38 +1,33 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { observer } from 'mobx-react-lite'
 import { fetchAllTask } from '../../services/taskService'
-import Loader from '../../components/loader/Loader.js'
+import Loader from '../../components/loader/Loader'
 import TaskCard from '../../components/taskCard/TaskCard'
 import styles from './TaskList.module.scss'
 import VSelect from '../../components/ui/VSelect/VSelect'
 import { useFetching } from '../../hooks/useFetching'
 import { useStores } from '../../store/rootStore'
+import { ETaskSort } from '../../globalEnum'
 
 const limit = 8 // количество заданий загружаемых за один запрос
 
-const TaskList = (props) => {
+const TaskList: React.FC = () => {
   const { settingsStore } = useStores()
-  const [taskList, setTaskList] = useState([]) // спсиок заданий
+  const [taskList, setTaskList] = useState<Array<ITaskFromServer>>([]) // спсиок заданий
   const [currentPage, setCurrentPage] = useState(1) // последняя загруженная страница
   const [totalPages, setTotalPages] = useState(1) // всего страниц
-  const lastElement = useRef() // элемент после листа, при отоброжении которго подгружаются новые посты
-  const observer = useRef() // для слежки за видимостью элемента после листа
+  const lastElement = useRef<HTMLDivElement>(null) // элемент после листа, при отоброжении которго подгружаются новые посты
+  const observer = useRef<IntersectionObserver>() // для слежки за видимостью элемента после листа
   const { loading, fetching } = useFetching() // обертка для отображения состояния загрузки данных с сервера
 
   // запрос списка заданий
   const getTasksFromServer = useCallback(
-    async (page, sort) => {
+    async (page: number, sort: ETaskSort) => {
       await fetching(async () => {
         await fetchAllTask(page, limit, sort)
           .then((data) => {
             setTaskList((taskList) => {
-              const newTaskList = [
-                ...taskList,
-                ...data.tasks.filter(
-                  (newTask) =>
-                    !taskList.find((oldTask) => oldTask.id === newTask.id)
-                ),
-              ]
+              const newTaskList = [...taskList, ...data.tasks.filter((newTask) => !taskList.find((oldTask) => oldTask.id === newTask.id))]
               return newTaskList
             })
             setTotalPages(data.totalPages)
@@ -47,7 +42,7 @@ const TaskList = (props) => {
   )
 
   useEffect(() => {
-    getTasksFromServer(currentPage, settingsStore.settings.taskSort)
+    getTasksFromServer(currentPage, settingsStore.settings.taskSort as ETaskSort)
   }, [currentPage, settingsStore.settings.taskSort, getTasksFromServer])
 
   // подгрузка постов при прокрутке страницы
@@ -56,18 +51,18 @@ const TaskList = (props) => {
     if (observer.current) observer.current.disconnect() // если observer за кем-то наблюдает, то отключаем наблюдение
 
     // когда видим указанный div то прибавляем страницу
-    const callback = function (entries, observer) {
+    const callback = function (entries: IntersectionObserverEntry[], observer: IntersectionObserver) {
       if (entries[0].isIntersecting && currentPage < totalPages) {
         setCurrentPage((currentPage) => currentPage + 1)
       }
     }
     observer.current = new IntersectionObserver(callback)
-    observer.current.observe(lastElement.current)
+    observer.current.observe(lastElement.current as Element)
   }, [currentPage, totalPages, loading])
 
   // смена сортировки
-  const SelectSort = (sort) => {
-    settingsStore.setSettings('taskSort', sort)
+  const SelectSort = (sort: string) => {
+    settingsStore.setSettingsItem('taskSort', sort)
     setCurrentPage(1)
     setTaskList([])
   }
@@ -76,19 +71,19 @@ const TaskList = (props) => {
     <div className={styles.container}>
       <div>
         <VSelect
-          value={settingsStore.settings.taskSort || 'easyFirst'}
+          value={settingsStore.settings.taskSort || ETaskSort[ETaskSort.easyFirst]}
           onChange={(sort) => SelectSort(sort)}
           defaultValue="Сортировка"
           options={[
-            { value: 'newFirst', name: 'Сначала новые' },
-            { value: 'popularFirst', name: 'Сначала популярные' },
-            { value: 'hardFirst', name: 'Cначала сложные' },
-            { value: 'easyFirst', name: 'Сначала простые' },
+            { value: ETaskSort.newFirst, name: 'Сначала новые' },
+            { value: ETaskSort.popularFirst, name: 'Сначала популярные' },
+            { value: ETaskSort.hardFirst, name: 'Cначала сложные' },
+            { value: ETaskSort.easyFirst, name: 'Сначала простые' },
             {
-              value: 'highlyRatedFirst',
+              value: ETaskSort.highlyRatedFirst,
               name: 'Сначала с высоким рейтингом',
             },
-            { value: 'lowRatedFirst', name: 'Сначала с низким рейтингом' },
+            { value: ETaskSort.lowRatedFirst, name: 'Сначала с низким рейтингом' },
           ]}
         />
       </div>
