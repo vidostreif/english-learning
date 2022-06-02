@@ -1,13 +1,13 @@
 require('dotenv').config() // инициализация переменных среды
-const express = require('express')
-const { sequelize, openConnection, closeConnection } = require('./db') //для подключения к БД
-const cookieParser = require('cookie-parser')
-const cors = require('cors') // для обработки запросов с браузера
-const fileUpload = require('express-fileupload')
-const router = require('./routes/index') // список маршрутов
-const errorHandler = require('./middleware/ErrorHandlingMiddleware')
-const path = require('path')
-const dbPreparation = require('./db/dbPreparation')
+import express from 'express'
+import { sequelize, openConnection, closeConnection } from './db' //для подключения к БД
+import cookieParser from 'cookie-parser'
+import cors from 'cors' // для обработки запросов с браузера
+import fileUpload from 'express-fileupload'
+import router from './routes/index' // список маршрутов
+import errorHandler from './middleware/ErrorHandlingMiddleware'
+import path from 'path'
+import dbPreparation from './db/dbPreparation'
 const PORT = process.env.PORT || 5000
 
 const app = express()
