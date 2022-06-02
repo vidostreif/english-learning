@@ -3,8 +3,22 @@ import React, { useEffect, useState } from 'react'
 import classNames from 'classnames/bind'
 import ownStyles from './DivDrag.module.scss'
 
+interface IProps {
+  readonly id: number
+  readonly text: string
+  readonly check: () => IElement | null // проверка корректности заполнения
+  readonly choiced: boolean // выбран в текущий момент
+  readonly used: boolean // заполнен правильным словом
+  readonly rootStyles: IStylesModule // стили которые передаются от родителя
+}
+
+interface IElement {
+  readonly id: number
+  readonly text: string
+}
+
 // перетаскиваемый блок
-function DivDrag({ id, text, check, choiced, used, rootStyles }) {
+const DivDrag: React.FC<IProps> = ({ id, text, check, choiced, used, rootStyles }) => {
   const [isMistake, setMistake] = useState(false) //совершили ошибку
   const [styles, setStyles] = useState({ ...ownStyles, ...rootStyles }) //стили
 
