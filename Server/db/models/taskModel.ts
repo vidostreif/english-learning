@@ -1,8 +1,8 @@
-const { sequelize } = require('..')
-const { DataTypes, Model } = require('sequelize')
-const Dictionary = require('./dictionaryModel')
-const TaskRating = require('./taskRatingModel')
-const User = require('./userModel')
+import { sequelize } from '..'
+import { DataTypes, Model } from 'sequelize'
+import Dictionary from './dictionaryModel'
+import TaskRating from './taskRatingModel'
+import User from './userModel'
 
 class Task extends Model {}
 
@@ -25,7 +25,7 @@ Task.init(
           include: [
             {
               association: 'Markers',
-              include: Dictionary,
+              include: [Dictionary],
             },
           ],
         }
@@ -33,12 +33,7 @@ Task.init(
       includeRating() {
         return {
           attributes: {
-            include: [
-              [
-                sequelize.fn('AVG', sequelize.col('taskRatings.rating')),
-                'rating',
-              ],
-            ],
+            include: [[sequelize.fn('AVG', sequelize.col('taskRatings.rating')), 'rating']],
           },
           include: [
             {
@@ -54,4 +49,4 @@ Task.init(
   }
 )
 
-module.exports = Task
+export default Task

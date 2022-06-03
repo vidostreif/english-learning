@@ -1,6 +1,6 @@
 require('dotenv').config() // инициализация переменных среды
 import express from 'express'
-import { sequelize, openConnection, closeConnection } from './db' //для подключения к БД
+import { sequelize, openConnection, closeConnection } from './db/' //для подключения к БД
 import cookieParser from 'cookie-parser'
 import cors from 'cors' // для обработки запросов с браузера
 import fileUpload from 'express-fileupload'

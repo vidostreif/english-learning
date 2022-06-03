@@ -1,4 +1,4 @@
-const taskRatingService = require('../services/taskRatingService')
+import taskRatingService from '../services/taskRatingService'
 
 class TaskRatingController {
   //добавление оценки задания от пользователя

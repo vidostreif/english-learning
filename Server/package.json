@@ -5,7 +5,7 @@
   "main": "dist/app.js",
   "scripts": {
     "start": "ts-node index.ts",
-    "dev": "nodemon --exec ts-node index.ts"
+    "dev": "ts-node-dev index.ts"
   },
   "keywords": [],
   "author": "",

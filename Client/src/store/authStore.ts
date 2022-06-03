@@ -50,6 +50,7 @@ export default class AuthStore {
 
   async login(email: string, password: string) {
     const user: IUser = await AuthService.login(email, password)
+
     toast(`И снова привет ${user.email}`, {
       icon: '🖐',
     })

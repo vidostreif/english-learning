@@ -1,11 +1,11 @@
-const { UserRole, TaskRating, User, Task } = require('../models')
-const sharp = require('sharp')
-const uuid = require('uuid')
-const fs = require('fs')
-const path = require('path')
+import { UserRole, TaskRating, User, Task } from '../models'
+// import sharp from 'sharp'
+// import uuid from 'uuid'
+// import fs from 'fs'
+// import path from 'path'
 
 //функция предварительного заполнения БД
-module.exports = async function dbPreparation(params) {
+export default async function dbPreparation() {
   await UserRole.findOrCreate({ where: { name: 'user' } })
   await UserRole.findOrCreate({ where: { name: 'administrator' } })
 

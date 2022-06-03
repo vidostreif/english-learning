@@ -1,5 +1,5 @@
-const { sequelize } = require('..')
-const { DataTypes, Model } = require('sequelize')
+import { sequelize } from '..'
+import { DataTypes, Model } from 'sequelize'
 
 class Token extends Model {}
 
@@ -16,4 +16,4 @@ Token.init(
   }
 )
 
-module.exports = Token
+export default Token

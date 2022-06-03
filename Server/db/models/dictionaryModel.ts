@@ -1,5 +1,5 @@
-const { sequelize } = require('..')
-const { DataTypes, Model } = require('sequelize')
+import { sequelize } from '..'
+import { DataTypes, Model } from 'sequelize'
 
 class Dictionary extends Model {}
 
@@ -16,4 +16,4 @@ Dictionary.init(
   }
 )
 
-module.exports = Dictionary
+export default Dictionary

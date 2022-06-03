@@ -1,10 +1,10 @@
-const Marker = require('./markerModel')
-const Dictionary = require('./dictionaryModel')
-const Task = require('./taskModel')
-const UserRole = require('./userRoleModel')
-const User = require('./userModel')
-const Token = require('./tokenModel')
-const TaskRating = require('./taskRatingModel')
+import Marker from './markerModel'
+import Dictionary from './dictionaryModel'
+import Task from './taskModel'
+import UserRole from './userRoleModel'
+import User from './userModel'
+import Token from './tokenModel'
+import TaskRating from './taskRatingModel'
 
 //Определяем связи
 Task.hasMany(Marker, { as: 'Markers', foreignKey: 'taskId' }) //у одной задачи может быть множество маркеров
@@ -19,8 +19,8 @@ User.belongsTo(UserRole)
 User.hasMany(Token, { as: 'Tokens', foreignKey: 'userId' })
 Token.belongsTo(User)
 
-User.belongsToMany(Task, { as: 'RatingForTasks', through: TaskRating })
-Task.belongsToMany(User, { as: 'RatingFromUsers', through: TaskRating })
+User.belongsToMany(Task, { as: 'TasksWithRating', through: TaskRating })
+Task.belongsToMany(User, { as: 'UsersWithRating', through: TaskRating })
 
 User.hasMany(TaskRating)
 TaskRating.belongsTo(User)
@@ -28,12 +28,4 @@ TaskRating.belongsTo(User)
 Task.hasMany(TaskRating)
 TaskRating.belongsTo(Task)
 
-module.exports = {
-  Marker,
-  Dictionary,
-  Task,
-  UserRole,
-  User,
-  Token,
-  TaskRating,
-}
+export { Marker, Dictionary, Task, UserRole, User, Token, TaskRating }

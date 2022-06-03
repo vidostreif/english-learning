@@ -1,8 +1,8 @@
-const { User, Task, TaskRating } = require('../db/models')
+import { User, Task, TaskRating } from '../db/models'
 
 class TaskRatingService {
   //добавление новой оценки
-  async add(userId, taskId, rating) {
+  async add(userId: number, taskId: number, rating: number): Promise<number> {
     const user = await User.findOne({ where: { id: userId } })
     if (!user) {
       throw new Error('Пользователь не найден')
@@ -13,14 +13,14 @@ class TaskRatingService {
       throw new Error('Задание не найдено')
     }
 
-    // await user.removeTaskRating(task)
-    await user.addRatingForTask(task, { through: { rating: rating } })
+    await this.remove(userId, taskId)
+    await user.addTasksWithRating([task], { through: { rating: rating } })
 
     return rating
   }
 
   // удаление оценки
-  async remove(userId, taskId) {
+  async remove(userId: number, taskId: number): Promise<void> {
     const user = await User.findOne({ where: { id: userId } })
     if (!user) {
       throw new Error('Пользователь не найден')
@@ -31,12 +31,13 @@ class TaskRatingService {
       throw new Error('Задание не найдено')
     }
 
-    return await user.removeTaskRating(task)
+    return await user.removeTasksWithRating(task)
   }
 
   // получить все оценки пользователя
-  async getAllForUser(userId) {
+  async getAllForUser(userId: number): Promise<Array<TaskRating>> {
     const user = await User.findOne({ where: { id: userId } })
+
     if (!user) {
       throw new Error('Пользователь не найден')
     }
@@ -45,7 +46,7 @@ class TaskRatingService {
   }
 
   // получить оценку пользователя по конкретному заданию
-  async getOneForUser(userId, taskId) {
+  async getOneForUser(userId: number, taskId: number): Promise<TaskRating> {
     if (!taskId) {
       throw new Error('Не задан ID задания')
     }
@@ -70,4 +71,4 @@ class TaskRatingService {
   }
 }
 
-module.exports = new TaskRatingService()
+export default new TaskRatingService()

@@ -11,6 +11,7 @@ class ApiError extends Error {
       try {
         return await callback(req, res, next)
       } catch (error) {
+        console.log(error)
         if (error instanceof ApiError) {
           next(error)
         }
