@@ -1,37 +1,36 @@
-const { Task, Marker, Dictionary } = require('../db/models')
-const { Sequelize, Op } = require('sequelize')
-const taskService = require('../services/taskService')
+import { Task, Marker, Dictionary, User } from '../db/models'
+import { Sequelize, Op } from 'sequelize'
+import { NextFunction, Request, Response } from 'express'
+import taskService from '../services/taskService'
 
 class TaskController {
-  async addOrUpdate(req, res, next) {
+  async addOrUpdate(req: Request, res: Response, next: NextFunction) {
     const userId = req.user.id
     const { complexity, markers, id } = req.body
     const files = req.files
 
-    res.json(
-      await taskService.addOrUpdate(userId, id, complexity, markers, files)
-    )
+    res.json(await taskService.addOrUpdate(userId, id, complexity, markers, files))
   }
 
-  async destroyOne(req, res, next) {
+  async destroyOne(req: Request, res: Response, next: NextFunction) {
     const { id } = req.params
 
     res.json(await taskService.destroyOne(id))
   }
 
-  async restoreOne(req, res, next) {
+  async restoreOne(req: Request, res: Response, next: NextFunction) {
     const { id } = req.params
 
     res.json(await taskService.restoreOne(id))
   }
 
-  async getAll(req, res, next) {
+  async getAll(req: Request, res: Response, next: NextFunction) {
     let { limit, page, complexity, sort } = req.query
 
     res.json(await taskService.getAll(limit, page, complexity, sort))
   }
 
-  async getOne(req, res, next) {
+  async getOne(req: Request, res: Response, next: NextFunction) {
     const { id } = req.params
 
     res.json(await taskService.getOne(id))

@@ -1,4 +1,4 @@
-import { UserRole, TaskRating, User, Task } from '../models'
+import { UserRole, TaskRating, User, Task, Dictionary, Marker, Token } from '../models'
 // import sharp from 'sharp'
 // import uuid from 'uuid'
 // import fs from 'fs'
@@ -8,6 +8,19 @@ import { UserRole, TaskRating, User, Task } from '../models'
 export default async function dbPreparation() {
   await UserRole.findOrCreate({ where: { name: 'user' } })
   await UserRole.findOrCreate({ where: { name: 'administrator' } })
+
+  // const userRole: UserRole = await UserRole.findOne({ where: { id: 1 } })
+
+  // const token: Token = await Token.findOne({ where: { id: 97 } })
+  // const us = await token.getUser()
+
+  // console.log(us.email)
+
+  // const user: User = await User.scope('role').findOne({ where: { id: 28 } })
+
+  // console.log(user.userRoleId)
+
+  // dict.getMarkers()
 
   //!!! Убрать
   //Пересохраняем все картинки в новом формате

@@ -1,8 +1,8 @@
 import { sequelize } from '..'
-// import { DataTypes, Model } from 'sequelize'
 import UserRole from './userRoleModel'
 import Task from './taskModel'
 import Token from './tokenModel'
+import * as Sequelize from 'sequelize'
 
 import {
   Association,
@@ -20,10 +20,12 @@ import {
   BelongsToManyAddAssociationsMixin,
   BelongsToManyGetAssociationsMixin,
   BelongsToManyRemoveAssociationMixin,
+  BelongsToGetAssociationMixin,
+  BelongsToSetAssociationMixin,
+  BelongsToCreateAssociationMixin,
   Model,
   ModelDefined,
   Optional,
-  Sequelize,
   InferAttributes,
   InferCreationAttributes,
   CreationOptional,
@@ -31,15 +33,6 @@ import {
   ForeignKey,
 } from 'sequelize'
 import TaskRating from './taskRatingModel'
-
-// interface IUser {
-//   id: number
-//   name: string
-//   email: string
-//   password: string
-//   isActivated: boolean
-//   activationLink: string
-// }
 
 class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare id: CreationOptional<number>
@@ -53,7 +46,10 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare createdAt: CreationOptional<Date>
   // updatedAt can be undefined during creation
   declare updatedAt: CreationOptional<Date>
+  // deletedAt can be undefined during creation
+  declare deletedAt: CreationOptional<Date>
 
+  declare Tokens?: NonAttribute<Array<Token>>
   declare getTokens: HasManyGetAssociationsMixin<Token> // Note the null assertions!
   declare addToken: HasManyAddAssociationMixin<Token, number>
   declare addTokens: HasManyAddAssociationsMixin<Token, number>
@@ -63,8 +59,9 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare hasToken: HasManyHasAssociationMixin<Token, number>
   declare hasTokens: HasManyHasAssociationsMixin<Token, number>
   declare countTokens: HasManyCountAssociationsMixin
-  declare createToken: HasManyCreateAssociationMixin<Token, 'ownerId'>
+  declare createToken: HasManyCreateAssociationMixin<Token, 'userId'>
 
+  declare TaskRatings?: NonAttribute<Array<TaskRating>>
   declare getTaskRatings: HasManyGetAssociationsMixin<TaskRating> // Note the null assertions!
   declare addTaskRating: HasManyAddAssociationMixin<TaskRating, number>
   declare addTaskRatings: HasManyAddAssociationsMixin<TaskRating, number>
@@ -74,11 +71,18 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare hasTaskRating: HasManyHasAssociationMixin<TaskRating, number>
   declare hasTaskRatings: HasManyHasAssociationsMixin<TaskRating, number>
   declare countTaskRatings: HasManyCountAssociationsMixin
-  declare creatTaskRatingn: HasManyCreateAssociationMixin<TaskRating, 'ownerId'>
+  declare creatTaskRatingn: HasManyCreateAssociationMixin<TaskRating, 'userId'>
 
+  declare TasksWithRatings?: NonAttribute<Array<Task>>
   declare addTasksWithRating: BelongsToManyAddAssociationsMixin<Task, number>
   declare removeTasksWithRating: BelongsToManyRemoveAssociationMixin<Task, number>
   declare getTasksWithRatings: BelongsToManyGetAssociationsMixin<Task>
+
+  declare userRoleId: ForeignKey<UserRole['id']>
+  declare userRole?: NonAttribute<UserRole>
+  declare getRole: BelongsToGetAssociationMixin<UserRole>
+  declare setRole: BelongsToSetAssociationMixin<UserRole, number>
+  declare createRole: BelongsToCreateAssociationMixin<UserRole>
 }
 
 User.init(
@@ -96,10 +100,12 @@ User.init(
     activationLink: { type: DataTypes.STRING, unique: false, allowNull: true },
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE,
+    deletedAt: DataTypes.DATE,
   },
   {
     // underscored: true,
     sequelize,
+    paranoid: true,
     // tableName: 'user',
     modelName: 'user',
     scopes: {

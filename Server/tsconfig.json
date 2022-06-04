@@ -3,12 +3,14 @@
     "module": "commonjs",
     "esModuleInterop": true,
     "target": "es6",
-    "allowJs": true,
+    // "allowJs": true,
     "moduleResolution": "node",
     "sourceMap": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    // "experimentalDecorators": true,
+    // "emitDecoratorMetadata": true
     // "outDir": "./dist"
+    "typeRoots": ["./@types"]
   },
+  // "include": ["./**/*"],
   "lib": ["es2015"]
 }

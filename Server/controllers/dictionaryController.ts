@@ -1,22 +1,23 @@
-const { Dictionary } = require('../db/models')
+import { Dictionary } from '../db/models'
+import { NextFunction, Request, Response } from 'express'
 
 class DictionaryController {
-  async create(req, res, next) {
+  async create(req: Request, res: Response, next: NextFunction) {
     const { name } = req.body
     const text = await Dictionary.create({ name })
     return res.json(text)
   }
 
-  async delete(req, res, next) {
+  async delete(req: Request, res: Response, next: NextFunction) {
     res.json({ message: 'Нужно реализовать DictionaryController!' })
   }
 
-  async getAll(req, res, next) {
+  async getAll(req: Request, res: Response, next: NextFunction) {
     const texts = await Dictionary.findAll()
     return res.json(texts)
   }
 
-  async getOne(req, res, next) {
+  async getOne(req: Request, res: Response, next: NextFunction) {
     const { name } = req.query
     if (!name) {
       throw new Error('Не задан Name')

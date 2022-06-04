@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt')
 const uuid = require('uuid')
 const mailService = require('./mailService')
 const tokenService = require('./tokenService')
-const UserDto = require('../dtos/userDto')
+const UserDto = require('../dtos/userDto').default
 const ApiError = require('../exceptions/ApiError')
 
 class UserService {

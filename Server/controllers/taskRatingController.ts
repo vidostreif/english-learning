@@ -1,8 +1,9 @@
 import taskRatingService from '../services/taskRatingService'
+import { NextFunction, Request, Response } from 'express'
 
 class TaskRatingController {
   //добавление оценки задания от пользователя
-  async addUserTaskRating(req, res, next) {
+  async addUserTaskRating(req: Request, res: Response, next: NextFunction) {
     const userId = req.user.id
     const { taskId, rating } = req.body
 
@@ -12,7 +13,7 @@ class TaskRatingController {
   }
 
   // удаление оценки пользователя
-  async removeUserTaskRating(req, res, next) {
+  async removeUserTaskRating(req: Request, res: Response, next: NextFunction) {
     const userId = req.user.id
     const { taskId } = req.body
 
@@ -22,18 +23,18 @@ class TaskRatingController {
   }
 
   // получить все оценки пользователя
-  async getAllUserTaskRatings(req, res, next) {
+  async getAllUserTaskRatings(req: Request, res: Response, next: NextFunction) {
     const userId = req.user.id
 
     return res.json(await taskRatingService.getAllForUser(userId))
   }
 
   // получить оценку пользователя по конкретному заданию
-  async getOneUserTaskRating(req, res, next) {
+  async getOneUserTaskRating(req: Request, res: Response, next: NextFunction) {
     const userId = req.user.id
     const { id: taskId } = req.params
 
-    return res.json(await taskRatingService.getOneForUser(userId, taskId))
+    return res.json(await taskRatingService.getOneForUser(userId, +taskId))
   }
 }
 
