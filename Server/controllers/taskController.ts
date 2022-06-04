@@ -15,25 +15,25 @@ class TaskController {
   async destroyOne(req: Request, res: Response, next: NextFunction) {
     const { id } = req.params
 
-    res.json(await taskService.destroyOne(id))
+    res.json(await taskService.destroyOne(+id))
   }
 
   async restoreOne(req: Request, res: Response, next: NextFunction) {
     const { id } = req.params
 
-    res.json(await taskService.restoreOne(id))
+    res.json(await taskService.restoreOne(+id))
   }
 
   async getAll(req: Request, res: Response, next: NextFunction) {
     let { limit, page, complexity, sort } = req.query
 
-    res.json(await taskService.getAll(limit, page, complexity, sort))
+    res.json(await taskService.getAll(+limit, +page, +complexity, sort.toString()))
   }
 
   async getOne(req: Request, res: Response, next: NextFunction) {
     const { id } = req.params
 
-    res.json(await taskService.getOne(id))
+    res.json(await taskService.getOne(+id))
   }
 
   async getRandom(req, res, next) {
@@ -50,4 +50,4 @@ class TaskController {
   }
 }
 
-module.exports = new TaskController()
+export default new TaskController()

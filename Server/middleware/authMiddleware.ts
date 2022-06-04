@@ -1,12 +1,13 @@
-const { check } = require('express-validator')
-const ApiError = require('../exceptions/ApiError')
-const tokenService = require('../services/tokenService')
+import { check } from 'express-validator'
+import ApiError from '../exceptions/ApiError'
+import tokenService from '../services/tokenService'
+import { NextFunction, Request, Response } from 'express'
 
 class AuthMiddleware {
-  static isAdministarator(req, res, next) {
+  static isAdministarator(req: Request, res: Response, next: NextFunction) {
     try {
       const userData = req.user
-      if (!userData || userData.userRole.toLowerCase() !== 'administrator') {
+      if (!userData || userData.userRole.toString().toLowerCase() !== 'administrator') {
         return next(ApiError.UnauthorizedError())
       }
       next()
@@ -16,7 +17,7 @@ class AuthMiddleware {
   }
 
   //проверка авторизации
-  static isAuthorized(req, res, next) {
+  static isAuthorized(req: Request, res: Response, next: NextFunction) {
     try {
       const authorizationHeader = req.headers.authorization
       if (!authorizationHeader) {
@@ -41,4 +42,4 @@ class AuthMiddleware {
   }
 }
 
-module.exports = AuthMiddleware
+export default AuthMiddleware

@@ -38,4 +38,4 @@ class TaskRatingController {
   }
 }
 
-module.exports = new TaskRatingController()
+export default new TaskRatingController()

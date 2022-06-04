@@ -1,17 +1,18 @@
-const { User, Task, TaskRating, Marker, Dictionary } = require('../db/models')
-const uuid = require('uuid')
-const fs = require('fs')
-const taskRatingService = require('./taskRatingService')
-const { Sequelize, Op } = require('sequelize')
-const path = require('path')
-const sharp = require('sharp')
+import { User, Task, TaskRating, Marker, Dictionary } from '../db/models'
+import uuid from 'uuid'
+import fs from 'fs'
+import taskRatingService from './taskRatingService'
+import { Sequelize, Op, InferCreationAttributes, Optional } from 'sequelize'
+import path from 'path'
+import sharp from 'sharp'
+import { NullishPropertiesOf } from 'sequelize/types/utils'
 
 class TaskService {
   //добавление или обновление параметров задания
-  async addOrUpdate(userId, taskId, complexity, markers, files) {
-    taskId = JSON.parse(taskId)
-    markers = JSON.parse(markers)
-    complexity = Number.parseInt(JSON.parse(complexity))
+  async addOrUpdate(userId: number, taskId: number, complexity: number, markersStr: string, files: { img: File }) {
+    // taskId = JSON.parse(taskId)
+    const markers: Array<{ text: string }> = JSON.parse(markersStr)
+    // complexity = Number.parseInt(JSON.parse(complexity))
 
     // получение картинки
     let img = null
@@ -88,17 +89,21 @@ class TaskService {
   // limit - выбираемое количество
   // page - запрашиваемая страница
   // sort - метод сортировки
-  async getAll(limit, page, complexity, sort) {
-    limit = parseInt(JSON.parse(limit || 10))
-    page = parseInt(JSON.parse(page || 1))
+  async getAll(limit: number, page: number, complexity: number, sort: string) {
+    limit = limit || 10
+    page = page || 1
 
     let param = {
       offset: limit * (page - 1),
       limit,
+      order: [
+        [Sequelize.literal('rating'), 'DESC'],
+        ['id', 'DESC'],
+      ],
     }
-    const filter = {}
+    const filter: any = {}
     if (complexity) {
-      complexity = parseInt(JSON.parse(complexity))
+      // complexity = parseInt(JSON.parse(complexity))
       filter.where = {
         complexity,
       }
@@ -143,11 +148,11 @@ class TaskService {
           ]
           break
         default:
-          throw new Error('Неудалось определить сортировку по значению: ' + sort)
+        // throw new Error('Неудалось определить сортировку по значению: ' + sort)
       }
     }
 
-    const resu = {}
+    const resu: any = {}
     resu.tasks = await Task.scope('includeRating').findAll({
       ...param,
       ...filter,
@@ -163,7 +168,7 @@ class TaskService {
     return resu
   }
 
-  async getOne(taskId) {
+  async getOne(taskId: number) {
     if (!taskId) {
       throw new Error('Не задан ID')
     }
@@ -172,13 +177,14 @@ class TaskService {
       where: { id: taskId },
     })
 
-    return resu.dataValues
+    return resu
   }
 
-  async getRandom(count, not_id) {
+  async getRandom(count: any, not_id: any) {
     let param = {
       order: Sequelize.literal('random()'),
       limit: count ? count : 1,
+      where: {},
     }
     if (not_id) {
       param.where = {
@@ -195,7 +201,7 @@ class TaskService {
 
   // force - если true, то полностью удаляемтся из БД
   //         если false, то не удаляется из БД, а в поле deletedAt устанавливается время удаления
-  async destroyOne(taskId, force = false) {
+  async destroyOne(taskId: number, force = false) {
     if (!taskId) {
       throw new Error('Не задан ID')
     }
@@ -209,21 +215,20 @@ class TaskService {
   }
 
   // восстанавливает помеченное на удаление задание
-  async restoreOne(taskId) {
+  async restoreOne(taskId: number) {
     if (!taskId) {
       throw new Error('Не задан ID')
     }
 
     await Task.restore({
       where: { id: taskId },
-      force,
     })
 
-    return 'Задание удалено'
+    return 'Задание восстановленно'
   }
 
   // увеличение счетчика прохождения задания
-  async wasPassed(taskId) {
+  async wasPassed(taskId: number) {
     if (!taskId) {
       throw new Error('Не задан ID задания')
     }
@@ -235,7 +240,7 @@ class TaskService {
   }
 
   // сохранение новой картинки
-  async saveImg(img) {
+  async saveImg(img: { data: sharp.SharpOptions }) {
     const newUuid = uuid.v4()
     const fileName = newUuid + '.webp'
     const imgPath = path.resolve(__dirname, '..', 'static', fileName)
@@ -249,7 +254,7 @@ class TaskService {
   }
 
   // удаление старой картинки
-  async delImg(imgName) {
+  async delImg(imgName: string) {
     const dirPath = path.resolve(__dirname, '..', 'static')
     // основную
     fs.unlink(path.resolve(dirPath, imgName), (err) => {
@@ -262,4 +267,4 @@ class TaskService {
   }
 }
 
-module.exports = new TaskService()
+export default new TaskService()

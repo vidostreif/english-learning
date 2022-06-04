@@ -19,6 +19,6 @@ import { User } from '../../db/models'
 declare module 'express' {
   interface Request {
     user: User
-    files?: Array<File>
+    files?: { img: File }
   }
 }

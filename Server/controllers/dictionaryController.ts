@@ -22,11 +22,9 @@ class DictionaryController {
     if (!name) {
       throw new Error('Не задан Name')
     }
-    const resu = await Dictionary.findOne({
-      where: { name: name },
-    })
+    const resu = await Dictionary.findOne({ where: { name: name.toString() } })
     res.json(resu)
   }
 }
 
-module.exports = new DictionaryController()
+export default new DictionaryController()
