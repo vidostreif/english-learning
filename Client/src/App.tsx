@@ -27,11 +27,7 @@ const App: React.FC = () => {
       <DndProvider backend={HTML5Backend}>
         <div className="App">
           <VHeader />
-          {authStore.isAuthLoading || settingsStore.isSettingsLoading ? (
-            <Loader />
-          ) : (
-            <AppRouter />
-          )}
+          {authStore.isAuthLoading || settingsStore.isSettingsLoading ? <Loader /> : <AppRouter />}
 
           <Toaster
             position="top-center"

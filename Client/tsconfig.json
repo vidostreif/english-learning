@@ -15,10 +15,10 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
     // mobx
-    // "experimentalDecorators": true,
-    // "useDefineForClassFields": true
+    "experimentalDecorators": true,
+    "useDefineForClassFields": true
   },
   "include": ["src"]
 }

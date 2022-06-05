@@ -1,7 +1,9 @@
 import React from 'react'
+import { configure } from 'mobx'
 import AuthStore from './authStore'
 import SettingsStore from './settingsStore'
 
+configure({ enforceActions: 'observed' })
 // Root Store Declaration
 export default class RootStore {
   settingsStore: SettingsStore

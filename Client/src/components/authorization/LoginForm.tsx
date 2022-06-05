@@ -87,7 +87,7 @@ const LoginForm: React.FC = () => {
   if (!authStore.isAuth) {
     return (
       <div className={styles.container}>
-        <h1>Авторизуйтесь или зарегестрируйтесь</h1>
+        <h2 className={styles.container__header}>Авторизуйтесь или зарегестрируйтесь</h2>
 
         <input
           className={styles.container__input}
@@ -118,8 +118,8 @@ const LoginForm: React.FC = () => {
   } else {
     return (
       <div className={styles.container}>
-        <h1>{`Пользователь авторизован как ${authStore.user?.email}`}</h1>
-        <h1>{authStore.user?.isActivated ? `Пользователь активирован` : `Пользователь не активирован`}</h1>
+        <h3>{`Пользователь авторизован как ${authStore.user?.email}`}</h3>
+        <h3>{authStore.user?.isActivated ? `Пользователь активирован` : `Пользователь не активирован`}</h3>
         <button className={styles.container__button} onClick={() => authStore.logout()}>
           Выйти
         </button>

@@ -4,11 +4,13 @@
   flex-direction: column;
   text-align: center;
   justify-content: center;
-  // &*,
-  // *:before,
-  // *:after {
-  //   box-sizing: border-box;
-  // }
+  &__header {
+    // transition: 0.2s;
+    // border-radius: 10px;
+    // border: 2px solid #eee;
+    margin: 5px;
+    // padding: 5px;
+  }
   &__input {
     // transition: 0.2s;
     // border-radius: 10px;
