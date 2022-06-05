@@ -1,14 +1,14 @@
-const { User, UserRole } = require('../db/models')
-const bcrypt = require('bcrypt')
-const uuid = require('uuid')
-const mailService = require('./mailService')
-const tokenService = require('./tokenService')
-const UserDto = require('../dtos/userDto').default
-const ApiError = require('../exceptions/ApiError')
+import { User, UserRole } from '../db/models'
+import bcrypt from 'bcrypt'
+import uuid from 'uuid'
+import mailService from './mailService'
+import tokenService from './tokenService'
+import ApiError from '../exceptions/ApiError'
+import UserDto from '../dtos/userDto'
 
 class UserService {
   //регистрация нового пользователя
-  async registration(email, password) {
+  async registration(email: string, password: string) {
     const candidate = await User.findOne({
       where: { email: email },
     })
@@ -30,17 +30,14 @@ class UserService {
       email,
       password: hashPassword,
       activationLink,
-      userRoleId: userRole.dataValues.id,
+      userRoleId: userRole.id,
     }) //сохранение пользователя
 
     user = await User.scope('role').findOne({ where: { id: user.id } })
 
-    // await mailService.sendActivationMail(
-    //   email,
-    //   `${process.env.API_URL}/api/user/activate/${activationLink}`
-    // ) //отправка письма с сылкой на активацию
+    await mailService.sendActivationMail(email, `${process.env.API_URL}/api/user/activate/${activationLink}`) //отправка письма с сылкой на активацию
 
-    const userDto = new UserDto(user) //с помощью dto обрезаем модель до трех полей email id isActivated
+    const userDto = new UserDto(user) //с помощью dto обрезаем модель
     const tokens = tokenService.generateTokens({ ...userDto })
     await tokenService.saveToken(userDto.id, tokens.refreshToken)
 
@@ -53,7 +50,7 @@ class UserService {
   }
 
   //активация пользователя
-  async activate(activationLink) {
+  async activate(activationLink: string) {
     const user = await User.findOne({
       where: { activationLink },
     })
@@ -64,7 +61,7 @@ class UserService {
     await user.save()
   }
 
-  async login(email, password) {
+  async login(email: string, password: string) {
     const user = await User.scope('role').findOne({
       where: { email: email },
     })
@@ -89,16 +86,16 @@ class UserService {
     }
   }
 
-  async logout(refreshToken) {
+  async logout(refreshToken: string) {
     const token = await tokenService.removeToken(refreshToken)
     return token
   }
 
-  async refresh(refreshToken) {
+  async refresh(refreshToken: string) {
     if (!refreshToken) {
       throw ApiError.UnauthorizedError()
     }
-    const userData = tokenService.validateRefreshToken(refreshToken)
+    const userData: UserDto = tokenService.validateRefreshToken(refreshToken) as UserDto
     const tokenFromDb = await tokenService.findToken(refreshToken)
     if (!userData || !tokenFromDb) {
       throw ApiError.UnauthorizedError()
@@ -124,4 +121,4 @@ class UserService {
   }
 }
 
-module.exports = new UserService()
+export default new UserService()

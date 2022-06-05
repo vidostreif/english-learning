@@ -9,7 +9,7 @@ class DictionaryController {
   }
 
   async delete(req: Request, res: Response, next: NextFunction) {
-    res.json({ message: 'Нужно реализовать DictionaryController!' })
+    return res.json({ message: 'Нужно реализовать DictionaryController!' })
   }
 
   async getAll(req: Request, res: Response, next: NextFunction) {
@@ -23,7 +23,7 @@ class DictionaryController {
       throw new Error('Не задан Name')
     }
     const resu = await Dictionary.findOne({ where: { name: name.toString() } })
-    res.json(resu)
+    return res.json(resu)
   }
 }
 

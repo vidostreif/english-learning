@@ -1,4 +1,5 @@
 import { User } from '../../db/models'
+import UserDto from '../../dtos/userDto'
 
 // declare global {
 //   namespace Express {
@@ -18,7 +19,7 @@ import { User } from '../../db/models'
 
 declare module 'express' {
   interface Request {
-    user: User
+    user: UserDto
     files?: { img: File }
   }
 }

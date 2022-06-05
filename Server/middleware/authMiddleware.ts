@@ -2,22 +2,24 @@ import { check } from 'express-validator'
 import ApiError from '../exceptions/ApiError'
 import tokenService from '../services/tokenService'
 import { NextFunction, Request, Response } from 'express'
+import { User } from '../db/models'
+import UserDto from '../dtos/userDto'
 
 class AuthMiddleware {
   static isAdministarator(req: Request, res: Response, next: NextFunction) {
     try {
       const userData = req.user
       if (!userData || userData.userRole.toString().toLowerCase() !== 'administrator') {
-        return next(ApiError.UnauthorizedError())
+        next(ApiError.UnauthorizedError())
       }
       next()
     } catch (error) {
-      return next(ApiError.UnauthorizedError())
+      next(ApiError.UnauthorizedError())
     }
   }
 
   //проверка авторизации
-  static isAuthorized(req: Request, res: Response, next: NextFunction) {
+  static isAuthorized(req: Request, res: Response, next: NextFunction): void {
     try {
       const authorizationHeader = req.headers.authorization
       if (!authorizationHeader) {
@@ -34,10 +36,11 @@ class AuthMiddleware {
         return next(ApiError.UnauthorizedError())
       }
 
-      req.user = userData
+      req.user = userData as UserDto
+
       next()
     } catch (error) {
-      return next(ApiError.UnauthorizedError())
+      next(ApiError.UnauthorizedError())
     }
   }
 }
