@@ -1,4 +1,5 @@
 import React from 'react'
+import styles from './ErrorList.module.scss'
 
 interface IProps {
   list: Array<string>
@@ -6,12 +7,14 @@ interface IProps {
 
 const ErrorList: React.FC<IProps> = ({ list }) => {
   if (list.length === 0) {
-    return <ul className="ErrorValidation"></ul>
+    return <ul className={styles.ul}></ul>
   } else {
     return (
-      <ul className="ErrorValidation">
+      <ul className={styles.ul}>
         {list.map((item, i) => (
-          <li key={i}>{item}</li>
+          <li className={styles.ul__li} key={i}>
+            {item}
+          </li>
         ))}
       </ul>
     )

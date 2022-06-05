@@ -4,3 +4,37 @@
   max-width: 1440px;
   margin: 0 auto;
 }
+
+// select {
+//   transition: 0.2s;
+//   border-radius: 10px;
+//   border: 2px solid rgb(179, 179, 179);
+//   padding: 5px;
+// }
+
+input,
+select {
+  transition: 0.2s;
+  border-radius: 10px;
+  border: 2px solid #eee;
+  padding: 5px;
+  // &:hover,
+  // :active,
+  // :enabled,
+  // :focus {
+  //   transition: 0.1s;
+  //   background-color: #00ffff10;
+  //   border-radius: 15px;
+  // }
+}
+
+button {
+  transition: 0.2s;
+  padding: 5px;
+  border-radius: 10px;
+  &:hover {
+    transition: 0.1s;
+    background-color: #00ffff80;
+    border-radius: 15px;
+  }
+}

@@ -1,0 +1,31 @@
+.container {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  justify-content: center;
+  // &*,
+  // *:before,
+  // *:after {
+  //   box-sizing: border-box;
+  // }
+  &__input {
+    // transition: 0.2s;
+    // border-radius: 10px;
+    // border: 2px solid #eee;
+    margin: 5px;
+    // padding: 5px;
+  }
+  &__button {
+    // transition: 0.2s;
+    margin: 5px;
+    // background-color: #00ffff50;
+    // padding: 5px;
+    // border-radius: 10px;
+    // &:hover {
+    //   transition: 0.1s;
+    //   background-color: #00ffff80;
+    //   border-radius: 15px;
+    // }
+  }
+}
