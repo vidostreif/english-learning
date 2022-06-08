@@ -48,3 +48,4 @@ jobs:
           cd ~/english-learning
           npm run pullAndBuild
           pm2 restart english-learning
+          exit
