@@ -47,5 +47,5 @@ jobs:
         script: |
           cd ~/english-learning
           npm run pullAndBuild
-          pm2 restart english-learning
+          pm2 restart 0
           exit
