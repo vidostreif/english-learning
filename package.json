@@ -5,6 +5,7 @@
   "main": "index.js",
   "predeploy": "npm version patch",
   "scripts": {
+    "editorconfig": "editorconfig-checker",
     "server:start": "npm run start --prefix Server",
     "server:dev": "npm run dev --prefix Server",
     "server:install": "cd Server && npm install",
@@ -35,6 +36,8 @@
     "typescript": "^4.7.2"
   },
   "devDependencies": {
+    "editorconfig-checker": "^4.0.2",
     "typescript-plugin-css-modules": "^3.4.0"
   }
 }
+
