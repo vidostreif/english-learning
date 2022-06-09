@@ -27,7 +27,7 @@ jobs:
           cache: 'npm'
       - run: npm ci
       - run: npm run client:install
-      - run: npm run client:build
+      # - run: npm run client:build
   #     - run: npm test
 
   deploy:
