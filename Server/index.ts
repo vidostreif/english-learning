@@ -1,5 +1,6 @@
 require('dotenv').config() // инициализация переменных среды
 import express from 'express'
+import cluster from 'cluster'
 import { sequelize, openConnection, closeConnection } from './db/' //для подключения к БД
 import cookieParser from 'cookie-parser'
 import cors from 'cors' // для обработки запросов с браузера
@@ -36,20 +37,44 @@ if (process.env.NODE_ENV === 'production') {
   })
 }
 
+const totalCPUs = require('os').cpus().length
+
 const start = async () => {
   try {
     await openConnection() //подключение к базе данных
-    await sequelize
-      .sync({ alter: true })
-      .then(() => {
-        console.log('Re-sync db.')
-        dbPreparation()
-        console.log('db Preparation.')
+    if (cluster.isPrimary) {
+      console.log(`Number of CPUs is ${totalCPUs}`)
+      console.log(`Master ${process.pid} is running`)
+
+      await sequelize
+        .sync({ alter: true })
+        .then(() => {
+          console.log('Re-sync db.')
+          dbPreparation()
+          console.log('db Preparation.')
+        })
+        .catch((e) => {
+          console.log('Error re-sync db: ' + e)
+        }) //сверка состояния базы данных со схемой
+
+      if (totalCPUs === 1) {
+        // если ядро только одно, то запускаем прослушивание в главном процессе
+        app.listen(PORT, () => console.log(`Server started on port ${PORT}`))
+      } else {
+        // иначе запускаем форки в количестве равное количеству ядер - 1
+        for (let i = 0; i < totalCPUs - 1; i++) {
+          cluster.fork()
+        }
+      }
+
+      cluster.on('exit', (worker, code, signal) => {
+        console.log(`worker ${worker.process.pid} died`)
+        console.log("Let's fork another worker!")
+        cluster.fork()
       })
-      .catch((e) => {
-        console.log('Error re-sync db: ' + e)
-      }) //сверка состояния базы данных со схемой
-    app.listen(PORT, () => console.log(`Server started on port ${PORT}`))
+    } else {
+      app.listen(PORT, () => console.log(`Worker ${cluster.worker.id} launched on port ${PORT}`))
+    }
   } catch (e) {
     console.log(e)
   }
