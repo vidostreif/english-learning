@@ -1,5 +1,5 @@
 import { useCallback, useState, useEffect } from 'react'
-import axios, { AxiosError } from 'axios'
+import axios from 'axios'
 import toast from 'react-hot-toast'
 import { useIsMounted } from './useIsMounted'
 
@@ -26,8 +26,12 @@ export const useFetching = () => {
         if (displayError) {
           if (isMounted.current) {
             if (axios.isAxiosError(error)) {
-              // если ошибка от axios то берем данные из response
-              setError((error.response?.data as IErrorMessage).message)
+              // если ошибка от axios и существует response.data то берем данные из response.data.message
+              if (error.response?.data && (error.response?.data as IErrorMessage).message) {
+                setError((error.response?.data as IErrorMessage).message)
+              } else {
+                setError(error.message)
+              }
             } else if (error instanceof Error) {
               // если типовая ошибка, то просто выводим сообщение
               setError(error.message)

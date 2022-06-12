@@ -9,7 +9,9 @@
     // "experimentalDecorators": true,
     // "emitDecoratorMetadata": true
     // "outDir": "./dist"
-    "typeRoots": ["./@types"]
+    "typeRoots": ["./@types"],
+    "experimentalDecorators": true,
+    "useDefineForClassFields": true
   },
   // "include": ["./**/*"],
   "lib": ["es2015"]
