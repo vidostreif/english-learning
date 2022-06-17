@@ -34,8 +34,8 @@ import Dictionary from './dictionaryModel'
 
 class Marker extends Model<InferAttributes<Marker>, InferCreationAttributes<Marker>> {
   declare id: CreationOptional<number>
-  declare top: boolean
-  declare left: boolean
+  declare top: number
+  declare left: number
 
   // createdAt can be undefined during creation
   declare createdAt: CreationOptional<Date>

@@ -46,18 +46,20 @@ const start = async () => {
       console.log(`Number of CPUs is ${totalCPUs}`)
       console.log(`Master ${process.pid} is running`)
 
-      await sequelize
-        .sync({ alter: true })
-        .then(() => {
-          console.log('Re-sync db.')
-          dbPreparation()
-          console.log('db Preparation.')
-        })
-        .catch((e) => {
-          console.log('Error re-sync db: ' + e)
-        }) //сверка состояния базы данных со схемой
+      // await sequelize
+      //   //сверка состояния базы данных со схемой
+      //   .sync({ alter: true })
+      //   //подготовка данных в БД
+      //   .then(() => {
+      //     console.log('Re-sync db.')
+      //     dbPreparation()
+      //     console.log('db Preparation.')
+      //   })
+      //   .catch((e) => {
+      //     console.log('Error re-sync db: ' + e)
+      //   })
 
-      if (totalCPUs === 1) {
+      if (totalCPUs === 1 || process.env.NODE_ENV === 'development') {
         // если ядро только одно, то запускаем прослушивание в главном процессе
         app.listen(PORT, () => console.log(`Server started on port ${PORT}`))
       } else {

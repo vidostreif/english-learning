@@ -1,0 +1,85 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model dictionaries {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique @db.VarChar(255)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  markers   markers[]
+}
+
+model markers {
+  id           Int           @id @default(autoincrement())
+  top          Int           @db.SmallInt
+  left         Int           @db.SmallInt
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  taskId       Int?
+  dictionaryId Int?
+  dictionaries dictionaries? @relation(fields: [dictionaryId], references: [id])
+  tasks        tasks?        @relation(fields: [taskId], references: [id])
+}
+
+model taskRatings {
+  rating Int
+  userId Int
+  taskId Int
+  id     Int   @default(autoincrement())
+  tasks  tasks @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  users  users @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, taskId])
+}
+
+model tasks {
+  id             Int           @id @default(autoincrement())
+  imgUrl         String        @db.VarChar(255)
+  numberOfPasses Int?          @default(0)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  complexity     Int?          @default(0)
+  deletedAt      DateTime?     @db.Timestamptz(6)
+  markers        markers[]
+  taskRatings    taskRatings[]
+}
+
+model tokens {
+  id           Int      @id @default(autoincrement())
+  refreshToken String   @db.VarChar(255)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  userId       Int?
+  users        users?   @relation(fields: [userId], references: [id])
+}
+
+model userRoles {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique @db.VarChar(255)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime? @db.Timestamptz(6)
+  users     users[]
+}
+
+model users {
+  id             Int           @id @default(autoincrement())
+  name           String?       @db.VarChar(255)
+  email          String        @unique @db.VarChar(255)
+  password       String        @db.VarChar(255)
+  isActivated    Boolean       @default(false)
+  activationLink String?       @db.VarChar(255)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  userRoleId     Int?
+  deletedAt      DateTime?     @db.Timestamptz(6)
+  userRoles      userRoles?    @relation(fields: [userRoleId], references: [id])
+  taskRatings    taskRatings[]
+  tokens         tokens[]
+}
