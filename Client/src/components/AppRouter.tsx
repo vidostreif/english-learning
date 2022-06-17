@@ -8,12 +8,11 @@ import { TASK_LIST_ROUTE } from '../utils/consts'
 // основной роутер
 const AppRouter: React.FC = () => {
   const { authStore } = useStores()
+
   return (
     <Routes>
       {authStore.isAuth &&
-        authRoutes.map(({ path, Component }) => (
-          <Route key={path} path={path} element={<Component />} />
-        ))}
+        authRoutes.map(({ path, Component }) => <Route key={path} path={path} element={<Component />} />)}
       {publicRoutes.map(({ path, Component }) => (
         <Route key={path} path={path} element={<Component />} />
       ))}

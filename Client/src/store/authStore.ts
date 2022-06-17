@@ -9,7 +9,7 @@ const guest: IUser = { id: 0, name: 'Гость', email: '', isActivated: false,
 export default class AuthStore {
   user: IUser = guest
   isAuth: boolean = false
-  isAuthLoading: boolean = true
+  isAuthLoading: boolean = false
   rootStore: RootStore
 
   constructor(rootStore: RootStore) {
@@ -77,6 +77,7 @@ export default class AuthStore {
 
   //если в стороке есть токен, то проверяем его валидность
   async checkAuth() {
+    if (this.isAuthLoading) return
     this.setAuthLoading(true)
 
     if (localStorage.getItem('token')) {
