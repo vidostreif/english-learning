@@ -172,33 +172,33 @@ class TaskService {
       throw new Error('Не задан ID')
     }
 
-    // const resu = await Task.scope('includeMarkers').findOne({
-    //   where: { id: taskId },
-    // })
-
-    const resu = await prisma.task.findFirst({
-      where: {
-        id: taskId,
-      },
-      include: { markers: { include: { dictionary: true } } },
-      // select: {
-      //   id: true,
-      //   imgUrl: true,
-      //   complexity: true,
-      //   markers: {
-      //     select: {
-      //       id: true,
-      //       top: true,
-      //       left: true,
-      //       dictionary: {
-      //         select: {
-      //           id: true,
-      //           name: true,
-      //         },
-      //       },
-      //     },
-      //   },
+    const resu = await Task.scope('includeMarkers').findOne({
+      where: { id: taskId },
     })
+
+    // const resu = await prisma.task.findFirst({
+    //   where: {
+    //     id: taskId,
+    //   },
+    //   include: { markers: { include: { dictionary: true } } },
+    //   // select: {
+    //   //   id: true,
+    //   //   imgUrl: true,
+    //   //   complexity: true,
+    //   //   markers: {
+    //   //     select: {
+    //   //       id: true,
+    //   //       top: true,
+    //   //       left: true,
+    //   //       dictionary: {
+    //   //         select: {
+    //   //           id: true,
+    //   //           name: true,
+    //   //         },
+    //   //       },
+    //   //     },
+    //   //   },
+    // })
 
     return resu
   }
@@ -278,9 +278,9 @@ class TaskService {
       throw new Error('Не задан ID задания')
     }
 
-    prisma.task.update({ where: { id: taskId }, data: { numberOfPasses: { increment: 1 } } })
+    // prisma.task.update({ where: { id: taskId }, data: { numberOfPasses: { increment: 1 } } })
     // инкремент количества прохождений
-    // await Task.increment({ numberOfPasses: 1 }, { where: { id: taskId } })
+    await Task.increment({ numberOfPasses: 1 }, { where: { id: taskId } })
 
     return 'Количество прохождений увеличино'
   }
