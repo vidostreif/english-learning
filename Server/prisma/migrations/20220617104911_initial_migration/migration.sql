@@ -2,8 +2,8 @@
 CREATE TABLE "dictionaries" (
     "id" SERIAL NOT NULL,
     "name" VARCHAR(255) NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "createdAt" TIMESTAMPTZ(6),
+    "updatedAt" TIMESTAMPTZ(6),
 
     CONSTRAINT "dictionaries_pkey" PRIMARY KEY ("id")
 );
@@ -13,8 +13,8 @@ CREATE TABLE "markers" (
     "id" SERIAL NOT NULL,
     "top" SMALLINT NOT NULL,
     "left" SMALLINT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "createdAt" TIMESTAMPTZ(6),
+    "updatedAt" TIMESTAMPTZ(6),
     "taskId" INTEGER,
     "dictionaryId" INTEGER,
 
@@ -36,8 +36,8 @@ CREATE TABLE "tasks" (
     "id" SERIAL NOT NULL,
     "imgUrl" VARCHAR(255) NOT NULL,
     "numberOfPasses" INTEGER DEFAULT 0,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "createdAt" TIMESTAMPTZ(6),
+    "updatedAt" TIMESTAMPTZ(6),
     "complexity" INTEGER DEFAULT 0,
     "deletedAt" TIMESTAMPTZ(6),
 
@@ -48,8 +48,8 @@ CREATE TABLE "tasks" (
 CREATE TABLE "tokens" (
     "id" SERIAL NOT NULL,
     "refreshToken" VARCHAR(255) NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "createdAt" TIMESTAMPTZ(6),
+    "updatedAt" TIMESTAMPTZ(6),
     "userId" INTEGER,
 
     CONSTRAINT "tokens_pkey" PRIMARY KEY ("id")
@@ -59,8 +59,8 @@ CREATE TABLE "tokens" (
 CREATE TABLE "userRoles" (
     "id" SERIAL NOT NULL,
     "name" VARCHAR(255) NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "createdAt" TIMESTAMPTZ(6),
+    "updatedAt" TIMESTAMPTZ(6),
     "deletedAt" TIMESTAMPTZ(6),
 
     CONSTRAINT "userRoles_pkey" PRIMARY KEY ("id")
@@ -74,8 +74,8 @@ CREATE TABLE "users" (
     "password" VARCHAR(255) NOT NULL,
     "isActivated" BOOLEAN NOT NULL DEFAULT false,
     "activationLink" VARCHAR(255),
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "createdAt" TIMESTAMPTZ(6),
+    "updatedAt" TIMESTAMPTZ(6),
     "userRoleId" INTEGER,
     "deletedAt" TIMESTAMPTZ(6),
 

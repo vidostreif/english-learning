@@ -35,7 +35,7 @@ declare interface IMarkerForGame extends IMarker {
 }
 
 declare interface ITaskFromServer extends ITask {
-  Markers: Array<{
+  markers: Array<{
     left: number
     top: number
     dictionary: { name: string }

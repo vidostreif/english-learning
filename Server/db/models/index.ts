@@ -7,10 +7,10 @@ import Token from './tokenModel'
 import TaskRating from './taskRatingModel'
 
 //Определяем связи
-Task.hasMany(Marker, { as: 'Markers', foreignKey: 'taskId' }) //у одной задачи может быть множество маркеров
+Task.hasMany(Marker, { as: 'markers', foreignKey: 'taskId' }) //у одной задачи может быть множество маркеров
 Marker.belongsTo(Task) //каждый маркер приндадлежит какой-то одной задаче
 
-Dictionary.hasMany(Marker, { as: 'Markers', foreignKey: 'dictionaryId' })
+Dictionary.hasMany(Marker, { as: 'markers', foreignKey: 'dictionaryId' })
 Marker.belongsTo(Dictionary)
 
 UserRole.hasMany(User, { as: 'Users', foreignKey: 'userRoleId' })

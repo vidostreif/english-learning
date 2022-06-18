@@ -11,9 +11,7 @@ import { useFetching } from '../../hooks/useFetching'
 // страница редактирования задания
 const Editor: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams() // забираем параметры из строки адреса
-  const [taskId, setTaskId] = useState<number | null>(
-    searchParams.get('id') ? Number(searchParams.get('id')) : null
-  ) // из параметров строки адреса берем id
+  const [taskId, setTaskId] = useState<number | null>(searchParams.get('id') ? Number(searchParams.get('id')) : null) // из параметров строки адреса берем id
   const [markers, setMarkers] = useState<Array<IMarker>>([]) // массив маркеров
   const [complexity, setComplexity] = useState(1) // сложность задания
   const [urlImg, setUrlImg] = useState('') // адрес картинки
@@ -41,19 +39,13 @@ const Editor: React.FC = () => {
   )
 
   // событие изменения сложности задания
-  const changeComplexity: React.ChangeEventHandler<HTMLSelectElement> = (
-    event
-  ) => {
+  const changeComplexity: React.ChangeEventHandler<HTMLSelectElement> = (event) => {
     setComplexity(+event.target.value)
   }
 
   // вызывается при изменении текста маркера
   const changeMarekerText = (id: number, text: string): void => {
-    setMarkers((markers) =>
-      markers.map((marker, index) =>
-        index === id ? { ...marker, text } : marker
-      )
-    )
+    setMarkers((markers) => markers.map((marker, index) => (index === id ? { ...marker, text } : marker)))
   }
 
   // вызывается при добавлении маркера
@@ -119,7 +111,7 @@ const Editor: React.FC = () => {
 
   // установка новых параметров задания
   const setTaskParam = (data: ITaskFromServer) => {
-    const newMarkers = data.Markers.map((element) => {
+    const newMarkers = data.markers.map((element) => {
       return {
         left: element.left,
         top: element.top,

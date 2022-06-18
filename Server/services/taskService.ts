@@ -5,7 +5,7 @@ import taskRatingService from './taskRatingService'
 import { Sequelize, Op, InferCreationAttributes, Optional } from 'sequelize'
 import path from 'path'
 import sharp from 'sharp'
-import { NullishPropertiesOf } from 'sequelize/types/utils'
+import prisma from '../prisma/prismaClient'
 
 class TaskService {
   //добавление или обновление параметров задания
@@ -103,7 +103,6 @@ class TaskService {
     }
     const filter: any = {}
     if (complexity) {
-      // complexity = parseInt(JSON.parse(complexity))
       filter.where = {
         complexity,
       }
@@ -173,8 +172,32 @@ class TaskService {
       throw new Error('Не задан ID')
     }
 
-    const resu = await Task.scope('includeMarkers').findOne({
-      where: { id: taskId },
+    // const resu = await Task.scope('includeMarkers').findOne({
+    //   where: { id: taskId },
+    // })
+
+    const resu = await prisma.task.findFirst({
+      where: {
+        id: taskId,
+      },
+      include: { markers: { include: { dictionary: true } } },
+      // select: {
+      //   id: true,
+      //   imgUrl: true,
+      //   complexity: true,
+      //   markers: {
+      //     select: {
+      //       id: true,
+      //       top: true,
+      //       left: true,
+      //       dictionary: {
+      //         select: {
+      //           id: true,
+      //           name: true,
+      //         },
+      //       },
+      //     },
+      //   },
     })
 
     return resu
@@ -194,6 +217,13 @@ class TaskService {
       }
     }
 
+    // await prisma.task.findMany({
+    //   where: {
+    //     id: ,
+    //   },
+    //   include: { markers: true },
+    // })
+
     return await Task.scope('includeMarkers').findAll({
       ...param,
     })
@@ -201,15 +231,21 @@ class TaskService {
 
   // force - если true, то полностью удаляемтся из БД
   //         если false, то не удаляется из БД, а в поле deletedAt устанавливается время удаления
-  async destroyOne(taskId: number, force = false) {
+  async destroyOne(taskId: number) {
     if (!taskId) {
       throw new Error('Не задан ID')
     }
 
-    await Task.destroy({
-      where: { id: taskId },
-      force,
+    await prisma.task.delete({
+      where: {
+        id: taskId,
+      },
     })
+
+    // await Task.destroy({
+    //   where: { id: taskId },
+    //   force,
+    // })
 
     return 'Задание удалено'
   }
@@ -220,9 +256,18 @@ class TaskService {
       throw new Error('Не задан ID')
     }
 
-    await Task.restore({
-      where: { id: taskId },
+    await prisma.task.update({
+      where: {
+        id: taskId,
+      },
+      data: {
+        deleted: false,
+      },
     })
+
+    // await Task.restore({
+    //   where: { id: taskId },
+    // })
 
     return 'Задание восстановленно'
   }
@@ -233,8 +278,9 @@ class TaskService {
       throw new Error('Не задан ID задания')
     }
 
+    prisma.task.update({ where: { id: taskId }, data: { numberOfPasses: { increment: 1 } } })
     // инкремент количества прохождений
-    await Task.increment({ numberOfPasses: 1 }, { where: { id: taskId } })
+    // await Task.increment({ numberOfPasses: 1 }, { where: { id: taskId } })
 
     return 'Количество прохождений увеличино'
   }

@@ -47,7 +47,7 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   // updatedAt can be undefined during creation
   declare updatedAt: CreationOptional<Date>
   // deletedAt can be undefined during creation
-  declare deletedAt: CreationOptional<Date>
+  // declare deletedAt: CreationOptional<Date>
 
   declare Tokens?: NonAttribute<Array<Token>>
   declare getTokens: HasManyGetAssociationsMixin<Token> // Note the null assertions!
@@ -100,12 +100,12 @@ User.init(
     activationLink: { type: DataTypes.STRING, unique: false, allowNull: true },
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE,
-    deletedAt: DataTypes.DATE,
+    // deletedAt: DataTypes.DATE,
   },
   {
     // underscored: true,
     sequelize,
-    paranoid: true,
+    // paranoid: true,
     // tableName: 'user',
     modelName: 'user',
     scopes: {

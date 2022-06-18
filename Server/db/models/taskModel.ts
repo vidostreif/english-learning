@@ -41,9 +41,9 @@ class Task extends Model<InferAttributes<Task>, InferCreationAttributes<Task>> {
   // updatedAt can be undefined during creation
   declare updatedAt: CreationOptional<Date>
   // deletedAt can be undefined during creation
-  declare deletedAt: CreationOptional<Date>
+  // declare deletedAt: CreationOptional<Date>
 
-  declare Markers?: NonAttribute<Array<Marker>>
+  declare markers?: NonAttribute<Array<Marker>>
   declare getMarkers: HasManyGetAssociationsMixin<Marker> // Note the null assertions!
   declare addMarker: HasManyAddAssociationMixin<Marker, number>
   declare addMarkers: HasManyAddAssociationsMixin<Marker, number>
@@ -81,20 +81,20 @@ Task.init(
     complexity: { type: DataTypes.INTEGER, defaultValue: 0 }, //оценка сложности задания
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE,
-    deletedAt: DataTypes.DATE,
+    // deletedAt: DataTypes.DATE,
   },
   {
     // underscored: true,
     sequelize,
     // tableName: 'task',
-    paranoid: true,
+    // paranoid: true,
     modelName: 'task',
     scopes: {
       includeMarkers() {
         return {
           include: [
             {
-              association: 'Markers',
+              association: 'markers',
               include: [Dictionary],
             },
           ],

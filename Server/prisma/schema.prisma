@@ -7,79 +7,92 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model dictionaries {
-  id        Int       @id @default(autoincrement())
-  name      String    @unique @db.VarChar(255)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  markers   markers[]
+model Dictionary {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique @db.VarChar(255)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  markers   Marker[]
+
+  @@map("dictionaries")
 }
 
-model markers {
-  id           Int           @id @default(autoincrement())
-  top          Int           @db.SmallInt
-  left         Int           @db.SmallInt
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
+model Marker {
+  id           Int         @id @default(autoincrement())
+  top          Int         @db.SmallInt
+  left         Int         @db.SmallInt
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
   taskId       Int?
   dictionaryId Int?
-  dictionaries dictionaries? @relation(fields: [dictionaryId], references: [id])
-  tasks        tasks?        @relation(fields: [taskId], references: [id])
+  dictionary   Dictionary? @relation(fields: [dictionaryId], references: [id])
+  task         Task?       @relation(fields: [taskId], references: [id])
+
+  @@map("markers")
 }
 
-model taskRatings {
+model TaskRating {
   rating Int
   userId Int
   taskId Int
-  id     Int   @default(autoincrement())
-  tasks  tasks @relation(fields: [taskId], references: [id], onDelete: Cascade)
-  users  users @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id     Int  @default(autoincrement())
+  task   Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([userId, taskId])
+  @@map("taskRatings")
 }
 
-model tasks {
-  id             Int           @id @default(autoincrement())
-  imgUrl         String        @db.VarChar(255)
-  numberOfPasses Int?          @default(0)
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
-  complexity     Int?          @default(0)
-  deletedAt      DateTime?     @db.Timestamptz(6)
-  markers        markers[]
-  taskRatings    taskRatings[]
+model Task {
+  id             Int          @id @default(autoincrement())
+  imgUrl         String       @db.VarChar(255)
+  numberOfPasses Int?         @default(0)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  complexity     Int?         @default(0)
+  deleted        Boolean      @default(false)
+  markers        Marker[]
+  taskRatings    TaskRating[]
+
+  @@map("tasks")
 }
 
-model tokens {
+model Token {
   id           Int      @id @default(autoincrement())
   refreshToken String   @db.VarChar(255)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   userId       Int?
-  users        users?   @relation(fields: [userId], references: [id])
+  user         User?    @relation(fields: [userId], references: [id])
+
+  @@map("tokens")
 }
 
-model userRoles {
-  id        Int       @id @default(autoincrement())
-  name      String    @unique @db.VarChar(255)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deletedAt DateTime? @db.Timestamptz(6)
-  users     users[]
+model UserRole {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique @db.VarChar(255)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deleted   Boolean  @default(false)
+  users     User[]
+
+  @@map("userRoles")
 }
 
-model users {
-  id             Int           @id @default(autoincrement())
-  name           String?       @db.VarChar(255)
-  email          String        @unique @db.VarChar(255)
-  password       String        @db.VarChar(255)
-  isActivated    Boolean       @default(false)
-  activationLink String?       @db.VarChar(255)
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
+model User {
+  id             Int          @id @default(autoincrement())
+  name           String?      @db.VarChar(255)
+  email          String       @unique @db.VarChar(255)
+  password       String       @db.VarChar(255)
+  isActivated    Boolean      @default(false)
+  activationLink String?      @db.VarChar(255)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  deleted        Boolean      @default(false)
   userRoleId     Int?
-  deletedAt      DateTime?     @db.Timestamptz(6)
-  userRoles      userRoles?    @relation(fields: [userRoleId], references: [id])
-  taskRatings    taskRatings[]
-  tokens         tokens[]
+  userRole       UserRole?    @relation(fields: [userRoleId], references: [id])
+  taskRatings    TaskRating[]
+  tokens         Token[]
+
+  @@map("users")
 }

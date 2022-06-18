@@ -82,7 +82,7 @@ const DragDrop: React.FC = () => {
 
   //если получили новое задание
   const setTaskParam = (data: ITaskFromServer) => {
-    const newMarkers: Array<IMarkerForGame> = data.Markers.map((element, index) => {
+    const newMarkers: Array<IMarkerForGame> = data.markers.map((element, index) => {
       return {
         id: index + keyMarkers,
         left: element.left,
@@ -145,7 +145,9 @@ const DragDrop: React.FC = () => {
       setCurText(element)
       setDictionary((prevMarkers) =>
         prevMarkers.map((prevElement) =>
-          prevElement.id === element.id ? { ...prevElement, choiced: !element.choiced } : { ...prevElement, choiced: false }
+          prevElement.id === element.id
+            ? { ...prevElement, choiced: !element.choiced }
+            : { ...prevElement, choiced: false }
         )
       )
     }
@@ -174,7 +176,9 @@ const DragDrop: React.FC = () => {
       setCurMarker(element)
       setMarkers((prevMarkers) =>
         prevMarkers.map((prevElement) =>
-          prevElement.id === element.id ? { ...prevElement, choiced: !element.choiced } : { ...prevElement, choiced: false }
+          prevElement.id === element.id
+            ? { ...prevElement, choiced: !element.choiced }
+            : { ...prevElement, choiced: false }
         )
       )
     }
@@ -221,7 +225,12 @@ const DragDrop: React.FC = () => {
               />
               <div className={styles.Words__nextLevel}>
                 <RandomTaskList count={3} not_id={taskId} />
-                <img src="/btn/random.png" alt="random" onClick={() => nextRandomTask(taskId)} className={styles.NextBtn}></img>
+                <img
+                  src="/btn/random.png"
+                  alt="random"
+                  onClick={() => nextRandomTask(taskId)}
+                  className={styles.NextBtn}
+                ></img>
               </div>
             </div>
           )}
@@ -265,7 +274,12 @@ const DragDrop: React.FC = () => {
           <Link to={TASK_LIST_ROUTE}>
             <img src="/btn/list.png" alt="list" className={styles.NextBtn}></img>
           </Link>
-          <img src="/btn/random.png" alt="random" onClick={() => nextRandomTask(taskId)} className={styles.NextBtn}></img>
+          <img
+            src="/btn/random.png"
+            alt="random"
+            onClick={() => nextRandomTask(taskId)}
+            className={styles.NextBtn}
+          ></img>
         </div>
       </div>
     </>

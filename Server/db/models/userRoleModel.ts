@@ -39,7 +39,7 @@ class UserRole extends Model<InferAttributes<UserRole>, InferCreationAttributes<
   // updatedAt can be undefined during creation
   declare updatedAt: CreationOptional<Date>
   // deletedAt can be undefined during creation
-  declare deletedAt: CreationOptional<Date>
+  // declare deletedAt: CreationOptional<Date>
 
   declare Users?: NonAttribute<Array<User>>
   declare getUsers: HasManyGetAssociationsMixin<User> // Note the null assertions!
@@ -64,12 +64,12 @@ UserRole.init(
     name: { type: DataTypes.STRING, unique: true, allowNull: false },
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE,
-    deletedAt: DataTypes.DATE,
+    // deletedAt: DataTypes.DATE,
   },
   {
     // underscored: true,
     sequelize,
-    paranoid: true,
+    // paranoid: true,
     // tableName: 'userRole',
     modelName: 'userRole',
   }

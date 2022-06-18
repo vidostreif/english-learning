@@ -36,7 +36,7 @@ class Dictionary extends Model<InferAttributes<Dictionary>, InferCreationAttribu
   // updatedAt can be undefined during creation
   declare updatedAt: CreationOptional<Date>
 
-  declare Markers?: Array<Marker>
+  declare markers?: Array<Marker>
   declare getMarkers: HasManyGetAssociationsMixin<Marker> // Note the null assertions!
   declare addMarker: HasManyAddAssociationMixin<Marker, number>
   declare addMarkers: HasManyAddAssociationsMixin<Marker, number>
@@ -62,7 +62,7 @@ Dictionary.init(
         return {
           include: [
             {
-              association: 'Markers',
+              association: 'markers',
               include: [Dictionary],
             },
           ],

@@ -8,7 +8,7 @@ import fileUpload from 'express-fileupload'
 import router from './routes/index' // список маршрутов
 import errorHandler from './middleware/ErrorHandlingMiddleware'
 import path from 'path'
-import dbPreparation from './db/dbPreparation'
+// import dbPreparation from './db/dbPreparation'
 const PORT = process.env.PORT || 5000
 
 const app = express()
