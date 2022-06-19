@@ -182,7 +182,7 @@ class TaskService {
       where: {
         id: taskId,
       },
-      //   include: { markers: { include: { dictionary: true } } },
+      include: { markers: { include: { dictionary: true } } },
       //   // select: {
       //   //   id: true,
       //   //   imgUrl: true,
