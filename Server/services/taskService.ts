@@ -5,7 +5,9 @@ import taskRatingService from './taskRatingService'
 import { Sequelize, Op, InferCreationAttributes, Optional } from 'sequelize'
 import path from 'path'
 import sharp from 'sharp'
-import prisma from '../prisma/prismaClient'
+// import prisma from '../prisma/prismaClient'
+import { PrismaClient } from '@prisma/client'
+const prisma = new PrismaClient()
 
 class TaskService {
   //добавление или обновление параметров задания
@@ -172,33 +174,33 @@ class TaskService {
       throw new Error('Не задан ID')
     }
 
-    const resu = await Task.scope('includeMarkers').findOne({
-      where: { id: taskId },
-    })
-
-    // const resu = await prisma.task.findFirst({
-    //   where: {
-    //     id: taskId,
-    //   },
-    //   include: { markers: { include: { dictionary: true } } },
-    //   // select: {
-    //   //   id: true,
-    //   //   imgUrl: true,
-    //   //   complexity: true,
-    //   //   markers: {
-    //   //     select: {
-    //   //       id: true,
-    //   //       top: true,
-    //   //       left: true,
-    //   //       dictionary: {
-    //   //         select: {
-    //   //           id: true,
-    //   //           name: true,
-    //   //         },
-    //   //       },
-    //   //     },
-    //   //   },
+    // const resu = await Task.scope('includeMarkers').findOne({
+    //   where: { id: taskId },
     // })
+
+    const resu = await prisma.task.findFirst({
+      where: {
+        id: taskId,
+      },
+      //   include: { markers: { include: { dictionary: true } } },
+      //   // select: {
+      //   //   id: true,
+      //   //   imgUrl: true,
+      //   //   complexity: true,
+      //   //   markers: {
+      //   //     select: {
+      //   //       id: true,
+      //   //       top: true,
+      //   //       left: true,
+      //   //       dictionary: {
+      //   //         select: {
+      //   //           id: true,
+      //   //           name: true,
+      //   //         },
+      //   //       },
+      //   //     },
+      //   //   },
+    })
 
     return resu
   }
