@@ -89,62 +89,72 @@ class TaskService {
   // limit - выбираемое количество
   // page - запрашиваемая страница
   // sort - метод сортировки
-  async getAll(limit: number, page: number, complexity: number, sort: string) {
+  async getAll(limit: number, page: number, complexity: number | number[], sort: string) {
     limit = limit || 10
     page = page || 1
+    const offset = limit * (page - 1)
 
     let param = {
-      offset: limit * (page - 1),
+      offset,
       limit,
       order: [
         [Sequelize.literal('rating'), 'DESC'],
         ['id', 'DESC'],
       ],
     }
+
     const filter: any = {}
     if (complexity) {
       filter.where = {
-        complexity,
+        // complexity: { in: complexity },
+        complexity: Array.isArray(complexity) ? { in: complexity } : complexity,
       }
     }
 
+    let order = { field: 'id', order: 'ASC' }
     if (sort) {
       switch (sort) {
         case 'newFirst':
-          param.order = [
-            ['createdAt', 'DESC'],
-            ['id', 'DESC'],
-          ]
+          // param.order = [
+          //   ['createdAt', 'DESC'],
+          //   ['id', 'DESC'],
+          // ]
+          order = { field: `"task"."createdAt"`, order: 'DESC' }
           break
         case 'popularFirst':
-          param.order = [
-            ['numberOfPasses', 'DESC'],
-            ['id', 'DESC'],
-          ]
+          // param.order = [
+          //   ['numberOfPasses', 'DESC'],
+          //   ['id', 'DESC'],
+          // ]
+          order = { field: `"task"."numberOfPasses"`, order: 'DESC' }
           break
         case 'hardFirst':
-          param.order = [
-            ['complexity', 'DESC'],
-            ['id', 'DESC'],
-          ]
+          // param.order = [
+          //   ['complexity', 'DESC'],
+          //   ['id', 'DESC'],
+          // ]
+          order = { field: `"task"."complexity"`, order: 'DESC' }
           break
         case 'easyFirst':
-          param.order = [
-            ['complexity', 'ASC'],
-            ['id', 'ASC'],
-          ]
+          // param.order = [
+          //   ['complexity', 'ASC'],
+          //   ['id', 'ASC'],
+          // ]
+          order = { field: `"task"."complexity"`, order: 'ASC' }
           break
         case 'highlyRatedFirst':
-          param.order = [
-            [Sequelize.literal('rating'), 'DESC'],
-            ['id', 'DESC'],
-          ]
+          // param.order = [
+          //   [Sequelize.literal('rating'), 'DESC'],
+          //   ['id', 'DESC'],
+          // ]
+          order = { field: 'rating', order: 'DESC' }
           break
         case 'lowRatedFirst':
-          param.order = [
-            [Sequelize.literal('rating'), 'ASC'],
-            ['id', 'ASC'],
-          ]
+          // param.order = [
+          //   [Sequelize.literal('rating'), 'ASC'],
+          //   ['id', 'ASC'],
+          // ]
+          order = { field: 'rating', order: 'ASC' }
           break
         default:
         // throw new Error('Неудалось определить сортировку по значению: ' + sort)
@@ -152,17 +162,46 @@ class TaskService {
     }
 
     const resu: any = {}
-    resu.tasks = await Task.scope('includeRating').findAll({
-      ...param,
-      ...filter,
-    })
+    // resu.tasks = await Task.scope('includeRating').findAll({
+    //   ...param,
+    //   ...filter,
+    // })
 
-    resu.count = await Task.count({
-      ...filter,
-    })
+    // resu.count = await Task.count({
+    //   ...filter,
+    // })
+
+    resu.count = await prisma.task.count({ ...filter })
+    // resu.count = await prisma.task.count()
 
     resu.currentPage = page
     resu.totalPages = Math.ceil(resu.count / limit) // всего страниц
+
+    //Подготавливаем данные для фильтрации в запросе
+    let WHERE = ''
+    if (filter.where) {
+      let whereArr = []
+      for (var key in filter.where) {
+        // если фильтруем значениями из массива
+        if (filter.where[key].in) {
+          whereArr.push(key + ' in (' + filter.where[key].in.join(', ') + ')')
+        } else {
+          whereArr.push(key + '=' + filter.where[key])
+        }
+      }
+      WHERE = 'WHERE ' + whereArr.join(' AND ')
+    }
+
+    resu.tasks =
+      await prisma.$queryRawUnsafe(`SELECT "task"."id", "task"."imgUrl", "task"."numberOfPasses", "task"."complexity", "task"."createdAt", "task"."updatedAt", 
+      AVG("taskRatings"."rating") AS "rating" 
+      FROM "tasks" AS "task" 
+      LEFT OUTER JOIN "taskRatings" AS "taskRatings" ON "task"."id" = "taskRatings"."taskId" 
+      ${WHERE}
+      GROUP BY "task"."id" 
+      ORDER BY ${order.field} ${order.order}, "task"."id" ASC 
+      LIMIT ${limit} 
+      OFFSET ${offset};`)
 
     return resu
   }
