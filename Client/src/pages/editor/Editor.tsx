@@ -8,11 +8,13 @@ import toast from 'react-hot-toast'
 import styles from './Editor.module.scss'
 import { useFetching } from '../../hooks/useFetching'
 
+// text
+
 // страница редактирования задания
 const Editor: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams() // забираем параметры из строки адреса
   const [taskId, setTaskId] = useState<number | null>(searchParams.get('id') ? Number(searchParams.get('id')) : null) // из параметров строки адреса берем id
-  const [markers, setMarkers] = useState<Array<IMarker>>([]) // массив маркеров
+  const [markers, setMarkers] = useState<Array<IMarkerL>>([]) // массив маркеров
   const [complexity, setComplexity] = useState(1) // сложность задания
   const [urlImg, setUrlImg] = useState('') // адрес картинки
   const [imgFile, setImgFile] = useState<File | null>(null) // файл картинки
@@ -45,12 +47,14 @@ const Editor: React.FC = () => {
 
   // вызывается при изменении текста маркера
   const changeMarekerText = (id: number, text: string): void => {
-    setMarkers((markers) => markers.map((marker, index) => (index === id ? { ...marker, text } : marker)))
+    setMarkers((markers) =>
+      markers.map((marker, index) => (index === id ? { ...marker, dictionary: { name: text } } : marker))
+    )
   }
 
   // вызывается при добавлении маркера
   const addMarker = () => {
-    setMarkers([...markers, { top: 5, left: 10, text: 'new' }])
+    setMarkers([...markers, { top: 5, left: 10, dictionary: { name: 'new' } }])
   }
 
   // вызывается при удалении маркера
@@ -115,7 +119,8 @@ const Editor: React.FC = () => {
       return {
         left: element.left,
         top: element.top,
-        text: element.dictionary.name,
+        dictionary: { name: element.dictionary.name },
+        // text: element.dictionary.name,
       }
     })
     setComplexity(data.complexity)

@@ -1,6 +1,6 @@
 generator client {
   provider = "prisma-client-js"
-  // engineType = "binary"
+  // previewFeatures = ["orderByRelation"]
 }
 
 datasource db {
@@ -60,7 +60,7 @@ model Task {
 
 model Token {
   id           Int      @id @default(autoincrement())
-  refreshToken String   @db.VarChar(255)
+  refreshToken String   @db.VarChar(1020)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   userId       Int?

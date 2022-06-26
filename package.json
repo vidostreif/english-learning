@@ -9,6 +9,8 @@
     "server:start": "npm run start --prefix Server",
     "server:dev": "npm run dev --prefix Server",
     "server:install": "cd Server && npm install",
+    "server:prisma:seed": "npm run prisma:seed --prefix Server",
+    "server:prisma:deploy": "npm run prisma:deploy --prefix Server",
     "client:build": "npm run build --prefix Client",
     "client:start": "npm run start --prefix Client",
     "client:install": "cd Client && npm install",

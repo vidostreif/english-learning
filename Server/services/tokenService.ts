@@ -1,5 +1,8 @@
 import jwt from 'jsonwebtoken'
-import { Token } from '../db/models'
+// import { Token } from '../db/models'
+import { prismaClient, Prisma } from '../prisma/prismaClient'
+
+type Token = Prisma.TokenGetPayload<{}>
 
 class TokenService {
   lifetimeAccessToken: number = 1800 //30 минут в секундах
@@ -40,38 +43,52 @@ class TokenService {
   }
 
   // сохранение refreshToken в БД
-  async saveToken(userId: any, refreshToken: any) {
-    const tokenData = await Token.findOne({
+  async saveToken(userId: any, refreshToken: any): Promise<Token> {
+    const tokenData = await prismaClient.token.findFirst({
       where: { userId: userId },
     })
 
-    //если нашли токен пользователя, то перезаписываем новый
+    // const tokenData = await Token.findOne({
+    //   where: { userId: userId },
+    // })
+
+    //если нашли токен пользователя, то перезаписываем
     if (tokenData) {
-      tokenData.refreshToken = refreshToken
-      return tokenData.save()
+      return await prismaClient.token.update({ where: { id: tokenData.id }, data: { refreshToken } })
+      // tokenData.refreshToken = refreshToken
+      // return tokenData.save()
     }
     //если не нашли, то создаем новый
-    const token = await Token.create({ userId, refreshToken })
-    return token
+    return await prismaClient.token.create({ data: { userId, refreshToken } })
+    // const token = await Token.create({ userId, refreshToken })
+    // return token
   }
 
   // удаление токена из БД
   async removeToken(refreshToken: any) {
-    const tokenData = await Token.findOne({
+    return await prismaClient.token.deleteMany({
       where: { refreshToken },
     })
-    if (tokenData) {
-      tokenData.destroy()
-    }
 
-    return tokenData
+    // const tokenData = await Token.findOne({
+    //   where: { refreshToken },
+    // })
+    // if (tokenData) {
+    //   tokenData.destroy()
+    // }
+
+    // return tokenData
   }
 
-  async findToken(refreshToken: any) {
-    const tokenData = await Token.findOne({
+  async findToken(refreshToken: any): Promise<Token> {
+    return await prismaClient.token.findFirst({
       where: { refreshToken },
     })
-    return tokenData
+
+    // const tokenData = await Token.findOne({
+    //   where: { refreshToken },
+    // })
+    // return tokenData
   }
 }
 

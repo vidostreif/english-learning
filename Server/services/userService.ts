@@ -1,70 +1,98 @@
-import { User, UserRole } from '../db/models'
+// import { User, UserRole } from '../db/models'
 import bcrypt from 'bcrypt'
-import uuid from 'uuid'
+import { v4 } from 'uuid'
 import mailService from './mailService'
 import tokenService from './tokenService'
 import ApiError from '../exceptions/ApiError'
-import UserDto from '../dtos/userDto'
+// import UserDto from '../dtos/userDto'
+import { prismaClient, Prisma, userIncludeRole, UserIncludeRole } from '../prisma/prismaClient'
 
 class UserService {
   //регистрация нового пользователя
   async registration(email: string, password: string) {
-    const candidate = await User.findOne({
+    const candidate = await prismaClient.user.findFirst({
       where: { email: email },
     })
+    // const candidate = await User.findOne({
+    //   where: { email: email },
+    // })
     if (candidate) {
       throw new Error(`Пользователь с почтовым адресом ${email} уже существует`)
     }
 
     const hashPassword = await bcrypt.hash(password, 3) //создание хеша пароля
-    const activationLink = uuid.v4() //генерация случайной строки
+    const activationLink = v4() //генерация случайной строки
 
     //если пользователь указан админскую почту, то даем ему админские права
     let role = 'user'
     if (email === process.env.DB_ADMINISTRATOR_EMAIL) {
       role = 'administrator'
     }
-    const userRole = await UserRole.findOne({ where: { name: role } })
+    const userRole = await prismaClient.userRole.findFirst({ where: { name: role } })
+    // const userRole = await UserRole.findOne({ where: { name: role } })
 
-    let user = await User.scope('role').create({
-      email,
-      password: hashPassword,
-      activationLink,
-      userRoleId: userRole.id,
+    let user = await prismaClient.user.create({
+      data: {
+        email,
+        password: hashPassword,
+        activationLink,
+        userRoleId: userRole.id,
+      },
+      ...userIncludeRole,
     }) //сохранение пользователя
 
-    user = await User.scope('role').findOne({ where: { id: user.id } })
+    // let user = await User.scope('role').create({
+    //   email,
+    //   password: hashPassword,
+    //   activationLink,
+    //   userRoleId: userRole.id,
+    // }) //сохранение пользователя
+
+    // user = await User.scope('role').findOne({ where: { id: user.id } })
 
     await mailService.sendActivationMail(email, `${process.env.API_URL}/api/user/activate/${activationLink}`) //отправка письма с сылкой на активацию
 
-    const userDto = new UserDto(user) //с помощью dto обрезаем модель
-    const tokens = tokenService.generateTokens({ ...userDto })
-    await tokenService.saveToken(userDto.id, tokens.refreshToken)
+    const tokens = await this.getNewToken(user)
+    // const userDto = new UserDto(user) //с помощью dto обрезаем модель
+    // const tokens = tokenService.generateTokens({ ...user })
+    // await tokenService.saveToken(user.id, tokens.refreshToken)
 
     return {
       ...tokens,
       lifetimeAccessToken: tokenService.lifetimeAccessToken,
-      user: userDto,
-      // role: role,
+      user,
     }
   }
 
   //активация пользователя
   async activate(activationLink: string) {
-    const user = await User.findOne({
+    const user = await prismaClient.user.findFirst({
       where: { activationLink },
     })
+    // const user = await User.findOne({
+    //   where: { activationLink },
+    // })
     if (!user) {
       throw new Error('Некорректная ссылка активации')
     }
-    user.isActivated = true
-    await user.save()
+
+    await prismaClient.user.update({
+      where: user,
+      data: { isActivated: true },
+    })
+    // user.isActivated = true
+    // await user.save()
   }
 
   async login(email: string, password: string) {
-    const user = await User.scope('role').findOne({
-      where: { email: email },
+    const user = await prismaClient.user.findFirst({
+      where: { email },
+      select: { ...userIncludeRole.select, password: true },
     })
+
+    // const user = await User.scope('role').findOne({
+    //   where: { email: email },
+    // })
 
     if (!user) {
       throw new Error(`Пользователь с таким email не найден`)
@@ -75,14 +103,16 @@ class UserService {
       throw new Error(`Не верный пароль`)
     }
 
-    const userDto = new UserDto(user)
-    const tokens = tokenService.generateTokens({ ...userDto })
-    await tokenService.saveToken(userDto.id, tokens.refreshToken)
+    // const userDto = new UserDto(user)
+    delete user.password
+    const tokens = await this.getNewToken(user)
+    // const tokens = tokenService.generateTokens({ id: user.id, name: user.name, email: user.email })
+    // await tokenService.saveToken(user.id, tokens.refreshToken)
 
     return {
       ...tokens,
       lifetimeAccessToken: tokenService.lifetimeAccessToken,
-      user: userDto,
+      user,
     }
   }
 
@@ -95,29 +125,43 @@ class UserService {
     if (!refreshToken) {
       throw ApiError.UnauthorizedError()
     }
-    const userData: UserDto = tokenService.validateRefreshToken(refreshToken) as UserDto
+
+    const userData: UserIncludeRole = tokenService.validateRefreshToken(refreshToken) as UserIncludeRole
     const tokenFromDb = await tokenService.findToken(refreshToken)
     if (!userData || !tokenFromDb) {
       throw ApiError.UnauthorizedError()
     }
 
-    const user = await User.scope('role').findOne({
+    const user = await prismaClient.user.findFirst({
       where: { id: userData.id },
+      ...userIncludeRole,
     })
-    const userDto = new UserDto(user)
-    const tokens = tokenService.generateTokens({ ...userDto })
-    await tokenService.saveToken(userDto.id, tokens.refreshToken)
+
+    // const user = await User.scope('role').findOne({
+    //   where: { id: userData.id },
+    // })
+    const tokens = await this.getNewToken(user)
+    // const userDto = new UserDto(user)
+    // const tokens = tokenService.generateTokens({ ...user })
+    // await tokenService.saveToken(user.id, tokens.refreshToken)
 
     return {
       ...tokens,
       lifetimeAccessToken: tokenService.lifetimeAccessToken,
-      user: userDto,
+      user,
     }
   }
 
   async getAllUsers() {
-    const users = await User.scope('role').findAll()
-    return users
+    return await prismaClient.user.findMany({ ...userIncludeRole })
+    // const users = await User.scope('role').findAll()
+    // return users
+  }
+
+  async getNewToken(user: UserIncludeRole) {
+    const tokens = tokenService.generateTokens(user)
+    await tokenService.saveToken(user.id, tokens.refreshToken)
+    return tokens
   }
 }
 

@@ -1,7 +1,7 @@
 require('dotenv').config() // инициализация переменных среды
 import express from 'express'
 import cluster from 'cluster'
-import { sequelize, openConnection, closeConnection } from './db/' //для подключения к БД
+// import { sequelize, openConnection, closeConnection } from './db/' //для подключения к БД
 import cookieParser from 'cookie-parser'
 import cors from 'cors' // для обработки запросов с браузера
 import fileUpload from 'express-fileupload'
@@ -41,7 +41,7 @@ const totalCPUs = require('os').cpus().length
 
 const start = async () => {
   try {
-    await openConnection() //подключение к базе данных
+    // await openConnection() //подключение к базе данных
     if (cluster.isPrimary) {
       console.log(`Number of CPUs is ${totalCPUs}`)
       console.log(`Master ${process.pid} is running`)

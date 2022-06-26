@@ -4,7 +4,7 @@ import toast from 'react-hot-toast'
 import EventService from '../services/eventService'
 import RootStore from './rootStore'
 
-const guest: IUser = { id: 0, name: 'Гость', email: '', isActivated: false, userRole: 'guest' }
+const guest: IUser = { id: 0, name: 'Гость', email: '', isActivated: false, userRole: { name: 'guest' } }
 
 export default class AuthStore {
   user: IUser = guest
@@ -31,7 +31,7 @@ export default class AuthStore {
   }
 
   isAdministrator() {
-    if (this.isAuth && this.user.userRole === 'administrator') {
+    if (this.isAuth && this.user.userRole.name === 'administrator') {
       return true
     }
     return false

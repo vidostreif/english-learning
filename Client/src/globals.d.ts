@@ -21,6 +21,13 @@ declare interface ITask {
   imgUrl: string
 }
 
+declare interface IMarkerL {
+  id?: number
+  left: number
+  top: number
+  dictionary: { name: string }
+}
+
 declare interface IMarker {
   id?: number
   left: number
@@ -53,5 +60,5 @@ declare interface IUser {
   name: string
   email: string
   isActivated: boolean
-  userRole: string
+  userRole: { name: string }
 }

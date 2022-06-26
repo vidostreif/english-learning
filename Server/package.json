@@ -3,9 +3,14 @@
   "version": "0.1.0",
   "description": "",
   "main": "dist/app.js",
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
   "scripts": {
     "start": "ts-node index.ts",
-    "dev": "ts-node-dev index.ts"
+    "dev": "ts-node-dev index.ts",
+    "prisma:seed": "prisma db seed",
+    "prisma:deploy": "prisma migrate deploy"
   },
   "keywords": [],
   "author": "",

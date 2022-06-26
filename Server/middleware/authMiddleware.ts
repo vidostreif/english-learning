@@ -3,13 +3,14 @@ import ApiError from '../exceptions/ApiError'
 import tokenService from '../services/tokenService'
 import { NextFunction, Request, Response } from 'express'
 import { User } from '../db/models'
-import UserDto from '../dtos/userDto'
+import { UserIncludeRole } from '../prisma/prismaClient'
+// import UserDto from '../dtos/userDto'
 
 class AuthMiddleware {
   static isAdministarator(req: Request, res: Response, next: NextFunction) {
     try {
       const userData = req.user
-      if (!userData || userData.userRole.toString().toLowerCase() !== 'administrator') {
+      if (!userData || !userData.userRole || userData.userRole.name.toString().toLowerCase() !== 'administrator') {
         next(ApiError.UnauthorizedError())
       }
       next()
@@ -36,7 +37,7 @@ class AuthMiddleware {
         return next(ApiError.UnauthorizedError())
       }
 
-      req.user = userData as UserDto
+      req.user = userData as UserIncludeRole
 
       next()
     } catch (error) {
