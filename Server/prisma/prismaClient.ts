@@ -1,11 +1,11 @@
-import { PrismaClient } from '@prisma/client'
-const prisma = new PrismaClient()
+import { PrismaClient, Prisma } from '@prisma/client'
+const prismaClient = new PrismaClient()
 
 /***********************************/
 /* SOFT DELETE MIDDLEWARE */
 /***********************************/
 
-prisma.$use(async (params, next) => {
+prismaClient.$use(async (params, next) => {
   if (params.model == 'User' || params.model == 'Task' || params.model == 'UserRole') {
     // if (!params.args.where['deleted']) {
     if (params.action === 'findUnique' || params.action === 'findFirst') {
@@ -55,26 +55,70 @@ prisma.$use(async (params, next) => {
 //   return next(params)
 // })
 
-prisma.$use(async (params, next) => {
-  // Check incoming query type
-  if (params.model == 'User' || params.model == 'Task' || params.model == 'UserRole') {
-    if (params.action == 'delete') {
-      // Delete queries
-      // Change action to an update
-      params.action = 'update'
-      params.args['data'] = { deleted: true }
-    }
-    if (params.action == 'deleteMany') {
-      // Delete many queries
-      params.action = 'updateMany'
-      if (params.args.data != undefined) {
-        params.args.data['deleted'] = true
-      } else {
-        params.args['data'] = { deleted: true }
-      }
-    }
-  }
-  return next(params)
+// prisma.$use(async (params, next) => {
+//   // Check incoming query type
+//   if (params.model == 'User' || params.model == 'Task' || params.model == 'UserRole') {
+//     if (params.action == 'delete') {
+//       // Delete queries
+//       // Change action to an update
+//       params.action = 'update'
+//       params.args['data'] = { deleted: true }
+//     }
+//     if (params.action == 'deleteMany') {
+//       // Delete many queries
+//       params.action = 'updateMany'
+//       if (params.args.data != undefined) {
+//         params.args.data['deleted'] = true
+//       } else {
+//         params.args['data'] = { deleted: true }
+//       }
+//     }
+//   }
+//   return next(params)
+// })
+
+// определяем какие вложенные объекты будем получать
+const userIncludeRole = Prisma.validator<Prisma.UserArgs>()({
+  select: { id: true, name: true, email: true, isActivated: true, userRole: { select: { name: true } } },
 })
 
-export default prisma
+// генерируем тип для User
+type UserIncludeRole = Prisma.UserGetPayload<typeof userIncludeRole>
+
+// определяем какие вложенные объекты будем получать
+const markerIncludeDictionary = Prisma.validator<Prisma.MarkerArgs>()({
+  include: {
+    dictionary: true,
+  },
+})
+// генерируем тип для Marker
+type MarkersIncludeDictionary = Prisma.MarkerGetPayload<typeof markerIncludeDictionary>
+
+const taskIncludeMarkersIncludeDictionary = Prisma.validator<Prisma.TaskArgs>()({
+  include: {
+    markers: markerIncludeDictionary,
+  },
+})
+// генерируем тип для task
+type TaskIncludeMarkersIncludeDictionary = Prisma.TaskGetPayload<typeof taskIncludeMarkersIncludeDictionary>
+
+// type TaskWithMessages = Prisma.TaskGetPayload<{
+//   include: {
+//     markers: {
+//       include: {
+//         dictionary: true;
+//       };
+//     };
+//   };
+// }>;
+
+export {
+  prismaClient,
+  Prisma,
+  userIncludeRole,
+  UserIncludeRole,
+  markerIncludeDictionary,
+  MarkersIncludeDictionary,
+  taskIncludeMarkersIncludeDictionary,
+  TaskIncludeMarkersIncludeDictionary,
+}

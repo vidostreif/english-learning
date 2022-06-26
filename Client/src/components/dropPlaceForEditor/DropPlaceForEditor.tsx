@@ -7,7 +7,7 @@ import styles from './DropPlaceForEditor.module.scss'
 interface IProps {
   readonly hideSourceOnDrag?: boolean
   readonly urlImg: string // адрес картинки
-  readonly markers: Array<IMarker> // массив маркеров
+  readonly markers: Array<IMarkerL> // массив маркеров
   readonly addMarker: (e: React.MouseEvent<HTMLButtonElement>) => void // событие добавления нового маркера
   readonly moveMarker: (id: number, left: number, top: number) => void // событие перемещения маркера
   readonly changeMarekerText: (id: number, value: string) => void // событие изменения текста
@@ -66,7 +66,7 @@ export const DropPlaceForEditor: React.FC<IProps> = ({
       <div ref={drop} className={styles.container}>
         <img src={urlImg} alt="1" className={styles.img} key="MainImg" id="MainImg" ref={targetRef} />
         {markers.map((marker, index) => {
-          let { left, top, text } = marker
+          let { left, top, dictionary } = marker
 
           return (
             <DivDragForEditor
@@ -76,7 +76,7 @@ export const DropPlaceForEditor: React.FC<IProps> = ({
               top={top}
               hideSourceOnDrag={hideSourceOnDrag}
               changeText={changeMarekerText}
-              value={text}
+              value={dictionary.name}
             />
           )
         })}

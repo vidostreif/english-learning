@@ -10,7 +10,7 @@ interface IAllTasks {
 // сохранение задания
 export const createTask = async (
   img: File | null,
-  markers: Array<IMarker>,
+  markers: Array<IMarkerL>,
   complexity: number,
   id: number | null = null
 ): Promise<ITaskFromServer> => {
