@@ -11,6 +11,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { GetTasksQuery, sortEnum } from './query/getTasksQuery';
 import { GetRandomTasksQuery } from './query/getRandomTasksQuery';
+import { TryCatchWrapper } from '../utils/decorators/try-catch-shell.decorator';
 
 @Injectable()
 export class TasksService {
@@ -31,7 +32,10 @@ export class TasksService {
     if (file) {
       img = file;
     } else if (!id) {
-      throw new Error('Попытка сохранения задания без картинки!');
+      throw new HttpException(
+        'Попытка сохранения задания без картинки!',
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
     let task: TaskIncludeMarkersIncludeDictionary = null;
@@ -136,7 +140,10 @@ export class TasksService {
           order = { field: 'rating', order: 'ASC' };
           break;
         default:
-        // throw new Error('Неудалось определить сортировку по значению: ' + sort)
+          throw new HttpException(
+            'Не удалось определить тип сортировки',
+            HttpStatus.BAD_REQUEST,
+          );
       }
     }
 
