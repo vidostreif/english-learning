@@ -127,7 +127,7 @@ const Editor: React.FC = () => {
     setMarkers(newMarkers)
     setTaskId(data.id)
     setSearchParams({ id: data.id.toString() })
-    setUrlImg(`${process.env.REACT_APP_API_URL}/${data.imgUrl}`)
+    setUrlImg(`${process.env.REACT_APP_API_URL}/static/${data.imgUrl}`)
     setImgFile(null)
   }
 

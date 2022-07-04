@@ -1,19 +1,22 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "esModuleInterop": true,
-    "target": "es6",
-    // "allowJs": true,
-    "moduleResolution": "node",
-    "sourceMap": true,
-    // "experimentalDecorators": true,
-    // "emitDecoratorMetadata": true
-    // "outDir": "./dist"
-    // "strict": true,
-    "typeRoots": ["./@types"],
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "useDefineForClassFields": true
-  },
-  // "include": ["./**/*"],
-  "lib": ["es2015"]
+    "allowSyntheticDefaultImports": true,
+    "target": "es2017",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "skipLibCheck": true,
+    "strictNullChecks": false,
+    "noImplicitAny": false,
+    "strictBindCallApply": false,
+    "forceConsistentCasingInFileNames": false,
+    "noFallthroughCasesInSwitch": false,
+    "paths": { "@src/*": ["./src/*"] }
+  }
 }

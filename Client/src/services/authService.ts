@@ -1,5 +1,5 @@
 import { $api, apiRefreshToken } from '../api'
-import { API_USER_LOGIN, API_USER_LOGOUT, API_USER_REGISTRATION, API_USER_USERS } from '../utils/consts'
+import { API_USERS, API_USER_LOGIN, API_USER_LOGOUT } from '../utils/consts'
 
 export default class AuthService {
   static async login(email: string, password: string): Promise<IUser> {
@@ -8,7 +8,7 @@ export default class AuthService {
   }
 
   static async registration(email: string, password: string): Promise<IUser> {
-    const response = await $api.post(`${API_USER_REGISTRATION}`, { email, password })
+    const response = await $api.post(`${API_USERS}`, { email, password })
     return response.data.user
   }
 
@@ -17,7 +17,7 @@ export default class AuthService {
   }
 
   static async getUsers(): Promise<Array<IUser>> {
-    const response = await $api.get(`${API_USER_USERS}`)
+    const response = await $api.get(`${API_USERS}`)
     return response.data
   }
 

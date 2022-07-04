@@ -1,7 +1,7 @@
 // import { User } from '../../db/models'
 // import UserDto from '../../dtos/userDto'
 
-import { UserIncludeRole } from '../../prisma/prismaClient'
+import { UserIncludeRole } from '../../prisma/prismaClient';
 
 // declare global {
 //   namespace Express {
@@ -21,7 +21,7 @@ import { UserIncludeRole } from '../../prisma/prismaClient'
 
 declare module 'express' {
   interface Request {
-    user: UserIncludeRole
-    files?: { img: File }
+    user: UserIncludeRole;
+    // files?: { img: File };
   }
 }

@@ -17,7 +17,7 @@ const TaskCard: React.FC<IProps> = ({ task, rootStyles }) => {
       <div className={rootStyles?.TaskListElement__imgConteiner || 'TaskListElement__imgConteiner'}>
         <img
           className={rootStyles?.TaskListElement__img || 'TaskListElement__img'}
-          src={`${process.env.REACT_APP_API_URL}/mini_${task.imgUrl}`}
+          src={`${process.env.REACT_APP_API_URL}/static/mini_${task.imgUrl}`}
           alt="1"
         />
       </div>

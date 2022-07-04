@@ -35,15 +35,19 @@ export const useFetching = () => {
             } else if (error instanceof Error) {
               // если типовая ошибка, то просто выводим сообщение
               setError(error.message)
-            } else {
-              // если не определили, то пробрасываем дальше
-              throw error
             }
+            // else {
+            //   // если не определили, то пробрасываем дальше
+            //   throw error
+            // }
           }
           // иначе пробрасываем ошибку в место вызова функции
-        } else {
-          throw error
         }
+        // else {
+        //   throw error
+        // }
+
+        throw error
       } finally {
         //finally выполняется в любом случае до передачи управления вызываемой функции
         if (isMounted.current) {

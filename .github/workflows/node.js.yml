@@ -49,5 +49,6 @@ jobs:
             npm run all:install
             npm run server:prisma:deploy
             npm run client:build
+            npm run server:build
             pm2 restart 0
             exit

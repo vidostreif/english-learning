@@ -48,17 +48,18 @@ export const fetchAllTask = async (page: number, limit: number, sort: ETaskSort)
 }
 
 // получение рандомного списка заданий
-export const fetchRandomTask = async (count: number, not_id: number | null = null): Promise<Array<ITaskFromServer>> => {
+export const fetchRandomTask = async (limit: number, not_id: number | null = null): Promise<Array<ITaskFromServer>> => {
   const { data } = await $api.get(API_TASK_RANDOM, {
     params: {
       not_id,
-      count,
+      limit,
     },
   })
+
   return data
 }
 
 // увеличение счетчика прохождения задания
 export const setTaskPassed = async (id: number): Promise<void> => {
-  await $api.post(`${API_TASK_PASSED}/${id}`)
+  await $api.patch(`${API_TASK_PASSED}/${id}`)
 }

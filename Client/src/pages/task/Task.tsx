@@ -72,7 +72,7 @@ const DragDrop: React.FC = () => {
       fetchingTask(async (current: boolean) => {
         await fetchRandomTask(1, id).then((data) => {
           // если этот объект еще монтирован
-          if (current) setTaskParam(data[0])
+          if (current) getTaskFromServer(data[0].id)
         })
       })
     } else {
@@ -100,7 +100,7 @@ const DragDrop: React.FC = () => {
     if (Number(searchParams.get('id')) !== data.id) {
       setSearchParams({ id: data.id.toString() })
     }
-    setUrlImg(`${process.env.REACT_APP_API_URL}/${data.imgUrl}`)
+    setUrlImg(`${process.env.REACT_APP_API_URL}/static/${data.imgUrl}`)
   }
 
   //пометка маркеров как использованные
