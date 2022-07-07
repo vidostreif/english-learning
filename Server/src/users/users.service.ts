@@ -2,6 +2,7 @@ import {
   HttpException,
   HttpStatus,
   Injectable,
+  NotAcceptableException,
   UnauthorizedException,
 } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
@@ -132,14 +133,14 @@ export class UsersService {
     });
 
     if (!user) {
-      throw new UnauthorizedException({
+      throw new NotAcceptableException({
         message: `Пользователь с таким email не найден`,
       });
     }
     //проверяем пароль
     const isPassEquals = await bcrypt.compare(password, user.password);
     if (!isPassEquals) {
-      throw new UnauthorizedException(`Не верный пароль`);
+      throw new NotAcceptableException(`Не верный пароль`);
     }
 
     delete user.password;

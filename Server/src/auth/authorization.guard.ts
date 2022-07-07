@@ -1,7 +1,9 @@
 import {
   CanActivate,
   ExecutionContext,
+  ForbiddenException,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
@@ -29,7 +31,7 @@ export class AuthorizationGuard implements CanActivate {
 
       // если не поставили декоратор с указанием ролей
       if (!requiredRoles) {
-        throw new UnauthorizedException(
+        throw new NotFoundException(
           'Не указан список разрешенных пользователей',
         );
       }
@@ -48,6 +50,7 @@ export class AuthorizationGuard implements CanActivate {
 
       const userData = this.tokenService.validateAccessToken(acccessToken);
       if (!userData) {
+        //!!! Добавить автоматическую выдачу нового токена доступа, в случае если в coocies усть рефреш токен
         throw new UnauthorizedException('Не удалось расшифровать токен');
       }
 
@@ -59,7 +62,11 @@ export class AuthorizationGuard implements CanActivate {
         return true;
       } else {
         // проверяем, совпадает роль пользователя с ролью, которую указали в декораторе
-        return requiredRoles.includes(user.userRole.name);
+        if (requiredRoles.includes(user.userRole.name)) {
+          return true;
+        } else {
+          throw new ForbiddenException('Доступ запрещен');
+        }
       }
     } catch (error) {
       throw error;
