@@ -4,6 +4,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AuthModule } from '../auth/auth.module';
 import { getMailConfig } from '../configs/mail.config';
 import { PrismaModule } from '../prisma/prisma.module';
+
 import { UsersService } from './users.service';
 
 describe('UserService', () => {

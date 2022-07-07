@@ -1,18 +1,20 @@
+import { APP_FILTER } from '@nestjs/core';
+import { AllExceptionsFilter } from './exception-filters/exception.filter';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { AppService } from './app.service';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { getMailConfig } from './configs/mail.config';
 import { AuthModule } from './auth/auth.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { UsersModule } from './users/users.module';
-import { AppController } from './app.controller';
 import { TasksModule } from './tasks/tasks.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { TaskRatingModule } from './task-rating/task-rating.module';
 import { validationSchema } from './validators/env-validator';
 import { RouterModule } from '@nestjs/core';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 
 @Module({
   imports: [
@@ -65,6 +67,12 @@ import { RouterModule } from '@nestjs/core';
     TaskRatingModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    {
+      provide: APP_FILTER,
+      useClass: AllExceptionsFilter,
+    },
+    AppService,
+  ],
 })
 export class AppModule {}

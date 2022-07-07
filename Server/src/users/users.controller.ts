@@ -15,8 +15,7 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Request, Response } from 'express';
-import { Roles } from '../auth/rolesAuth.decorator';
-import { AuthorizationGuard } from '../auth/authorization.guard';
+
 import {
   ApiBearerAuth,
   ApiCookieAuth,
@@ -31,6 +30,8 @@ import {
 } from './entities/user.entity';
 import { IdUserParam } from './query/IdUserParam';
 import { LoginDto } from './dto/login.dto';
+import { AuthorizationGuard } from '../auth/authorization.guard';
+import { Roles } from '../auth/rolesAuth.decorator';
 
 const maxAge = 2592000000; // один месяц
 
